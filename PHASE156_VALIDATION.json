@@ -1,0 +1,278 @@
+{
+  "phase": 156,
+  "name": "MongoDB Transaction Reliability",
+  "date": "2026-10-29",
+  "phase156_reliability_contract_tests": "10/10 passed",
+  "all_discovered_phase_contract_suite_processes_exit_successfully": 51,
+  "mongo_integration_test_status": "SKIPPED \u2014 FORESTOS_TEST_MONGODB_URI not set; no live DB was tested",
+  "api_build_status": "NOT RUN \u2014 dependencies not installed in packaged working tree",
+  "changes": [
+    "unique partial tenant/kind/batchHash index for batch ledger",
+    "opt-in real MongoDB integration test runner",
+    "idempotency, tenant isolation, revision conflict, version conflict, invalid-input scenarios",
+    "phase 156 reliability contract tests"
+  ],
+  "safety": "Integration runner requires an explicit disposable MongoDB URI and creates/drops only uniquely named phase156 collections.",
+  "limitations": [
+    "real MongoDB replica-set behavior remains unverified in this environment",
+    "NestJS TypeScript build remains unverified",
+    "integration harness scenarios must be run in a controlled test environment before production"
+  ],
+  "suites": [
+    {
+      "file": "phase105-tenant-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 105 contract tests: 6/6 passed."
+    },
+    {
+      "file": "phase107-workflow-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 107 workflow contract: 10/10 passed."
+    },
+    {
+      "file": "phase108-environment-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 108 environment contract: 8/8 passed."
+    },
+    {
+      "file": "phase109-schema-alignment-contract-tests.js",
+      "exit": 0,
+      "summary": "Scope: static source checks only; runtime model registration, collection mapping, login, and MongoDB behavior are not verified."
+    },
+    {
+      "file": "phase110-live-readiness-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 110 live-probe contract: 8/8 passed."
+    },
+    {
+      "file": "phase111-membership-reference-contract-tests.js",
+      "exit": 0,
+      "summary": "Scope: static source checks only; run MongoDB-backed tests before relying on runtime behavior."
+    },
+    {
+      "file": "phase112-model-fixture-contract-tests.js",
+      "exit": 0,
+      "summary": "Scope: static checks only. Confirm collection names and schema compatibility against a disposable MongoDB test database before live tenant tests."
+    },
+    {
+      "file": "phase113-runtime-preflight-contract-tests.js",
+      "exit": 0,
+      "summary": "Scope: static checks only; no MongoDB connection was attempted."
+    },
+    {
+      "file": "phase114-fixture-integrity-contract-tests.js",
+      "exit": 0,
+      "summary": "Scope: static checks only; the database audit was not run."
+    },
+    {
+      "file": "phase115-auth-membership-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 115 contract checks: 11/11 passed."
+    },
+    {
+      "file": "phase116-tenant-route-audit-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 116 contract checks: 10/10 passed."
+    },
+    {
+      "file": "phase117-service-tenant-query-contract-tests.js",
+      "exit": 0,
+      "summary": "12/12 checks passed"
+    },
+    {
+      "file": "phase118-route-service-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 118 contract checks: 14/14 passed."
+    },
+    {
+      "file": "phase119-plantation-tenant-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 119 contract checks: 16/16 passed."
+    },
+    {
+      "file": "phase120-critical-domain-tenant-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 120 contract tests: 11/11 passed"
+    },
+    {
+      "file": "phase121-sales-inventory-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 121 compatibility contract tests: 10/10 passed"
+    },
+    {
+      "file": "phase122-sales-inventory-tenant-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 122 contract tests: 21/21 passed"
+    },
+    {
+      "file": "phase123-legacy-tenant-data-migration-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 123 contract tests: 13/12 passed"
+    },
+    {
+      "file": "phase124-approved-tenant-migration-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 124 contract tests: 13/12 passed"
+    },
+    {
+      "file": "phase125-schema-index-readiness-contract-tests.js",
+      "exit": 0,
+      "summary": "15/15 passed"
+    },
+    {
+      "file": "phase126-inventory-control-tenant-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 126 contract tests: 15/15 passed"
+    },
+    {
+      "file": "phase127-inventory-control-tenant-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 127 contract tests: 15/15 passed"
+    },
+    {
+      "file": "phase128-inventory-migration-preflight-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 128 contract tests: 16/16 passed"
+    },
+    {
+      "file": "phase129-inventory-migration-rehearsal-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 129 contract tests: 20/20 passed"
+    },
+    {
+      "file": "phase130-inventory-migration-execution-guard-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 130 contract tests: 18/18 passed"
+    },
+    {
+      "file": "phase131-inventory-migration-reconciliation-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 131 contract tests: 19/19 passed"
+    },
+    {
+      "file": "phase132-inventory-migration-release-decision-contract-tests.js",
+      "exit": 0,
+      "summary": "15/15 Phase 132 contract tests passed"
+    },
+    {
+      "file": "phase133-post-change-verification-contract-tests.js",
+      "exit": 0,
+      "summary": "16/16 Phase 133 contract tests passed"
+    },
+    {
+      "file": "phase134-incident-response-rollback-decision-contract-tests.js",
+      "exit": 0,
+      "summary": "17/17 Phase 134 contract tests passed"
+    },
+    {
+      "file": "phase135-incident-register-corrective-actions-contract-tests.js",
+      "exit": 0,
+      "summary": "20/20 Phase 135 contract tests passed"
+    },
+    {
+      "file": "phase136-corrective-action-effectiveness-contract-tests.js",
+      "exit": 0,
+      "summary": "23/23 Phase 136 contract tests passed"
+    },
+    {
+      "file": "phase137-improvement-action-plan-contract-tests.js",
+      "exit": 0,
+      "summary": "25/25 Phase 137 contract tests passed"
+    },
+    {
+      "file": "phase138-management-kpi-analytics-contract-tests.js",
+      "exit": 0,
+      "summary": "24/24 Phase 138 contract tests passed"
+    },
+    {
+      "file": "phase139-forestry-apiary-scorecards-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 139 contract tests: 31 passed"
+    },
+    {
+      "file": "phase140-farm-operations-inspections-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 140 contract tests: 30/30 passed"
+    },
+    {
+      "file": "phase141-capa-management-contract-tests.js",
+      "exit": 0,
+      "summary": "38 passed"
+    },
+    {
+      "file": "phase142-farm-task-execution-contract-tests.js",
+      "exit": 0,
+      "summary": "41 passed"
+    },
+    {
+      "file": "phase143-supervisor-verification-evidence-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 143 supervisor verification/evidence tests: 36 passed."
+    },
+    {
+      "file": "phase144-recurring-failure-intelligence-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 144 recurring-failure intelligence tests: 36 passed."
+    },
+    {
+      "file": "phase145-unified-farm-operations-dashboard-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 145 contract tests: 55 passed"
+    },
+    {
+      "file": "phase146-automated-data-integration-pipeline-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 146 contract tests: 52 passed"
+    },
+    {
+      "file": "phase147-data-quality-reconciliation-engine-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 147 contract tests: 59 passed"
+    },
+    {
+      "file": "phase148-decision-action-intelligence-engine-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 148 contract tests: 65 passed"
+    },
+    {
+      "file": "phase149-corrective-action-lifecycle-verification-engine-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 149 contract tests: 59 passed"
+    },
+    {
+      "file": "phase150-management-command-centre-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 150 contract tests: 76 passed"
+    },
+    {
+      "file": "phase151-live-operations-data-integration-gateway-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 151 contract tests: 78 passed"
+    },
+    {
+      "file": "phase152-master-data-registry-idempotent-import-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 152 contract tests: 16 passed"
+    },
+    {
+      "file": "phase153-transactional-persistence-adapter-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 153 contract tests: 10 passed"
+    },
+    {
+      "file": "phase154-mongodb-transactional-persistence-adapter-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 154 contract tests: 11/11 passed"
+    },
+    {
+      "file": "phase155-api-database-integration-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 155 API integration contract tests: 10/10 passed"
+    },
+    {
+      "file": "phase156-mongodb-reliability-contract-tests.js",
+      "exit": 0,
+      "summary": "Phase 156 reliability contract tests: 10/10 passed"
+    }
+  ]
+}

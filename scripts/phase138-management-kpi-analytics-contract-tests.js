@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+"use strict";
+const assert=require("assert"),{evaluate}=require("./phase138-management-kpi-analytics.js");
+let passed=0;function test(name,fn){try{fn();passed++;console.log("PASS "+name);}catch(e){console.error("FAIL "+name+": "+(e.stack||e));process.exitCode=1;}}
+const now="2026-10-27T12:00:00Z";
+test("computes action completion rate",()=>{const r=evaluate({actions:[{status:"COMPLETED"},{status:"IN_PROGRESS"}]},now);assert.strictEqual(r.kpis.actions.completionRatePercent,50);});
+test("zero action denominator yields null rate",()=>assert.strictEqual(evaluate({actions:[]},now).kpis.actions.completionRatePercent,null));
+test("counts overdue open actions",()=>assert.strictEqual(evaluate({actions:[{status:"IN_PROGRESS",dueAt:"2026-10-01"}]},now).kpis.actions.overdue,1));
+test("does not count completed action as overdue",()=>assert.strictEqual(evaluate({actions:[{status:"COMPLETED",dueAt:"2026-10-01"}]},now).kpis.actions.overdue,0));
+test("counts critical open actions",()=>assert.strictEqual(evaluate({actions:[{status:"BLOCKED",priority:"CRITICAL"}]},now).kpis.actions.criticalOpen,1));
+test("counts blocked actions",()=>assert.strictEqual(evaluate({actions:[{status:"BLOCKED"}]},now).kpis.actions.blocked,1));
+test("computes incident closure rate",()=>assert.strictEqual(evaluate({incidents:[{status:"CLOSED"},{status:"OPEN"}]},now).kpis.incidents.closureRate,50));
+test("counts high severity incidents",()=>assert.strictEqual(evaluate({incidents:[{severity:"CRITICAL"},{severity:"LOW"}]},now).kpis.incidents.highSeverity,1));
+test("computes effectiveness rate",()=>assert.strictEqual(evaluate({reviews:[{outcome:"EFFECTIVE"},{outcome:"INEFFECTIVE"}]},now).kpis.effectiveness.effectivenessRatePercent,50));
+test("counts repeat incidents",()=>assert.strictEqual(evaluate({reviews:[{repeatIncident:true}]},now).kpis.effectiveness.repeatIncidents,1));
+test("flags ineffective action",()=>assert(r=>true) && assert(evaluate({reviews:[{outcome:"INEFFECTIVE"}]},now).findings.some(f=>f.code==="INEFFECTIVE_ACTIONS")));
+test("flags repeat incident after action",()=>assert(evaluate({reviews:[{repeatIncident:true}]},now).findings.some(f=>f.code==="REPEAT_INCIDENTS_AFTER_ACTION")));
+test("computes operational compliance rate",()=>assert.strictEqual(evaluate({operations:[{area:"Nursery",compliant:true},{area:"Nursery",compliant:false}]},now).kpis.operations.complianceRatePercent,50));
+test("breaks compliance down by area",()=>assert.strictEqual(evaluate({operations:[{area:"Apiary",compliant:true}]},now).kpis.operations.byArea.Apiary.complianceRate,100));
+test("unknown area is grouped as unspecified",()=>assert(evaluate({operations:[{compliant:false}]},now).kpis.operations.byArea.Unspecified));
+test("invalid top-level input is an error",()=>assert.strictEqual(evaluate([],now).dataQuality.errorFindings,1));
+test("invalid dataset type is an error",()=>assert.strictEqual(evaluate({actions:{}},now).dataQuality.errorFindings,1));
+test("empty input datasets default to zero",()=>assert.strictEqual(evaluate({},now).kpis.incidents.total,0));
+test("uses supplied deterministic clock",()=>assert.strictEqual(evaluate({},now).generatedAt,new Date(now).toISOString()));
+test("reports routine recommendation when no flags",()=>assert(evaluate({},now).recommendations.some(r=>r.priority==="ROUTINE")));
+test("recommends overdue action review",()=>assert(evaluate({actions:[{status:"IN_PROGRESS",dueAt:"2026-10-01"}]},now).recommendations.some(r=>r.priority==="HIGH")));
+test("nulls effectiveness rate with no reviews",()=>assert.strictEqual(evaluate({reviews:[]},now).kpis.effectiveness.effectivenessRatePercent,null));
+test("nulls incident closure rate with no incidents",()=>assert.strictEqual(evaluate({incidents:[]},now).kpis.incidents.closureRate,null));
+test("returns schema and phase identifiers",()=>{const r=evaluate({},now);assert.strictEqual(r.schemaVersion,1);assert.strictEqual(r.phase,138);});
+console.log(`${passed}/24 Phase 138 contract tests passed`);
+if(passed!==24)process.exitCode=1;

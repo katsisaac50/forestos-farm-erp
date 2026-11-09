@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
+const root = path.resolve(__dirname, '..');
+const script = path.join(__dirname, 'phase201_trusted_build_execution_gate.js');
+const result = spawnSync(process.execPath, [script], { cwd: root, encoding: 'utf8', timeout: 10000 });
+assert.ok(result.status === 0 || result.status === 2, 'preflight should return a documented readiness status');
+const reportPath = path.join(root, 'PHASE201_TRUSTED_BUILD_EXECUTION_REPORT.json');
+assert.ok(fs.existsSync(reportPath), 'report should be emitted');
+const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+assert.equal(report.phase, 201);
+assert.equal(report.productionCleared, false);
+assert.equal(report.mode, 'preflight');
+assert.equal(report.installExecuted, false);
+assert.equal(report.buildExecuted, false);
+assert.equal(typeof report.checks.manifestValid, 'boolean');
+assert.equal(typeof report.checks.lockfileExists, 'boolean');
+assert.ok(Array.isArray(report.blockers));
+assert.ok(Array.isArray(report.nextActions));
+console.log('Phase 201 contract tests: 8 passed, 0 failed');

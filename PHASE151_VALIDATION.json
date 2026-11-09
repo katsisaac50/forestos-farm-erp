@@ -1,0 +1,105 @@
+{
+  "phase": 151,
+  "name": "Live Operations & Data Integration Gateway",
+  "sourceZip": "ForestOS_Phase150_Management_Command_Centre.zip",
+  "sourceZipIntegrity": "passed",
+  "phase151ContractTests": {
+    "passed": 78,
+    "failed": 0
+  },
+  "priorSuites": [
+    {
+      "phase": 138,
+      "file": "phase138-management-kpi-analytics-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": null
+    },
+    {
+      "phase": 139,
+      "file": "phase139-forestry-apiary-scorecards-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 31
+    },
+    {
+      "phase": 140,
+      "file": "phase140-farm-operations-inspections-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 30
+    },
+    {
+      "phase": 141,
+      "file": "phase141-capa-management-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 38
+    },
+    {
+      "phase": 142,
+      "file": "phase142-farm-task-execution-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 41
+    },
+    {
+      "phase": 143,
+      "file": "phase143-supervisor-verification-evidence-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 36
+    },
+    {
+      "phase": 144,
+      "file": "phase144-recurring-failure-intelligence-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 36
+    },
+    {
+      "phase": 145,
+      "file": "phase145-unified-farm-operations-dashboard-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 55
+    },
+    {
+      "phase": 146,
+      "file": "phase146-automated-data-integration-pipeline-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 52
+    },
+    {
+      "phase": 147,
+      "file": "phase147-data-quality-reconciliation-engine-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 59
+    },
+    {
+      "phase": 148,
+      "file": "phase148-decision-action-intelligence-engine-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 65
+    },
+    {
+      "phase": 149,
+      "file": "phase149-corrective-action-lifecycle-verification-engine-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 59
+    },
+    {
+      "phase": 150,
+      "file": "phase150-management-command-centre-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 76
+    }
+  ],
+  "priorReportedTestsTotal": 578,
+  "allReportedTestsTotal": 656,
+  "smokeTest": {
+    "passed": true,
+    "status": "accepted_with_warnings",
+    "recordsAccepted": 7,
+    "recordsQuarantined": 1,
+    "batchHash": "f4751d72e45b6f42c714b1cc8d95b785b8024b971af68f3c1b4ac8a65f306809"
+  },
+  "limitations": [
+    "Offline JSON batch processor; no live source connectors or network listener.",
+    "No database persistence, authentication, or authorization.",
+    "No concurrent-import coordination or master-store idempotency.",
+    "SHA-256 hashes are checksums, not digital signatures or proof of submitter identity."
+  ]
+}

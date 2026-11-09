@@ -1,0 +1,21 @@
+{
+  "phase": 166,
+  "title": "Transaction Fault Injection & Rollback Verification",
+  "contract_test_command": "node scripts/phase166-transaction-fault-injection-contract-tests.js",
+  "live_test_command": "node scripts/phase166-transaction-fault-injection-integration-tests.js",
+  "live_test_status": "not_run_no_disposable_mongodb_uri_configured",
+  "build_status": "not_run_dependencies_not_installed_in_packaged_environment",
+  "claims": [
+    "Added opt-in storage-layer fault-injection test",
+    "Added static contract checks for rollback invariants"
+  ],
+  "limitations": [
+    "Live MongoDB rollback not demonstrated in this environment",
+    "NestJS build not executed"
+  ],
+  "contract_tests": {
+    "phase166": "11/11 passed",
+    "all_phase_contract_test_scripts": "60 passed, 0 failed",
+    "javascript_syntax": "passed"
+  }
+}

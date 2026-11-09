@@ -1,0 +1,32 @@
+{
+  "phase": 213,
+  "title": "Build Evidence Diagnosis",
+  "localContractTests": "pending",
+  "remoteWorkflowExecuted": false,
+  "apiCleanInstallExecuted": false,
+  "apiBuildExecuted": false,
+  "productionCleared": false,
+  "limitations": [
+    "Requires a downloaded GitHub Actions evidence artifact for real-run diagnosis",
+    "Does not connect to GitHub",
+    "Does not replace log review or production approval"
+  ],
+  "localContractTestFiles": 14,
+  "localContractTestFilesPassed": 14,
+  "localContractTestFilesFailed": 0,
+  "phase210Assertions": "passed",
+  "phase211Assertions": "passed",
+  "phase212Assertions": "passed",
+  "phase213Assertions": "12/12 passed",
+  "javascriptSyntaxFiles": 213,
+  "javascriptSyntaxFailures": 0,
+  "jsonFiles": 142,
+  "validJsonFiles": 141,
+  "invalidJsonFiles": [
+    {
+      "path": "PHASE125_SCHEMA_INDEX_READINESS.json",
+      "issue": "Extra data at line 96 column 2; pre-existing and unchanged"
+    }
+  ],
+  "zipIntegrity": "pending"
+}

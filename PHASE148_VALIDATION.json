@@ -1,0 +1,83 @@
+{
+  "phase": 148,
+  "name": "Decision & Action Intelligence Engine",
+  "generatedAt": "2026-10-29",
+  "contractTestSuites": 11,
+  "contractTestsPassed": 467,
+  "phase148ContractTests": 65,
+  "previousPhasesIncluded": [
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147
+  ],
+  "suiteResults": [
+    {
+      "file": "phase138-management-kpi-analytics-contract-tests.js",
+      "status": "passed",
+      "summary": "PASS returns schema and phase identifiers | 24/24 Phase 138 contract tests passed"
+    },
+    {
+      "file": "phase139-forestry-apiary-scorecards-contract-tests.js",
+      "status": "passed",
+      "summary": " | Phase 139 contract tests: 31 passed"
+    },
+    {
+      "file": "phase140-farm-operations-inspections-contract-tests.js",
+      "status": "passed",
+      "summary": " | Phase 140 contract tests: 30/30 passed"
+    },
+    {
+      "file": "phase141-capa-management-contract-tests.js",
+      "status": "passed",
+      "summary": "38 passed"
+    },
+    {
+      "file": "phase142-farm-task-execution-contract-tests.js",
+      "status": "passed",
+      "summary": "41 passed"
+    },
+    {
+      "file": "phase143-supervisor-verification-evidence-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 143 supervisor verification/evidence tests: 36 passed."
+    },
+    {
+      "file": "phase144-recurring-failure-intelligence-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 144 recurring-failure intelligence tests: 36 passed."
+    },
+    {
+      "file": "phase145-unified-farm-operations-dashboard-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 145 contract tests: 55 passed"
+    },
+    {
+      "file": "phase146-automated-data-integration-pipeline-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 146 contract tests: 52 passed"
+    },
+    {
+      "file": "phase147-data-quality-reconciliation-engine-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 147 contract tests: 59 passed"
+    },
+    {
+      "file": "phase148-decision-action-intelligence-engine-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 148 contract tests: 65 passed"
+    }
+  ],
+  "smokeTests": {
+    "blockedReconciliationInput": "passed: CLI emits urgent_attention and exit code 2",
+    "actions": "passed: proposals include deterministic IDs, due dates, priorities, evidence and escalation guidance"
+  },
+  "limitations": "Offline JSON advisory tool only; no database/API connectors, automatic task execution, named owner assignment, notifications, or production scheduling. Human approval is required.",
+  "archiveIntegrity": "passed (zipfile.testzip)"
+}

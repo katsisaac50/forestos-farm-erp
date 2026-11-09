@@ -1,0 +1,318 @@
+{
+  "phase": 180,
+  "title": "Audit Writer Migration Readiness & Trusted Context Gate",
+  "status": "PARTIAL_REMEDIATION_REQUIRED_NOT_CLEARED_FOR_PRODUCTION",
+  "method": "Static source scan. Context signals are not proof of trusted context at each call site.",
+  "summary": {
+    "legacyCallSites": 41,
+    "filesWithLegacyCallSites": 14,
+    "filesWithContextSignals": 0,
+    "convertedCallSitesSincePhase179": 0
+  },
+  "policy": {
+    "convertOnlyWhen": "A validated organization/tenant context is derived from authenticated membership and explicitly passed to recordForTenant().",
+    "neverInferTenantFrom": [
+      "actor email",
+      "DTO/request body",
+      "free-form metadata",
+      "resource ID without scoped lookup"
+    ],
+    "systemEvents": "System events need an explicit trusted tenant scope or a deliberately designed global-event policy; do not use a fake actor/tenant."
+  },
+  "callSites": [
+    {
+      "file": "apps/api/src/capital-allocation/capital-allocation.service.ts",
+      "line": 49,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/capital-allocation/capital-allocation.service.ts",
+      "line": 58,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/capital-allocation/capital-allocation.service.ts",
+      "line": 74,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+      "line": 186,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+      "line": 220,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+      "line": 241,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+      "line": 254,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+      "line": 286,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/cashflow/cashflow.service.ts",
+      "line": 48,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/cashflow/cashflow.service.ts",
+      "line": 59,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/cashflow/cashflow.service.ts",
+      "line": 75,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.service.ts",
+      "line": 40,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.service.ts",
+      "line": 56,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/finance/finance.service.ts",
+      "line": 21,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/finance/finance.service.ts",
+      "line": 43,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/financial-investigations/financial-investigation.service.ts",
+      "line": 20,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/financial-investigations/financial-investigation.service.ts",
+      "line": 36,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/harvest/harvest.service.ts",
+      "line": 23,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/harvest/harvest.service.ts",
+      "line": 31,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/harvest/harvest.service.ts",
+      "line": 39,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/harvest/harvest.service.ts",
+      "line": 49,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/inspections/inspections.service.ts",
+      "line": 16,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/investment/investment.service.ts",
+      "line": 80,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/investment/investment.service.ts",
+      "line": 87,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/investment/investment.service.ts",
+      "line": 95,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.service.ts",
+      "line": 91,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.service.ts",
+      "line": 168,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.service.ts",
+      "line": 202,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.service.ts",
+      "line": 225,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/nursery/nursery.service.ts",
+      "line": 30,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/nursery/nursery.service.ts",
+      "line": 47,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/regeneration/regeneration.service.ts",
+      "line": 20,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/regeneration/regeneration.service.ts",
+      "line": 26,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/regeneration/regeneration.service.ts",
+      "line": 35,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/regeneration/regeneration.service.ts",
+      "line": 45,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/statement-matching/statement-matching.service.ts",
+      "line": 117,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/statement-matching/statement-matching.service.ts",
+      "line": 149,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/workforce/workforce.service.ts",
+      "line": 22,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/workforce/workforce.service.ts",
+      "line": 30,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/workforce/workforce.service.ts",
+      "line": 36,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    },
+    {
+      "file": "apps/api/src/workforce/workforce.service.ts",
+      "line": 48,
+      "writer": "legacy record()",
+      "contextSignal": "NOT_FOUND_IN_SERVICE_FILE",
+      "requiredAction": "Trace controller authentication and organization membership; pass validated tenant context explicitly before conversion."
+    }
+  ],
+  "limitations": [
+    "Static text scan may miss aliased or indirect audit writers.",
+    "Presence of tenant-related terms does not prove call-site trust or resource ownership.",
+    "No automatic code conversion was performed because current legacy signatures do not consistently carry validated tenant context.",
+    "Live database, HTTP authorization, and production build tests were not run."
+  ],
+  "productionClearance": "NOT CLEARED FOR PRODUCTION"
+}

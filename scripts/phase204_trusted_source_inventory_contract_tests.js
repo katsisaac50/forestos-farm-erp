@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const cp = require('node:child_process');
+const root = path.resolve(__dirname, '..');
+const script = path.join(__dirname, 'phase204_trusted_source_inventory.js');
+const reportPath = path.join(root, 'PHASE204_TRUSTED_SOURCE_INVENTORY_REPORT.json');
+let pass = 0;
+function test(name, fn) { fn(); pass++; console.log('PASS ' + name); }
+const source = fs.readFileSync(script, 'utf8');
+test('script exists', () => assert.ok(fs.existsSync(script)));
+test('report is phase 204', () => assert.match(source, /phase: 204/));
+test('read-only mode declared', () => assert.match(source, /readOnly: true/));
+test('network is explicitly not attempted', () => assert.match(source, /networkAccessAttempted: false/));
+test('install is not executed', () => assert.match(source, /installExecuted: false/));
+test('build is not executed', () => assert.match(source, /buildExecuted: false/));
+test('production clearance stays false', () => assert.match(source, /productionCleared: false/));
+test('checks API package-lock', () => assert.match(source, /package-lock\.json/));
+test('checks npm-shrinkwrap', () => assert.match(source, /npm-shrinkwrap\.json/));
+test('checks tracked workspace lockfiles', () => assert.match(source, /ls-files/));
+test('candidate size is bounded', () => assert.match(source, /25 \* 1024 \* 1024/));
+test('candidate SHA-256 is captured', () => assert.match(source, /sha256\(bytes\)/));
+test('root dependency maps are compared', () => assert.match(source, /rootDependenciesMatch/));
+test('provenance not presumed verified', () => assert.match(source, /trustedProvenanceVerified: false/));
+test('writes machine-readable report', () => assert.match(source, /PHASE204_TRUSTED_SOURCE_INVENTORY_REPORT\.json/));
+const r = cp.spawnSync(process.execPath, [script], { cwd: root, encoding: 'utf8', timeout: 10000 });
+test('inventory command exits successfully for current manifest', () => assert.equal(r.status, 0, r.stderr));
+test('report exists after run', () => assert.ok(fs.existsSync(reportPath)));
+const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+test('report identifies phase 204', () => assert.equal(report.phase, 204));
+test('report preserves no-network claim', () => assert.equal(report.networkAccessAttempted, false));
+test('report preserves production not cleared', () => assert.equal(report.productionCleared, false));
+test('report records source summary', () => assert.ok(report.summary && Number.isInteger(report.summary.candidatesInspected)));
+test('report does not claim trusted provenance', () => assert.equal(report.summary.trustedProvenanceVerified, false));
+console.log(`Phase 204 contract tests: ${pass}/22 passed`);

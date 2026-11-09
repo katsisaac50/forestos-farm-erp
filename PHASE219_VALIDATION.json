@@ -1,0 +1,12 @@
+{
+  "phase": 219,
+  "title": "Manifest Lockfile Alignment Gate",
+  "validationScope": "Local contract tests and static checks only; no network installation or API compilation",
+  "phase218ContractAssertions": 4,
+  "phase219ContractAssertions": 3,
+  "apiLockfilePresentInWorkspace": false,
+  "npmCiExecuted": false,
+  "nestBuildExecuted": false,
+  "productionCleared": false,
+  "knownInheritedInvalidJson": "PHASE125_SCHEMA_INDEX_READINESS.json"
+}

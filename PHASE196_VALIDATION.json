@@ -1,0 +1,15 @@
+{
+  "phase": 196,
+  "title": "Local Lockfile Recovery",
+  "contractTests": { "passed": 13, "failed": 0 },
+  "allContractTestFiles": { "passed": 90, "failed": 0 },
+  "javascriptSyntax": { "checked": 183, "passed": 183, "failed": 0 },
+  "jsonInventory": { "total": 109, "valid": 108, "invalid": 1 },
+  "knownJsonIssue": "PHASE125_SCHEMA_INDEX_READINESS.json has pre-existing extra data at line 96.",
+  "matchingLocalLockfileFound": false,
+  "apiLockfileGenerated": false,
+  "cleanInstallExecuted": false,
+  "apiBuildExecuted": false,
+  "liveDatabaseTestsExecuted": false,
+  "productionCleared": false
+}

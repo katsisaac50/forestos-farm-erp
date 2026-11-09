@@ -1,0 +1,24 @@
+{
+  "phase": 198,
+  "title": "Trusted Lockfile Intake & Manifest Alignment",
+  "contractTestFiles": 92,
+  "contractTestFilesFailed": 0,
+  "phase198ContractTestsPassed": 14,
+  "phase198ContractTestsFailed": 0,
+  "javascriptSyntaxFilesChecked": 187,
+  "javascriptSyntaxFailures": 0,
+  "validJsonFiles": 112,
+  "invalidJsonFiles": [
+    {
+      "path": "PHASE125_SCHEMA_INDEX_READINESS.json",
+      "status": "pre-existing",
+      "issue": "Extra data at line 96 column 2"
+    }
+  ],
+  "apiLockfilePresent": false,
+  "dependencyInstallExecuted": false,
+  "apiBuildExecuted": false,
+  "productionCleared": false,
+  "preflightStatus": "BLOCKED_NO_LOCKFILE_OR_CANDIDATE",
+  "zipIntegrity": "pending packaging verification"
+}

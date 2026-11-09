@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-10-29",
+  "actions": [
+    {
+      "actionId": "CAPA-TREE-SURVIVAL-001",
+      "title": "Investigate eucalyptus survival below target",
+      "description": "Inspect sample plots and document mortality causes.",
+      "findingCode": "LOW_SURVIVAL_RATE",
+      "priority": "high",
+      "ownerRole": "Forestry supervisor",
+      "dueDate": "2026-11-03",
+      "sourceFinding": {
+        "survivalRate": 0.82,
+        "target": 0.9
+      },
+      "events": [
+        {
+          "type": "assign",
+          "actor": "Farm Manager",
+          "owner": "Forestry Supervisor",
+          "ownerRole": "Forestry"
+        },
+        {
+          "type": "start",
+          "actor": "Forestry Supervisor"
+        },
+        {
+          "type": "add_evidence",
+          "actor": "Forestry Supervisor",
+          "description": "Plot inspection notes and photos recorded",
+          "reference": "evidence/plot-inspection-001"
+        },
+        {
+          "type": "submit_verification",
+          "actor": "Forestry Supervisor"
+        },
+        {
+          "type": "verify_ineffective",
+          "actor": "Independent Reviewer",
+          "reviewer": "Independent Reviewer",
+          "notes": "Follow-up inspection indicates survival remains below target"
+        }
+      ]
+    }
+  ]
+}

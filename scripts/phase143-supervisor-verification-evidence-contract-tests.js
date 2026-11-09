@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+'use strict';
+const assert=require('assert');const {analyze}=require('./phase143-supervisor-verification-evidence');let n=0;
+function t(name,fn){try{fn();n++}catch(e){console.error('FAIL '+name+': '+e.message);process.exitCode=1}}
+function data(o={}){return {records:[{id:'V1',taskId:'T1',worker:'Worker A',area:'Block A',submittedDate:'2026-10-27',status:'approved',plannedQuantity:10,reportedQuantity:10,unit:'rows',evidence:[{id:'E1',type:'photo',reference:'photo.jpg',capturedDate:'2026-10-27'}],checklist:[{criterion:'Quality',required:true,result:'pass'}],review:{reviewer:'Supervisor',date:'2026-10-28',decision:'approve'},...o}]}}
+t('valid approved record',()=>assert.equal(analyze(data(),'2026-10-28').summary.errorCount,0));
+t('requires records array',()=>assert(analyze({},'2026-10-28').errors.some(e=>e.code==='records_required')));
+t('duplicate record id',()=>{let x=data();x.records.push({...x.records[0]});assert(analyze(x,'2026-10-28').errors.some(e=>e.code==='duplicate_record_id'))});
+t('global duplicate evidence id',()=>{let x=data();x.records.push({...x.records[0],id:'V2',taskId:'T2'});assert(analyze(x,'2026-10-28').errors.some(e=>e.code==='duplicate_evidence_id'))});
+t('invalid status',()=>assert(analyze(data({status:'done'}),'2026-10-28').errors.some(e=>e.code==='invalid_status')));
+t('invalid date',()=>assert(analyze(data({submittedDate:'2026-02-30'}),'2026-10-28').errors.some(e=>e.code==='invalid_submitted_date')));
+t('missing task',()=>assert(analyze(data({taskId:''}),'2026-10-28').errors.some(e=>e.code==='task_id_required')));
+t('missing worker',()=>assert(analyze(data({worker:''}),'2026-10-28').errors.some(e=>e.code==='worker_required')));
+t('negative quantity',()=>assert(analyze(data({reportedQuantity:-2}),'2026-10-28').errors.some(e=>e.code==='invalid_reported_quantity')));
+t('unit required',()=>assert(analyze(data({unit:''}),'2026-10-28').errors.some(e=>e.code==='unit_required')));
+t('approved evidence required',()=>assert(analyze(data({evidence:[]}),'2026-10-28').errors.some(e=>e.code==='approved_without_evidence')));
+t('explicit evidence exception',()=>assert(!analyze(data({evidence:[],evidenceRequired:false}),'2026-10-28').errors.some(e=>e.code==='approved_without_evidence')));
+t('invalid evidence type',()=>assert(analyze(data({evidence:[{id:'E2',type:'video',reference:'x',capturedDate:'2026-10-27'}]}),'2026-10-28').errors.some(e=>e.code==='invalid_evidence')));
+t('missing evidence reference',()=>assert(analyze(data({evidence:[{id:'E2',type:'photo',reference:'',capturedDate:'2026-10-27'}]}),'2026-10-28').errors.some(e=>e.code==='invalid_evidence')));
+t('evidence after submission warning',()=>assert(analyze(data({evidence:[{id:'E2',type:'photo',reference:'x',capturedDate:'2026-10-28'}]}),'2026-10-28').warnings.some(e=>e.code==='evidence_after_submission')));
+t('required failed criterion blocks approval',()=>assert(analyze(data({checklist:[{criterion:'Quality',required:true,result:'fail'}]}),'2026-10-28').errors.some(e=>e.code==='approval_with_unmet_criterion')));
+t('optional failed criterion allowed',()=>assert(!analyze(data({checklist:[{criterion:'Optional',required:false,result:'fail'}]}),'2026-10-28').errors.some(e=>e.code==='approval_with_unmet_criterion')));
+t('invalid checklist result',()=>assert(analyze(data({checklist:[{criterion:'Quality',result:'maybe'}]}),'2026-10-28').errors.some(e=>e.code==='invalid_checklist_item')));
+t('approval review required',()=>assert(analyze(data({review:null}),'2026-10-28').errors.some(e=>e.code==='review_required')));
+t('review cannot precede submission',()=>assert(analyze(data({review:{reviewer:'S',date:'2026-10-26',decision:'approve'}}),'2026-10-28').errors.some(e=>e.code==='review_before_submission')));
+t('return requires notes',()=>assert(analyze(data({status:'returned',review:{reviewer:'S',date:'2026-10-28',decision:'return'},rework:{reason:'redo',assignedTo:'W',dueDate:'2026-10-30',status:'open'}}),'2026-10-28').errors.some(e=>e.code==='review_notes_required')));
+t('return requires rework details',()=>assert(analyze(data({status:'returned',review:{reviewer:'S',date:'2026-10-28',decision:'return',notes:'redo'},rework:null}),'2026-10-28').errors.some(e=>e.code==='rework_required')));
+t('valid returned work tracked',()=>{let r=analyze(data({status:'returned',review:{reviewer:'S',date:'2026-10-28',decision:'return',notes:'missed rows'},rework:{reason:'redo',assignedTo:'W',dueDate:'2026-10-30',status:'open'}}),'2026-10-28');assert.equal(r.summary.errorCount,0);assert.equal(r.summary.openRework,1)});
+t('shortfall requires explicit approval',()=>assert(analyze(data({reportedQuantity:8}),'2026-10-28').errors.some(e=>e.code==='unaccepted_quantity_shortfall')));
+t('accepted shortfall allowed',()=>assert(!analyze(data({reportedQuantity:8,review:{reviewer:'S',date:'2026-10-28',decision:'approve',quantityAccepted:true}}),'2026-10-28').errors.some(e=>e.code==='unaccepted_quantity_shortfall')));
+t('shortfalls counted',()=>assert.equal(analyze(data({reportedQuantity:8,review:{reviewer:'S',date:'2026-10-28',decision:'approve',quantityAccepted:true}}),'2026-10-28').summary.quantityShortfalls,1));
+t('overdue submitted review',()=>assert.equal(analyze(data({status:'submitted',review:null}),'2026-10-28').summary.overdueReview,1));
+t('same-day not overdue',()=>assert.equal(analyze(data({status:'submitted',submittedDate:'2026-10-28',review:null}),'2026-10-28').summary.overdueReview,0));
+t('overdue rework',()=>assert.equal(analyze(data({status:'returned',review:{reviewer:'S',date:'2026-10-27',decision:'return',notes:'redo'},rework:{reason:'redo',assignedTo:'W',dueDate:'2026-10-27',status:'open'}}),'2026-10-28').summary.overdueRework,1));
+t('cancelled ignores missing evidence',()=>assert.equal(analyze(data({status:'cancelled',evidence:[],review:null}),'2026-10-28').summary.recordsMissingEvidence,0));
+t('future submission warning',()=>assert(analyze(data({submittedDate:'2026-10-29'}),'2026-10-28').warnings.some(e=>e.code==='future_submission_date')));
+t('review/status mismatch',()=>assert(analyze(data({status:'returned',review:{reviewer:'S',date:'2026-10-28',decision:'approve'},rework:{reason:'redo',assignedTo:'W',dueDate:'2026-10-30',status:'open'}}),'2026-10-28').errors.some(e=>e.code==='review_status_mismatch')));
+t('rework submitted state alignment',()=>assert(analyze(data({status:'rework_submitted',rework:{reason:'redo',assignedTo:'W',dueDate:'2026-10-30',status:'open'}}),'2026-10-28').errors.some(e=>e.code==='rework_status_mismatch')));
+t('status summary',()=>{let x=data();x.records.push({...x.records[0],id:'V2',taskId:'T2',status:'submitted',review:null,evidence:[{id:'E2',type:'photo',reference:'x',capturedDate:'2026-10-27'}]});assert.equal(analyze(x,'2026-10-28').summary.byStatus.submitted,1)});
+t('invalid now',()=>assert(analyze(data(),'2026-02-30').errors.some(e=>e.code==='invalid_now')));
+t('empty rates are zero',()=>{let r=analyze({records:[]},'2026-10-28');assert.equal(r.summary.reviewRate,0);assert.equal(r.summary.approvalRate,0)});
+console.log(`Phase 143 supervisor verification/evidence tests: ${n} passed.`);

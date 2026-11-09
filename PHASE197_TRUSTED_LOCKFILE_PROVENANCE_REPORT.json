@@ -1,0 +1,38 @@
+{
+  "phase": 197,
+  "title": "Trusted Lockfile Provenance Gate",
+  "generatedAt": "2026-10-29T22:50:34.989Z",
+  "manifest": {
+    "path": "apps/api/package.json",
+    "name": "forestos-api",
+    "version": "0.1.0",
+    "sha256": "46344c9aa27f0c3f05d81fa5c41bf5fafb107f302586fa4074516b9a745bac0f"
+  },
+  "environment": {
+    "node": "v22.16.0",
+    "npm": "10.9.2",
+    "gitCommit": null,
+    "ciProviderPresent": true,
+    "registryUrlConfigured": false
+  },
+  "lockfile": {
+    "path": "apps/api/package-lock.json",
+    "exists": false,
+    "sha256": null,
+    "jsonValid": false,
+    "lockfileVersion": null,
+    "rootNameMatches": false,
+    "rootVersionMatches": false,
+    "provenanceStatus": "missing",
+    "installExecuted": false,
+    "buildExecuted": false
+  },
+  "decision": "BLOCKED_MISSING_TRUSTED_LOCKFILE",
+  "nextActions": [
+    "Retrieve package-lock.json from trusted version control or CI artifact, or generate it in a registry-enabled environment.",
+    "Verify the manifest SHA-256 and lockfile root identity before clean installation.",
+    "Run Phase 194 install and build gates only after lockfile review.",
+    "Keep production deployment blocked until runtime, tenant-isolation, and security checks pass."
+  ],
+  "productionCleared": false
+}

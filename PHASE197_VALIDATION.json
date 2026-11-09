@@ -1,0 +1,14 @@
+{
+  "phase": 197,
+  "title": "Trusted Lockfile Provenance Gate",
+  "contractTestFiles": {"passed": 91, "failed": 0},
+  "javascriptSyntax": {"checked": 185, "failed": 0},
+  "jsonFiles": {"total": 111, "valid": 110, "invalid": 1},
+  "preExistingInvalidJson": "PHASE125_SCHEMA_INDEX_READINESS.json",
+  "zipIntegrity": "pending final packaging",
+  "apiLockfileExists": false,
+  "cleanInstallExecuted": false,
+  "apiBuildExecuted": false,
+  "productionCleared": false,
+  "notes": "Phase 197 adds a read-only manifest/lockfile fingerprint and provenance gate. No trusted API lockfile is present, so the gate correctly reports BLOCKED_MISSING_TRUSTED_LOCKFILE. Matching package identity alone is not treated as proof of provenance."
+}

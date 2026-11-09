@@ -1,0 +1,77 @@
+{
+  "phase": 147,
+  "name": "Data Quality & Reconciliation Engine",
+  "generatedAt": "2026-10-28",
+  "contractTestSuites": 10,
+  "contractTestsPassed": 402,
+  "phase147ContractTests": 59,
+  "previousPhasesIncluded": [
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146
+  ],
+  "suiteResults": [
+    {
+      "file": "phase138-management-kpi-analytics-contract-tests.js",
+      "status": "passed",
+      "summary": "PASS returns schema and phase identifiers | 24/24 Phase 138 contract tests passed"
+    },
+    {
+      "file": "phase139-forestry-apiary-scorecards-contract-tests.js",
+      "status": "passed",
+      "summary": " | Phase 139 contract tests: 31 passed"
+    },
+    {
+      "file": "phase140-farm-operations-inspections-contract-tests.js",
+      "status": "passed",
+      "summary": " | Phase 140 contract tests: 30/30 passed"
+    },
+    {
+      "file": "phase141-capa-management-contract-tests.js",
+      "status": "passed",
+      "summary": "38 passed"
+    },
+    {
+      "file": "phase142-farm-task-execution-contract-tests.js",
+      "status": "passed",
+      "summary": "41 passed"
+    },
+    {
+      "file": "phase143-supervisor-verification-evidence-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 143 supervisor verification/evidence tests: 36 passed."
+    },
+    {
+      "file": "phase144-recurring-failure-intelligence-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 144 recurring-failure intelligence tests: 36 passed."
+    },
+    {
+      "file": "phase145-unified-farm-operations-dashboard-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 145 contract tests: 55 passed"
+    },
+    {
+      "file": "phase146-automated-data-integration-pipeline-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 146 contract tests: 52 passed"
+    },
+    {
+      "file": "phase147-data-quality-reconciliation-engine-contract-tests.js",
+      "status": "passed",
+      "summary": "Phase 147 contract tests: 59 passed"
+    }
+  ],
+  "smokeTests": {
+    "conflictInput": "passed: CLI exits 2 and reports blocked",
+    "cleanInput": "passed: CLI exits 0 and reports ready"
+  },
+  "limitations": "Offline JSON only; no database/API integration, automatic Phase 146 consumption, source-of-truth inference, data repair, access controls, scheduling, or notifications.",
+  "archiveIntegrity": "passed (zipfile.testzip)"
+}

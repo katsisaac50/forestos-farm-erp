@@ -1,0 +1,26 @@
+{
+  "phase": 160,
+  "title": "Runtime Verification Orchestrator",
+  "generatedAt": "2026-10-29T15:26:27.244Z",
+  "checks": [
+    {
+      "name": "API build command declared",
+      "status": "PASS",
+      "detail": "build=nest build"
+    },
+    {
+      "name": "NestJS build execution",
+      "status": "SKIP",
+      "detail": "dependencies or Nest CLI are not installed; run npm ci/install in apps/api"
+    },
+    {
+      "name": "Live MongoDB integration",
+      "status": "SKIP",
+      "detail": "FORESTOS_TEST_MONGODB_URI not set"
+    }
+  ],
+  "limitations": [
+    "NestJS compilation was not executed because dependencies are not installed.",
+    "Live MongoDB integration tests were not run."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-10-28",
+  "staleAfterDays": 14,
+  "sources": [
+    {
+      "name": "forestry",
+      "asOf": "2026-10-27",
+      "metrics": {
+        "treeCount": 7000,
+        "plantedAcres": 7,
+        "survivalRate": 0.93
+      }
+    },
+    {
+      "name": "dashboard",
+      "asOf": "2026-10-28",
+      "metrics": {
+        "treeCount": 6990,
+        "plantedAcres": 7,
+        "survivalRate": 0.93
+      }
+    }
+  ],
+  "rules": [
+    {
+      "metric": "treeCount",
+      "sources": [
+        "forestry",
+        "dashboard"
+      ],
+      "tolerance": 0,
+      "severity": "high"
+    },
+    {
+      "metric": "plantedAcres",
+      "sources": [
+        "forestry",
+        "dashboard"
+      ],
+      "tolerance": 0
+    },
+    {
+      "metric": "survivalRate",
+      "sources": [
+        "forestry",
+        "dashboard"
+      ],
+      "tolerance": 0.01
+    }
+  ],
+  "records": []
+}

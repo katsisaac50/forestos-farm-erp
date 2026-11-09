@@ -1,0 +1,13 @@
+{
+  "manifestSha256": "REPLACE_WITH_SHA256_OF_apps_api_package_json",
+  "lockfileSha256": "REPLACE_WITH_SHA256_OF_package_lock_json",
+  "packageName": "forestos-api",
+  "packageVersion": "0.1.0",
+  "lockfileVersion": "3",
+  "generatedAt": "2026-10-30T00:00:00Z",
+  "nodeVersion": "REPLACE_WITH_node --version",
+  "npmVersion": "REPLACE_WITH_npm --version",
+  "registry": "https://registry.npmjs.org/",
+  "gitCommit": "REPLACE_WITH_VERIFIED_GIT_COMMIT",
+  "command": "npm install --package-lock-only --ignore-scripts --no-audit --no-fund"
+}

@@ -1,0 +1,91 @@
+name: ForestOS API Lockfile Recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_generation:
+        description: 'Type GENERATE to permit lockfile generation in this trusted CI run'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  generate-lockfile:
+    if: ${{ inputs.confirm_generation == 'GENERATE' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout the explicitly selected commit
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Record source identity
+        shell: bash
+        run: |
+          git rev-parse HEAD | tee source-commit.txt
+          node --version | tee node-version.txt
+          npm --version | tee npm-version.txt
+          npm config get registry | tee npm-registry.txt
+      - name: Generate lockfile without lifecycle scripts
+        working-directory: apps/api
+        timeout-minutes: 5
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund --fetch-retries=0 --fetch-timeout=30000
+      - name: Validate lockfile against manifest
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const manifest = JSON.parse(fs.readFileSync('apps/api/package.json', 'utf8'));
+          const lock = JSON.parse(fs.readFileSync('apps/api/package-lock.json', 'utf8'));
+          const root = lock.packages && lock.packages[''];
+          if (!root) throw new Error('Lockfile is missing packages[""] root metadata');
+          if (lock.lockfileVersion !== 2 && lock.lockfileVersion !== 3) throw new Error('Unsupported lockfileVersion');
+          if (lock.name !== manifest.name || lock.version !== manifest.version || root.name !== manifest.name || root.version !== manifest.version) throw new Error('Lockfile package identity/version mismatch');
+          for (const key of ['dependencies', 'devDependencies']) {
+            if (JSON.stringify(root[key] || {}) !== JSON.stringify(manifest[key] || {})) throw new Error(`Root ${key} mismatch`);
+          }
+          console.log(JSON.stringify({ valid: true, name: lock.name, version: lock.version, lockfileVersion: lock.lockfileVersion }, null, 2));
+          NODE
+          echo "LOCKFILE_VALIDATED=true" >> "$GITHUB_ENV"
+      - name: Create provenance sidecar
+        if: always()
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs'); const crypto = require('node:crypto'); const cp = require('node:child_process');
+          const file = 'apps/api/package-lock.json';
+          const exists = fs.existsSync(file);
+          const report = {
+            phase: 208,
+            purpose: 'trusted CI lockfile recovery artifact',
+            generatedAt: new Date().toISOString(),
+            commit: cp.execFileSync('git', ['rev-parse', 'HEAD'], {encoding:'utf8'}).trim(),
+            nodeVersion: process.version,
+            npmVersion: cp.execFileSync('npm', ['--version'], {encoding:'utf8'}).trim(),
+            registry: cp.execFileSync('npm', ['config', 'get', 'registry'], {encoding:'utf8'}).trim(),
+            manifestSha256: crypto.createHash('sha256').update(fs.readFileSync('apps/api/package.json')).digest('hex'),
+            lockfilePresent: exists,
+            lockfileSha256: exists ? crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex') : null,
+            lockfileValidated: process.env.LOCKFILE_VALIDATED === 'true',
+            note: 'A maintainer must review this run and verify the selected commit and registry before accepting the artifact.'
+          };
+          fs.writeFileSync('PHASE208_CI_LOCKFILE_PROVENANCE.json', JSON.stringify(report, null, 2) + '\n');
+          NODE
+      - name: Upload lockfile and provenance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forestos-api-lockfile-recovery-${{ github.sha }}
+          if-no-files-found: warn
+          path: |
+            apps/api/package-lock.json
+            apps/api/package.json
+            PHASE208_CI_LOCKFILE_PROVENANCE.json
+            source-commit.txt
+            node-version.txt
+            npm-version.txt
+            npm-registry.txt

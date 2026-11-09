@@ -1,0 +1,19 @@
+{
+  "phase": 190,
+  "title": "Dependency Lockfile and Clean Build Recovery",
+  "contractTestSuites": { "passed": 84, "failed": 0 },
+  "phase190ContractTests": { "passed": 13, "failed": 0 },
+  "javascriptSyntax": { "filesChecked": 171, "failed": 0 },
+  "phase190ReadinessAudit": { "checksPassed": 5, "checksTotal": 6, "blockers": ["apps/api/package-lock.json is missing"] },
+  "lockfileGenerationAttempt": "Timed out in packaging environment; no lockfile was produced",
+  "cleanInstallExecuted": false,
+  "nestBuildExecuted": false,
+  "liveHttpTestsExecuted": false,
+  "mongodbIntegrationTestsExecuted": false,
+  "productionCleared": false,
+  "notes": [
+    "Contract tests and syntax checks are source-level validation, not runtime security proof.",
+    "A real npm package-lock.json must be generated with registry access, reviewed, and committed; it is not fabricated.",
+    "A previous malformed Phase 125 JSON report remains outside this phase's scope."
+  ]
+}

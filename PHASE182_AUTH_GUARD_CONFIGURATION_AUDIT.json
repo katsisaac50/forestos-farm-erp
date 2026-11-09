@@ -1,0 +1,57 @@
+{
+  "phase": 182,
+  "title": "Authentication Guard Configuration & Public Route Audit",
+  "status": "GLOBAL_GUARD_CONFIGURATION_SIGNAL_FOUND_REQUIRES_RUNTIME_VERIFICATION",
+  "method": "Static source inspection of NestJS bootstrap, module providers, auth guard, decorator definitions and @Public annotations.",
+  "findings": {
+    "globalGuardProviderConfigured": true,
+    "authGuardRegisteredAsGlobalProvider": true,
+    "authGuardValidatesBearerToken": false,
+    "authGuardRejectsInvalidToken": false,
+    "authGuardChecksRoleMetadata": false,
+    "publicDecoratorBypassesGuard": false,
+    "globalPrefixConfigured": true,
+    "globalValidationPipeConfigured": true,
+    "jwtSecretEnvironmentBased": false,
+    "mongodbFallbackConfigured": true
+  },
+  "publicRouteAnnotations": [
+    {
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "line": 11,
+      "review": "Confirm endpoint is intentionally public and returns no tenant-sensitive data."
+    },
+    {
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "line": 19,
+      "review": "Confirm endpoint is intentionally public and returns no tenant-sensitive data."
+    },
+    {
+      "file": "apps/api/src/health.controller.ts",
+      "line": 6,
+      "review": "Confirm endpoint is intentionally public and returns no tenant-sensitive data."
+    },
+    {
+      "file": "apps/api/src/health.controller.ts",
+      "line": 12,
+      "review": "Confirm endpoint is intentionally public and returns no tenant-sensitive data."
+    }
+  ],
+  "counts": {
+    "publicAnnotations": 4,
+    "sourceFilesScanned": 304
+  },
+  "interpretation": [
+    "An APP_GUARD provider is declared in AuthModule, which is imported by AppModule; static source inspection suggests a global guard is configured.",
+    "@Public annotations intentionally bypass authentication and require endpoint-by-endpoint review.",
+    "JWT_SECRET is environment-based; deployment must provide a strong secret and fail safely when missing.",
+    "This scan does not validate runtime dependency injection, role correctness, organization membership, tenant-scoped queries, or live HTTP behavior."
+  ],
+  "requiredActions": [
+    "Review every @Public annotation and document its reason.",
+    "Verify JWT_SECRET is mandatory in production startup configuration and rotate any default or exposed secret.",
+    "Verify organization membership and tenant context are validated on each protected data path.",
+    "Run build and live HTTP tests for missing, invalid, expired, and insufficient-role tokens plus cross-tenant read/write attempts."
+  ],
+  "productionClearance": "NOT CLEARED FOR PRODUCTION"
+}

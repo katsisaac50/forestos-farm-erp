@@ -1,0 +1,193 @@
+{
+  "schemaVersion": "151.1",
+  "gateway": "live_operations_data_integration_gateway",
+  "batchId": "FORESTOS-DEMO-151",
+  "generatedAt": "2026-10-29",
+  "receivedAt": "2026-10-29",
+  "status": "accepted_with_warnings",
+  "summary": {
+    "domainsReceived": 7,
+    "recordsReceived": 8,
+    "recordsAccepted": 7,
+    "recordsQuarantined": 1,
+    "duplicateWithinBatch": 1,
+    "unknownDomains": 0
+  },
+  "feeds": {
+    "forestry": {
+      "received": 2,
+      "accepted": 1,
+      "quarantined": 1,
+      "duplicateWithinBatch": 1
+    },
+    "apiary": {
+      "received": 1,
+      "accepted": 1,
+      "quarantined": 0,
+      "duplicateWithinBatch": 0
+    },
+    "workforce": {
+      "received": 1,
+      "accepted": 1,
+      "quarantined": 0,
+      "duplicateWithinBatch": 0
+    },
+    "inspections": {
+      "received": 1,
+      "accepted": 1,
+      "quarantined": 0,
+      "duplicateWithinBatch": 0
+    },
+    "dataQuality": {
+      "received": 1,
+      "accepted": 1,
+      "quarantined": 0,
+      "duplicateWithinBatch": 0
+    },
+    "correctiveActions": {
+      "received": 1,
+      "accepted": 1,
+      "quarantined": 0,
+      "duplicateWithinBatch": 0
+    },
+    "decisionActions": {
+      "received": 1,
+      "accepted": 1,
+      "quarantined": 0,
+      "duplicateWithinBatch": 0
+    }
+  },
+  "acceptedRecords": [
+    {
+      "domain": "forestry",
+      "recordId": "FOREST-PLOT-001",
+      "recordedAt": "2026-10-28",
+      "status": "inspected",
+      "priority": "low",
+      "source": "field-log",
+      "payload": {
+        "plot": "A",
+        "plantedAcres": 7,
+        "treeCount": 7000
+      },
+      "payloadHash": "8f660d21c519130f2d93c5fe53cf13021d4988ab158bdb8be3688fc112a23469",
+      "contentHash": "7e07ac4c85477b5121e5555f23e6c3913fe59c25e2e7980d8a6e133dd833156a",
+      "validation": "accepted"
+    },
+    {
+      "domain": "apiary",
+      "recordId": "HIVE-001",
+      "recordedAt": "2026-10-29",
+      "status": "active",
+      "priority": "medium",
+      "source": "apiary-log",
+      "payload": {
+        "hiveNumber": 1,
+        "activeColonies": 1
+      },
+      "payloadHash": "19275f3f7efd667633527d51936c0a1ca24fc4021358cb35006e02fb05d81345",
+      "contentHash": "e5a02d9296b92b341a79444af229385342a6cc9a85031a9a2f01d41a10b5811e",
+      "validation": "accepted"
+    },
+    {
+      "domain": "workforce",
+      "recordId": "TASK-001",
+      "recordedAt": "2026-10-29",
+      "status": "completed",
+      "priority": "low",
+      "source": "daily-log",
+      "payload": {
+        "task": "Inspect eucalyptus plot"
+      },
+      "payloadHash": "2c70c746de9033d4c3f91ea4260551f8064b0a7b2f7a3dbe27040c7d5893879e",
+      "contentHash": "fd8e739acc261afe17a2c636a999df52ebac04692b66dffdf93de129834edf7d",
+      "validation": "accepted"
+    },
+    {
+      "domain": "inspections",
+      "recordId": "INSP-001",
+      "recordedAt": "2026-10-29",
+      "status": "open",
+      "priority": "high",
+      "source": "inspection-log",
+      "payload": {
+        "finding": "Follow up on field inspection"
+      },
+      "payloadHash": "74d8fb6e3234bf5c64b4b9b6040b5d9c9c15e872e3f54141bccd9544ee5e40bd",
+      "contentHash": "bb38e15d426f2ac3c6f192a7d5529dff78cb0535b82bdca62394ff328bad328d",
+      "validation": "accepted"
+    },
+    {
+      "domain": "dataQuality",
+      "recordId": "DQ-001",
+      "recordedAt": "2026-10-29",
+      "status": "review_required",
+      "priority": "medium",
+      "source": "gateway-demo",
+      "payload": {
+        "note": "Example import"
+      },
+      "payloadHash": "c20ec7c6d2d26c0c0dd1cd983d19a18e42122c120777eb449b0e1a13673e252a",
+      "contentHash": "762c761066cb30073a0f3ea759bba0ec7bd4de2700fb3243ea94a992a8cd5514",
+      "validation": "accepted"
+    },
+    {
+      "domain": "correctiveActions",
+      "recordId": "CAPA-001",
+      "recordedAt": "2026-10-29",
+      "status": "in_progress",
+      "priority": "high",
+      "source": "capa-log",
+      "payload": {
+        "title": "Close corrective action evidence"
+      },
+      "payloadHash": "17901501623b51ffe1a36b9610b495c2fc401b90f8dea282cc9282684374032a",
+      "contentHash": "f149d1a2f7adc0d3326704dcf7a243aed344f06098832c8f95970a0fd4b01deb",
+      "validation": "accepted"
+    },
+    {
+      "domain": "decisionActions",
+      "recordId": "DEC-001",
+      "recordedAt": "2026-10-29",
+      "status": "proposed",
+      "priority": "medium",
+      "source": "decision-log",
+      "payload": {
+        "title": "Review next apiary expansion"
+      },
+      "payloadHash": "de1df9b2e98abadf185ba885e1eb9357f87c36197dc7c1bc54493cfe2cf6b31e",
+      "contentHash": "28d42121e9b66c578d9646e6271b7267d5350f3a91223e53645a540d8e33e8d3",
+      "validation": "accepted"
+    }
+  ],
+  "quarantine": [
+    {
+      "domain": "forestry",
+      "recordId": "FOREST-PLOT-001",
+      "code": "DUPLICATE_RECORD_ID",
+      "message": "Duplicate record ID within this batch; later occurrence quarantined."
+    }
+  ],
+  "warnings": [],
+  "lineage": {
+    "batchId": "FORESTOS-DEMO-151",
+    "receivedAt": "2026-10-29",
+    "generatedAt": "2026-10-29",
+    "sourceSnapshotHash": "cb1b087d8957457e7c8bafb05b43040d04668ec4f07c6e7faa9cbe9adfb5052c",
+    "acceptedRecordsHash": "7a8c4e9b138e2ee97d433998398a72a13286344ec9e634e211fa9d5980bf1a67",
+    "quarantineHash": "78390fff1e33df855f8ca3fee8e3ce6723baac6177169844eade88e452417290",
+    "batchHash": "f4751d72e45b6f42c714b1cc8d95b785b8024b971af68f3c1b4ac8a65f306809",
+    "hashing": "SHA-256 over canonicalized JSON; integrity checksum only, not a digital signature"
+  },
+  "nextStep": "Review quarantined records, reconcile IDs against the master system, then pass accepted records to a separately controlled persistence/integration adapter.",
+  "productionBoundary": {
+    "liveConnectors": false,
+    "databaseWrites": false,
+    "authentication": false,
+    "authorization": false,
+    "concurrencyControl": false,
+    "immutableAuditLog": false,
+    "externalDelivery": false,
+    "operatorReviewRequired": true
+  }
+}

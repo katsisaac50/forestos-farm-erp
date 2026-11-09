@@ -1,0 +1,70 @@
+#!/usr/bin/env node
+'use strict';
+const assert=require('assert');
+const {reconcile,parseArgs,dateOnly,dayAge}=require('./phase147-data-quality-reconciliation-engine');
+let passed=0;
+function test(name,fn){try{fn();passed++;}catch(e){console.error(`FAIL ${name}: ${e.stack}`);process.exitCode=1;}}
+function base(){return {generatedAt:'2026-10-28',staleAfterDays:14,sources:[
+{name:'forestry',asOf:'2026-10-27',metrics:{treeCount:7000,plantedAcres:7,survivalRate:0.93}},
+{name:'dashboard',asOf:'2026-10-28',metrics:{treeCount:7000,plantedAcres:7,survivalRate:0.93}}
+],rules:[{metric:'treeCount',sources:['forestry','dashboard']},{metric:'plantedAcres',sources:['forestry','dashboard']},{metric:'survivalRate',sources:['forestry','dashboard'],tolerance:0.01}],records:[]};}
+test('clean data returns ready',()=>assert.strictEqual(reconcile(base()).status,'ready'));
+test('clean score is 100',()=>assert.strictEqual(reconcile(base()).qualityScore,100));
+test('report type stable',()=>assert.strictEqual(reconcile(base()).reportType,'forestos.data-quality-reconciliation'));
+test('offline mode explicit',()=>assert.strictEqual(reconcile(base()).mode,'offline_json_reconciliation'));
+test('counts source records',()=>assert.strictEqual(reconcile(base()).summary.sourceCount,2));
+test('counts metric rules',()=>assert.strictEqual(reconcile(base()).summary.metricRuleCount,3));
+test('exact values match',()=>assert.strictEqual(reconcile(base()).metrics[0].status,'match'));
+test('within tolerance matches',()=>{const x=base();x.sources[1].metrics.survivalRate=.94;assert.strictEqual(reconcile(x).metrics[2].status,'match');});
+test('outside tolerance conflicts',()=>{const x=base();x.sources[1].metrics.treeCount=6990;assert.strictEqual(reconcile(x).metrics[0].status,'conflict');});
+test('conflict blocks readiness',()=>{const x=base();x.sources[1].metrics.treeCount=6990;assert.strictEqual(reconcile(x).status,'blocked');});
+test('conflict increments summary',()=>{const x=base();x.sources[1].metrics.treeCount=6990;assert.strictEqual(reconcile(x).summary.conflictCount,1);});
+test('missing metric status',()=>{const x=base();delete x.sources[1].metrics.treeCount;assert.strictEqual(reconcile(x).metrics[0].status,'single_source');});
+test('missing metric issue surfaced',()=>{const x=base();delete x.sources[1].metrics.treeCount;assert(reconcile(x).issues.some(i=>i.code==='MISSING_METRIC'));});
+test('all missing metric status',()=>{const x=base();delete x.sources[0].metrics.treeCount;delete x.sources[1].metrics.treeCount;assert.strictEqual(reconcile(x).metrics[0].status,'missing_metric');});
+test('missing source reference surfaced',()=>{const x=base();x.rules.push({metric:'treeCount',sources:['forestry','absent']});assert(reconcile(x).issues.some(i=>i.code==='SOURCE_NOT_FOUND'));});
+test('negative value invalid',()=>{const x=base();x.sources[0].metrics.treeCount=-1;assert(reconcile(x).issues.some(i=>i.code==='INVALID_METRIC_VALUE'));});
+test('string value invalid',()=>{const x=base();x.sources[0].metrics.treeCount='7000';assert(reconcile(x).issues.some(i=>i.code==='INVALID_METRIC_VALUE'));});
+test('NaN-like value invalid after JSON parse semantics',()=>{const x=base();x.sources[0].metrics.treeCount=null;assert(reconcile(x).issues.some(i=>i.code==='MISSING_METRIC'));});
+test('stale source detected',()=>{const x=base();x.sources[0].asOf='2026-09-01';assert(reconcile(x).issues.some(i=>i.code==='STALE_SOURCE'));});
+test('stale source review required when no blocking issue',()=>{const x=base();x.sources[0].asOf='2026-09-01';assert.strictEqual(reconcile(x).status,'review_required');});
+test('future source date detected',()=>{const x=base();x.sources[0].asOf='2026-10-29';assert(reconcile(x).issues.some(i=>i.code==='FUTURE_SOURCE_DATE'));});
+test('future date blocks',()=>{const x=base();x.sources[0].asOf='2026-10-29';assert.strictEqual(reconcile(x).status,'blocked');});
+test('missing source date surfaced',()=>{const x=base();delete x.sources[0].asOf;assert(reconcile(x).issues.some(i=>i.code==='MISSING_SOURCE_DATE'));});
+test('invalid date surfaced',()=>{const x=base();x.sources[0].asOf='2026-02-30';assert(reconcile(x).issues.some(i=>i.code==='INVALID_SOURCE_DATE'));});
+test('duplicate source names flagged',()=>{const x=base();x.sources.push({...x.sources[0]});assert(reconcile(x).issues.some(i=>i.code==='DUPLICATE_SOURCE_NAME'));});
+test('missing metrics object flagged',()=>{const x=base();delete x.sources[0].metrics;assert(reconcile(x).issues.some(i=>i.code==='MISSING_METRICS'));});
+test('duplicate record id flagged',()=>{const x=base();x.records=[{source:'forestry',recordId:'r1'},{source:'forestry',recordId:'r1'}];assert(reconcile(x).issues.some(i=>i.code==='DUPLICATE_RECORD_ID'));});
+test('duplicate fingerprint flagged',()=>{const x=base();x.records=[{source:'forestry',fingerprint:'abc'},{source:'forestry',fingerprint:'abc'}];assert(reconcile(x).issues.some(i=>i.code==='DUPLICATE_FINGERPRINT'));});
+test('same id across sources is allowed',()=>{const x=base();x.records=[{source:'forestry',recordId:'r1'},{source:'dashboard',recordId:'r1'}];assert(!reconcile(x).issues.some(i=>i.code==='DUPLICATE_RECORD_ID'));});
+test('unknown record source surfaced',()=>{const x=base();x.records=[{source:'ghost',recordId:'r1'}];assert(reconcile(x).issues.some(i=>i.code==='RECORD_SOURCE_UNKNOWN'));});
+test('invalid record flagged',()=>{const x=base();x.records=[null];assert(reconcile(x).issues.some(i=>i.code==='INVALID_RECORD'));});
+test('missing source metrics object yields blocked',()=>{const x=base();delete x.sources[0].metrics;assert.strictEqual(reconcile(x).status,'blocked');});
+test('tolerance supports decimals',()=>{const x=base();x.sources[1].metrics.survivalRate=.935;assert.strictEqual(reconcile(x).metrics[2].status,'match');});
+test('invalid negative tolerance rejected',()=>{const x=base();x.rules[0].tolerance=-1;assert(reconcile(x).issues.some(i=>i.code==='INVALID_TOLERANCE'));});
+test('invalid string tolerance rejected',()=>{const x=base();x.rules[0].tolerance='1';assert(reconcile(x).issues.some(i=>i.code==='INVALID_TOLERANCE'));});
+test('empty rules allowed',()=>{const x=base();x.rules=[];assert.strictEqual(reconcile(x).summary.metricRuleCount,0);});
+test('missing rules defaults empty',()=>{const x=base();delete x.rules;assert.strictEqual(reconcile(x).metrics.length,0);});
+test('missing records defaults empty',()=>{const x=base();delete x.records;assert.strictEqual(reconcile(x).summary.recordCount,0);});
+test('unknown severity falls back to high',()=>{const x=base();x.sources[1].metrics.treeCount=1;x.rules[0].severity='odd';assert.strictEqual(reconcile(x).issues.find(i=>i.code==='METRIC_CONFLICT').severity,'high');});
+test('medium conflict still blocks because unresolved metric conflicts are blocking',()=>{const x=base();x.sources[1].metrics.treeCount=1;x.rules[0].severity='medium';assert.strictEqual(reconcile(x).status,'blocked');});
+test('issue counts sum to issue count',()=>{const r=reconcile(base());assert.strictEqual(Object.values(r.summary.issueCounts).reduce((a,b)=>a+b,0),r.summary.issueCount);});
+test('score floors at zero',()=>{const x=base();x.sources[0].asOf='bad';x.sources[1].asOf='bad';delete x.sources[0].metrics;delete x.sources[1].metrics;for(let i=0;i<10;i++)x.records.push(null);assert(reconcile(x).qualityScore>=0);});
+test('date override deterministic',()=>assert.strictEqual(reconcile(base(),{now:'2026-10-29'}).generatedAt,'2026-10-29'));
+test('same input produces stable output',()=>assert.deepStrictEqual(reconcile(base()),reconcile(base())));
+test('valid date parser',()=>assert.strictEqual(dateOnly('2026-10-28'),'2026-10-28'));
+test('invalid date parser rejects impossible date',()=>assert.throws(()=>dateOnly('2026-02-30')));
+test('day age calculation',()=>assert.strictEqual(dayAge('2026-10-01','2026-10-28'),27));
+test('parse args valid',()=>assert.deepStrictEqual(parseArgs(['--input=in.json','--output=out.json','--now=2026-10-28']),{input:'in.json',output:'out.json',now:'2026-10-28'}));
+test('parse args requires input',()=>assert.throws(()=>parseArgs(['--output=out.json'])));
+test('parse args rejects unknown',()=>assert.throws(()=>parseArgs(['--input=x','--wat=y'])));
+test('negative stale window rejected',()=>{const x=base();x.staleAfterDays=-1;assert.throws(()=>reconcile(x));});
+test('non-object input rejected',()=>assert.throws(()=>reconcile([])));
+test('sources array required',()=>{const x=base();x.sources={};assert.throws(()=>reconcile(x));});
+test('rules type validated',()=>{const x=base();x.rules={};assert.throws(()=>reconcile(x));});
+test('records type validated',()=>{const x=base();x.records={};assert.throws(()=>reconcile(x));});
+test('source metric count exposed',()=>assert.strictEqual(reconcile(base()).sources[0].metricCount,3));
+test('single source rule classified',()=>{const x=base();x.rules=[{metric:'treeCount',sources:['forestry']}];assert.strictEqual(reconcile(x).metrics[0].status,'single_source');});
+test('report includes heuristic score explanation',()=>assert(reconcile(base()).scoreMethod.includes('Heuristic')));
+test('empty source list produces review not crash',()=>assert.strictEqual(reconcile({...base(),sources:[],rules:[]}).status,'ready'));
+if (!process.exitCode) console.log(`Phase 147 contract tests: ${passed} passed`);

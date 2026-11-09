@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-10-29",
+  "reconciliationReport": {
+    "status": "blocked",
+    "issues": [
+      {
+        "code": "METRIC_CONFLICT",
+        "severity": "high",
+        "metric": "treeCount",
+        "spread": 10,
+        "tolerance": 0,
+        "values": [
+          {
+            "source": "forestry",
+            "value": 7000
+          },
+          {
+            "source": "dashboard",
+            "value": 6990
+          }
+        ]
+      },
+      {
+        "code": "STALE_SOURCE",
+        "severity": "medium",
+        "source": "apiary",
+        "ageDays": 21
+      }
+    ]
+  },
+  "metrics": {
+    "overdueTasks": 3,
+    "criticalUnverified": 1,
+    "highSeverityInspectionIssues": 0,
+    "survivalRate": 0.82,
+    "minimumSurvivalRate": 0.9,
+    "activeColonies": 1,
+    "minimumActiveColonies": 1
+  },
+  "actionTemplates": {}
+}

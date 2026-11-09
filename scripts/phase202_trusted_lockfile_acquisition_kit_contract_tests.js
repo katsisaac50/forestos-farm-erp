@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
+const root = path.resolve(__dirname, '..');
+const script = path.join(__dirname, 'phase202_trusted_lockfile_acquisition_kit.js');
+const reportPath = path.join(root, 'PHASE202_LOCKFILE_ACQUISITION_REPORT.json');
+const run = args => spawnSync(process.execPath, [script, ...args], { cwd: root, encoding: 'utf8', timeout: 10000 });
+let passed = 0;
+function check(fn) { fn(); passed++; }
+const base = run([]);
+check(() => assert.ok(base.status === 0, 'handoff generation succeeds'));
+const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+check(() => assert.equal(report.phase, 202));
+check(() => assert.equal(report.productionCleared, false));
+check(() => assert.equal(report.networkAccessAttempted, false));
+check(() => assert.equal(report.installExecuted, false));
+check(() => assert.equal(report.buildExecuted, false));
+check(() => assert.equal(report.checks.manifestValid, true));
+check(() => assert.ok(report.evidence.manifest.sha256.length === 64));
+check(() => assert.ok(fs.existsSync(path.join(root, 'artifacts/phase202-lockfile-acquisition/API_PACKAGE_MANIFEST_SNAPSHOT.json'))));
+check(() => assert.ok(fs.existsSync(path.join(root, 'artifacts/phase202-lockfile-acquisition/README_ACQUISITION_STEPS.md'))));
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'forestos-phase202-'));
+try {
+ const manifest = JSON.parse(fs.readFileSync(path.join(root, 'apps/api/package.json'), 'utf8'));
+ const valid = { name: 'lockfile-fixture', version: '1.0.0', lockfileVersion: 3, packages: { '': { name: manifest.name, version: manifest.version, dependencies: manifest.dependencies, devDependencies: manifest.devDependencies } } };
+ const validPath = path.join(tmp, 'package-lock.json'); fs.writeFileSync(validPath, JSON.stringify(valid));
+ const good = run(['--validate-candidate', validPath]);
+ check(() => assert.equal(good.status, 0));
+ const goodReport = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+ check(() => assert.equal(goodReport.checks.candidateAligned, true));
+ check(() => assert.equal(goodReport.status, 'CANDIDATE_ALIGNED_PROVENANCE_REQUIRES_INDEPENDENT_VERIFICATION'));
+ const badPath = path.join(tmp, 'bad-lock.json'); fs.writeFileSync(badPath, JSON.stringify({ lockfileVersion: 3, packages: { '': { name: 'wrong', version: '0.0.0' } } }));
+ const bad = run(['--validate-candidate', badPath]);
+ check(() => assert.equal(bad.status, 2));
+ const badReport = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+ check(() => assert.equal(badReport.checks.candidateAligned, false));
+ check(() => assert.equal(badReport.status, 'CANDIDATE_REJECTED'));
+ const malformedPath = path.join(tmp, 'malformed.json'); fs.writeFileSync(malformedPath, '{');
+ const malformed = run(['--validate-candidate', malformedPath]);
+ check(() => assert.equal(malformed.status, 2));
+ check(() => assert.equal(JSON.parse(fs.readFileSync(reportPath, 'utf8')).checks.candidateJsonValid, false));
+ const unsupportedPath = path.join(tmp, 'unsupported.json'); valid.lockfileVersion = 1; fs.writeFileSync(unsupportedPath, JSON.stringify(valid));
+ const unsupported = run(['--validate-candidate', unsupportedPath]);
+ check(() => assert.equal(unsupported.status, 2));
+ check(() => assert.equal(JSON.parse(fs.readFileSync(reportPath, 'utf8')).checks.lockfileVersionSupported, false));
+} finally { fs.rmSync(tmp, { recursive: true, force: true }); }
+console.log(`Phase 202 contract tests: ${passed} passed, 0 failed`);

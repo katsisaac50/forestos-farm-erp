@@ -1,0 +1,16 @@
+{
+  "phase": 162,
+  "title": "Live API Readiness Smoke Test",
+  "generatedAt": "2026-10-29T15:45:06.911Z",
+  "mode": "read-only GET",
+  "checks": [
+    {
+      "name": "Live API smoke test",
+      "status": "SKIP",
+      "detail": "set FORESTOS_TEST_API_BASE_URL to enable live requests"
+    }
+  ],
+  "limitations": [
+    "No live HTTP request was made because the API base URL was not configured."
+  ]
+}

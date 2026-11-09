@@ -1,0 +1,24 @@
+{
+  "phase": 209,
+  "title": "CI Lockfile Artifact Verification",
+  "generatedAt": "2026-10-30",
+  "mode": "offline-read-only",
+  "status": "BLOCKED_NO_REAL_CI_ARTIFACT",
+  "networkAccessAttempted": false,
+  "ciWorkflowExecuted": false,
+  "lockfileAcquired": false,
+  "importExecuted": false,
+  "installExecuted": false,
+  "buildExecuted": false,
+  "productionCleared": false,
+  "blockers": [
+    "No real Phase 208 CI artifact has been supplied to verify.",
+    "apps/api/package-lock.json remains missing."
+  ],
+  "nextActions": [
+    "Run the Phase 208 manual workflow on an independently reviewed commit in the authoritative repository.",
+    "Download the artifact and independently obtain the full commit hash and API manifest SHA-256.",
+    "Run scripts/phase209_ci_artifact_verifier.js against the extracted artifact.",
+    "After human source review, use the Phase 206 acceptance gate, then run npm ci and npm run build separately."
+  ]
+}

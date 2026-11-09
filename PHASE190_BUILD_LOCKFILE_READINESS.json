@@ -1,0 +1,55 @@
+{
+  "phase": 190,
+  "purpose": "API npm lockfile bootstrap and clean-build readiness",
+  "generatedAt": "2026-11-04T07:07:29.953Z",
+  "packageManager": "npm",
+  "apiPackage": "forestos-api",
+  "checks": [
+    {
+      "name": "API manifest parses",
+      "passed": true,
+      "detail": "forestos-api"
+    },
+    {
+      "name": "npm build script declared",
+      "passed": true,
+      "detail": "nest build"
+    },
+    {
+      "name": "npm lockfile exists and is structurally valid",
+      "passed": true,
+      "detail": "npm lockfile v3 present"
+    },
+    {
+      "name": "NestJS CLI declared",
+      "passed": true,
+      "detail": "^10.4.9"
+    },
+    {
+      "name": "TypeScript config exists",
+      "passed": true,
+      "detail": "apps/api/tsconfig.json"
+    },
+    {
+      "name": "Phase 188 HTTP probe present",
+      "passed": true,
+      "detail": "source-level availability only"
+    }
+  ],
+  "passed": 6,
+  "total": 6,
+  "lockfileGeneratedByThisAudit": false,
+  "cleanInstallExecuted": false,
+  "buildExecuted": false,
+  "liveHttpTestsExecuted": false,
+  "productionCleared": false,
+  "blockers": [],
+  "nextActions": [
+    "Run npm run bootstrap:phase190:lockfile from apps/api in a registry-enabled environment.",
+    "Review and commit apps/api/package-lock.json.",
+    "Run npm ci --ignore-scripts --no-audit --no-fund from apps/api.",
+    "Run npm run build from apps/api and capture the actual output.",
+    "Run the Phase 188 HTTP probe against a dedicated non-production API."
+  ],
+  "note": "Readiness audit only; it never installs packages, changes dependency versions, executes the build, contacts an API, or grants production clearance."
+}

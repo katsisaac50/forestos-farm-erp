@@ -1,0 +1,11 @@
+{
+  "phase": 159,
+  "title": "Idempotent Retry & Optimistic Write Safeguards",
+  "scope": "source-level contract validation",
+  "liveMongoDBTestRun": false,
+  "nestjsBuildRun": false,
+  "limitations": [
+    "Contract checks inspect source and do not execute database transactions.",
+    "A live MongoDB replica-set test and a dependency-installed NestJS build remain required."
+  ]
+}

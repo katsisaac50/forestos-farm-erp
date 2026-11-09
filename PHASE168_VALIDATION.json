@@ -1,0 +1,15 @@
+{
+  "phase": 168,
+  "title": "Production Release Gate & Deployment Readiness",
+  "scope": [
+    "Read-only release gate with explicit evidence statuses",
+    "Critical contract-suite execution for phases 164–167",
+    "Production build prerequisite detection",
+    "Disposable MongoDB target safety check without automatic live writes",
+    "Authorization and environment-template review flags",
+    "Machine-readable release decision report"
+  ],
+  "live_mongodb_test_run": false,
+  "production_build_run": false,
+  "release_decision": "NOT READY — evidence incomplete until runtime, database, and human security review evidence is supplied"
+}

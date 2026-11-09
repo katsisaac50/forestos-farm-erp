@@ -1,0 +1,35 @@
+{
+  "phase": 196,
+  "title": "Local Lockfile Recovery",
+  "generatedAt": "2026-10-29T22:44:40.736Z",
+  "mode": "read-only-scan",
+  "manifest": {
+    "exists": true,
+    "valid": true,
+    "name": "forestos-api",
+    "version": "0.1.0",
+    "sha256": "16c4e85ebc2972d853f687f38a14c14de218650621548020beee21cbec2744f8"
+  },
+  "target": {
+    "path": "apps/api/package-lock.json",
+    "exists": false,
+    "created": false
+  },
+  "scan": {
+    "candidatesChecked": 0,
+    "candidates": [],
+    "truncated": false
+  },
+  "recovery": {
+    "attempted": false,
+    "succeeded": false,
+    "source": null
+  },
+  "installExecuted": false,
+  "buildExecuted": false,
+  "productionCleared": false,
+  "nextActions": [
+    "No exact-match lockfile found in local project artifacts. Do not invent dependency resolutions; retry in a registry-enabled environment or obtain a lockfile from trusted version control/CI artifacts.",
+    "This phase does not run npm install, compile the API, test live services, or clear production."
+  ]
+}

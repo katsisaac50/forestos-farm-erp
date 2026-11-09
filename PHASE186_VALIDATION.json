@@ -1,0 +1,22 @@
+{
+  "phase": 186,
+  "title": "JWT Verification Configuration Consistency",
+  "status": "static-validation-passed-runtime-validation-pending",
+  "phase186ContractTests": {"passed": 12, "failed": 0},
+  "phase186AuditChecks": {"passed": 6, "failed": 0},
+  "allContractTestScripts": {"passed": 80, "failed": 0},
+  "targetedJavaScriptSyntaxChecks": "passed",
+  "targetedJsonValidation": "passed",
+  "repositoryJsonValidation": {"valid": 88, "invalid": 1, "knownPreExistingInvalidFile": "PHASE125_SCHEMA_INDEX_READINESS.json"},
+  "zipIntegrity": "pending-packaging",
+  "nestBuildRun": false,
+  "liveHttpAuthenticationTestsRun": false,
+  "mongodbIntegrationTestsRun": false,
+  "crossTenantIsolationTestsRun": false,
+  "productionCleared": false,
+  "limitations": [
+    "API dependencies are not installed in this environment, so NestJS build and live runtime tests could not be run.",
+    "Static source checks do not establish runtime authentication correctness or tenant isolation.",
+    "A pre-existing malformed JSON file at PHASE125_SCHEMA_INDEX_READINESS.json remains unchanged."
+  ]
+}

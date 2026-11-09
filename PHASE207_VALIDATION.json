@@ -1,0 +1,20 @@
+{
+  "phase": 207,
+  "title": "Registry Connectivity & Build Recovery",
+  "contractTestFilesPassed": 101,
+  "contractTestFilesFailed": 0,
+  "phase207ContractAssertionsPassed": 24,
+  "phase207ContractAssertionsTotal": 24,
+  "javascriptSyntaxFilesPassed": 200,
+  "javascriptSyntaxFilesFailed": 0,
+  "jsonFilesChecked": 134,
+  "jsonFilesValid": 133,
+  "jsonFilesInvalid": 1,
+  "preExistingInvalidJson": "PHASE125_SCHEMA_INDEX_READINESS.json: Extra data at line 96 column 2",
+  "registryProbe": "FAILED_EAI_AGAIN",
+  "apiLockfilePresent": false,
+  "cleanInstallExecuted": false,
+  "apiBuildExecuted": false,
+  "zipIntegrity": "PASSED",
+  "productionCleared": false
+}

@@ -1,0 +1,37 @@
+{
+  "phase": 202,
+  "title": "Trusted Lockfile Acquisition Kit",
+  "generatedAt": "2026-10-30T19:29:58.895Z",
+  "productionCleared": false,
+  "networkAccessAttempted": false,
+  "installExecuted": false,
+  "buildExecuted": false,
+  "status": "CANDIDATE_REJECTED",
+  "checks": {
+    "manifestValid": true,
+    "candidateExists": true,
+    "candidateJsonValid": true,
+    "candidateAligned": true,
+    "lockfileVersionSupported": false
+  },
+  "evidence": {
+    "manifest": {
+      "path": "apps/api/package.json",
+      "name": "forestos-api",
+      "version": "0.1.0",
+      "sha256": "a762ae27f19ca2ddb7598dfd73b36470d611431eb26f39ae22f7690b15a115a0",
+      "dependencyCount": 12,
+      "devDependencyCount": 3
+    },
+    "candidate": {
+      "path": "/tmp/forestos-phase202-RdaD6m/unsupported.json",
+      "sha256": "4431f522f04abb43e196013d8cea318b4b32d480cb2ad13648727a1c5470cac3"
+    }
+  },
+  "blockers": [
+    "Candidate lockfileVersion must be 2 or 3."
+  ],
+  "nextActions": [
+    "Independently verify candidate provenance from trusted Git history or CI artifact metadata before importing it."
+  ]
+}

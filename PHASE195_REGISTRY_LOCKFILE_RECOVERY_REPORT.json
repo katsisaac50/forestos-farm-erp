@@ -1,0 +1,30 @@
+{
+  "phase": 195,
+  "title": "Registry & Lockfile Recovery Diagnostics",
+  "generatedAt": "2026-10-29T22:42:46.254Z",
+  "mode": "registry-check",
+  "registry": {
+    "checked": true,
+    "succeeded": false,
+    "exitCode": 1,
+    "timedOut": false,
+    "detail": "npm notice PING https://registry.npmjs.org/\nnpm error code EAI_AGAIN\nnpm error syscall getaddrinfo\nnpm error errno EAI_AGAIN\nnpm error request to https://registry.npmjs.org/-/ping failed, reason: getaddrinfo EAI_AGAIN registry.npmjs.org\nnpm error A complete log of this run can be found in: /home/oai/.npm/_logs/2026-10-29T22_42_46_427Z-debug-0.log"
+  },
+  "manifest": {
+    "exists": true,
+    "valid": true
+  },
+  "lockfile": {
+    "exists": false,
+    "validJson": false,
+    "aligned": false
+  },
+  "cleanInstallExecuted": false,
+  "buildExecuted": false,
+  "productionCleared": false,
+  "nextActions": [
+    "Run the lockfile bootstrap only in a registry-enabled environment; review the resulting lockfile before clean installation.",
+    "Investigate DNS, proxy/firewall, npm registry access, or environment network restrictions; do not fabricate a lockfile.",
+    "This diagnostic does not install dependencies, compile the API, test live services, or clear production."
+  ]
+}

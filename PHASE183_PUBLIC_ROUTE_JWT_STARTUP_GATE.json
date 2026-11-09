@@ -1,0 +1,87 @@
+{
+  "phase": 183,
+  "title": "Public Route Review Register & JWT Startup Safety Gate",
+  "status": "STATIC_REVIEW_COMPLETE_RUNTIME_VERIFICATION_REQUIRED",
+  "method": "Static source inspection only. No source code is automatically changed; no network or database calls are made.",
+  "publicRoutes": [
+    {
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "line": 11,
+      "controller": "'auth'",
+      "method": "constructor",
+      "nearbyHttpDecorator": "@Post('setup-owner')",
+      "reviewStatus": "REQUIRES_HUMAN_APPROVAL",
+      "reviewQuestions": [
+        "Is public access required for this endpoint?",
+        "Does the response or side effect expose or modify tenant-scoped data?",
+        "Is rate limiting, input validation and abuse protection applied?",
+        "Is there a documented owner and reason for bypassing authentication?"
+      ]
+    },
+    {
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "line": 19,
+      "controller": "'auth'",
+      "method": "constructor",
+      "nearbyHttpDecorator": "@Post('login')",
+      "reviewStatus": "REQUIRES_HUMAN_APPROVAL",
+      "reviewQuestions": [
+        "Is public access required for this endpoint?",
+        "Does the response or side effect expose or modify tenant-scoped data?",
+        "Is rate limiting, input validation and abuse protection applied?",
+        "Is there a documented owner and reason for bypassing authentication?"
+      ]
+    },
+    {
+      "file": "apps/api/src/health.controller.ts",
+      "line": 6,
+      "controller": "'health'",
+      "method": null,
+      "nearbyHttpDecorator": "@Get()",
+      "reviewStatus": "REQUIRES_HUMAN_APPROVAL",
+      "reviewQuestions": [
+        "Is public access required for this endpoint?",
+        "Does the response or side effect expose or modify tenant-scoped data?",
+        "Is rate limiting, input validation and abuse protection applied?",
+        "Is there a documented owner and reason for bypassing authentication?"
+      ]
+    },
+    {
+      "file": "apps/api/src/health.controller.ts",
+      "line": 12,
+      "controller": "'health'",
+      "method": "Public",
+      "nearbyHttpDecorator": "@Get()",
+      "reviewStatus": "REQUIRES_HUMAN_APPROVAL",
+      "reviewQuestions": [
+        "Is public access required for this endpoint?",
+        "Does the response or side effect expose or modify tenant-scoped data?",
+        "Is rate limiting, input validation and abuse protection applied?",
+        "Is there a documented owner and reason for bypassing authentication?"
+      ]
+    }
+  ],
+  "jwtStartupReview": {
+    "authModuleExists": true,
+    "guardExists": true,
+    "appModuleExists": true,
+    "mainExists": true,
+    "environmentSecretReferences": 0,
+    "evidenceOfExplicitMissingSecretStartupFailure": true,
+    "evidenceOfProductionSpecificSecretGate": true,
+    "note": "Static regular-expression checks are indicators only; verify configuration and failure behavior by executing startup tests in a controlled environment."
+  },
+  "counts": {
+    "sourceFilesScanned": 311,
+    "publicAnnotations": 4,
+    "publicRoutesNeedingApproval": 4
+  },
+  "requiredActions": [
+    "Assign an owner and documented business justification to every public route; approve or remove each bypass explicitly.",
+    "For each public route, test response data and side effects for tenant-sensitive access, abuse resistance, rate limits and validation.",
+    "Add controlled startup tests proving the API refuses to start in production when JWT_SECRET is absent or insecure.",
+    "Test missing, malformed, invalid, expired and insufficient-role tokens using live HTTP requests.",
+    "Verify tenant membership and tenant-scoped reads and writes independently of authentication."
+  ],
+  "productionClearance": "NOT CLEARED FOR PRODUCTION"
+}

@@ -1,0 +1,33 @@
+{
+  "phase": 199,
+  "title": "Build Evidence & Release Gate",
+  "generatedAt": "2026-11-09T05:11:41.265Z",
+  "mode": "read-only-preflight",
+  "productionCleared": false,
+  "buildExecuted": false,
+  "checks": {
+    "manifestValid": true,
+    "lockfileExists": true,
+    "lockfileAligned": true,
+    "nodeModulesExists": true,
+    "nestCliExists": true
+  },
+  "blockers": [],
+  "evidence": {
+    "manifest": {
+      "path": "apps/api/package.json",
+      "name": "forestos-api",
+      "version": "0.1.0",
+      "sha256": "789ffdf001b8ccb7f62459f2c1676021699e6065d33017aaf4e0db30aca605f4"
+    },
+    "node": "v26.13.0",
+    "npm": null,
+    "lockfile": {
+      "path": "apps/api/package-lock.json",
+      "sha256": "54486b6a5c658f2c570a2b27b57831edf17dd80bf4aa751b61b008d0bcdb87df",
+      "lockfileVersion": 3,
+      "packageCount": 428
+    }
+  },
+  "status": "READY_FOR_EXPLICIT_BUILD"
+}

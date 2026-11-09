@@ -1,0 +1,565 @@
+{
+  "title": "ForestOS Phase 169 — Security and Tenant-Isolation Static Audit",
+  "generatedAt": "2026-10-29T19:00:14.469Z",
+  "decision": "REVIEW REQUIRED — static inventory is not security certification",
+  "methodology": "Scans controller source for decorated HTTP routes, visible guard/role decorators, and tenant-context signals. Heuristics can produce false positives and false negatives.",
+  "summary": {
+    "controllersScanned": 67,
+    "routesInventoried": 286,
+    "controllersWithoutVisibleGuardOrRole": 4,
+    "controllersWithoutVisibleTenantContext": 54,
+    "controllersWithoutVisibleRolePolicy": 15
+  },
+  "registryPersistence": {
+    "controllerFound": true,
+    "derivesTenantFromRequestUser": true,
+    "checksMissingTenantClaim": true,
+    "explicitRoleDecoratorPresent": false,
+    "note": "Static inspection only. Authentication may be global; this audit does not execute guards or prove runtime authorization or query isolation."
+  },
+  "controllers": [
+    {
+      "file": "apps/api/src/alert-center/alert-center.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/apiary-actions/apiary-actions.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_ROLE_POLICY_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/apiary-intelligence/apiary-intelligence.controller.ts",
+      "routeCount": 2,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_ROLE_POLICY_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/apiary-operations/apiary-operations.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_ROLE_POLICY_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/audit/audit.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "routeCount": 4,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/backup-continuity/backup-continuity.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/capital-allocation/capital-allocation.controller.ts",
+      "routeCount": 4,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "routeCount": 7,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "routeCount": 23,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/cashflow/cashflow.controller.ts",
+      "routeCount": 7,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/command-centre/command-centre.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/corrective-actions/corrective-actions.controller.ts",
+      "routeCount": 6,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/dashboard/dashboard.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/data-integrity/data-integrity.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/evidence/evidence.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/farm-map/farm-map.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/field-capture/field-capture.controller.ts",
+      "routeCount": 7,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_ROLE_POLICY_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/field-inspections/field-inspections.controller.ts",
+      "routeCount": 4,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/field-logs/field-logs.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": false,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_GUARD_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/field-navigation/field-navigation.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/field-verification/field-verification.controller.ts",
+      "routeCount": 4,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "routeCount": 7,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_ROLE_POLICY_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/finance/finance.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-action-centre/financial-action-centre.controller.ts",
+      "routeCount": 2,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-audit-trail/financial-audit-trail.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-control-performance/financial-control-performance.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-control-report/financial-control-report.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-escalations/financial-escalations.controller.ts",
+      "routeCount": 2,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-evidence/financial-evidence.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-exceptions/financial-exceptions.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-governance/financial-governance.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-investigation-cases/financial-investigation-cases.controller.ts",
+      "routeCount": 6,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-investigations/financial-investigation.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-reconciliation/financial-reconciliation.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/financial-reports/financial-reports.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/growth/growth.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": true,
+      "status": "STATIC_SIGNALS_PRESENT_REVIEW_REQUIRED"
+    },
+    {
+      "file": "apps/api/src/harvest/harvest.controller.ts",
+      "routeCount": 8,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/health.controller.ts",
+      "routeCount": 2,
+      "hasGuardOrRoleDecorator": false,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_GUARD_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/hives/hives.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_ROLE_POLICY_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/inspections/inspections.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/integration-workflows/integration-workflows.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/inventory-control/inventory-control.controller.ts",
+      "routeCount": 6,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": true,
+      "status": "STATIC_SIGNALS_PRESENT_REVIEW_REQUIRED"
+    },
+    {
+      "file": "apps/api/src/inventory/inventory.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_ROLE_POLICY_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/investment/investment.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "routeCount": 10,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/management-intelligence/management-intelligence.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/notification-policies/notification-policies.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/nursery/nursery.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/organizations/organization-access.controller.ts",
+      "routeCount": 2,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_ROLE_POLICY_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/organizations/organizations.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/performance-intelligence/performance-intelligence.controller.ts",
+      "routeCount": 2,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/performance-strategy/performance-strategy.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/photo-evidence/photo-evidence.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/plantations/plantations.controller.ts",
+      "routeCount": 4,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": true,
+      "status": "STATIC_SIGNALS_PRESENT_REVIEW_REQUIRED"
+    },
+    {
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "routeCount": 12,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/regeneration/regeneration.controller.ts",
+      "routeCount": 8,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/registry-persistence/registry-persistence.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": false,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_GUARD_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/reinvestment-decision-engine/reinvestment-decision-engine.controller.ts",
+      "routeCount": 1,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/risk-management/risk-management.controller.ts",
+      "routeCount": 7,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/sales/sales.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": true,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_ROLE_POLICY_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "routeCount": 9,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/statement-matching/statement-matching.controller.ts",
+      "routeCount": 5,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/tasks/tasks.controller.ts",
+      "routeCount": 3,
+      "hasGuardOrRoleDecorator": false,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": false,
+      "status": "REVIEW_REQUIRED_GUARD_NOT_VISIBLE"
+    },
+    {
+      "file": "apps/api/src/workforce/workforce.controller.ts",
+      "routeCount": 8,
+      "hasGuardOrRoleDecorator": true,
+      "hasTenantContextReference": false,
+      "hasRolePolicyReference": true,
+      "status": "REVIEW_REQUIRED_TENANT_CONTEXT_NOT_VISIBLE"
+    }
+  ],
+  "requiredManualChecks": [
+    "Verify global and route-level authentication at runtime.",
+    "Test that a user from tenant A cannot read or mutate tenant B records.",
+    "Verify role enforcement for every write and sensitive read route.",
+    "Review tenant identity claims, token validation, and authorization failures.",
+    "Review secrets, CORS, rate limits, audit logging, and production environment settings."
+  ]
+}

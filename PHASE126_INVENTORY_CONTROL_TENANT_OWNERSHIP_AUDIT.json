@@ -1,0 +1,29 @@
+{
+  "phase": 126,
+  "title": "Inventory Control Tenant Ownership & Migration Design Audit",
+  "generatedAt": "2026-11-09T05:11:34.085Z",
+  "mode": "static-source-only-read-only",
+  "databaseConnectionAttempted": false,
+  "recordsModified": 0,
+  "sources": {
+    "schema": "apps\\api\\src\\inventory-control\\inventory.schema.ts",
+    "service": "apps\\api\\src\\inventory-control\\inventory-control.service.ts",
+    "controller": "apps\\api\\src\\inventory-control\\inventory-control.controller.ts"
+  },
+  "findings": [],
+  "decisionGate": {
+    "migrationApproved": false,
+    "requiredBeforeMigration": [
+      "Product owner explicitly decides whether inventory is global or organization-owned.",
+      "Confirm identity and ownership for every legacy StockItem; unresolved records remain quarantined.",
+      "For each StockMovement, verify the referenced StockItem exists and determine ownership from that verified parent.",
+      "Inventory and movement codes are checked for duplicates under the chosen uniqueness scope.",
+      "Generate a reviewed dry-run report, take a restorable backup, and approve a reversible migration plan.",
+      "Add tenant-scoped API tests before changing indexes or applying a backfill."
+    ]
+  },
+  "limitations": [
+    "Static source heuristics only; not proof of runtime behavior or an exploit.",
+    "No MongoDB connection, data inventory, index inspection, NestJS build, or HTTP integration test was performed."
+  ]
+}

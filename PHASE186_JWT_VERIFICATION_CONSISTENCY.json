@@ -1,0 +1,54 @@
+{
+  "phase": 186,
+  "title": "JWT Verification Configuration Consistency Audit",
+  "generatedAt": "2026-11-04T06:58:10.267Z",
+  "mode": "static-contract-only",
+  "checks": [
+    {
+      "name": "AuthModule resolves and configures JWT secret at startup",
+      "passed": true
+    },
+    {
+      "name": "Guard verifies with configured JwtService",
+      "passed": true
+    },
+    {
+      "name": "Guard does not override verifier secret from process.env",
+      "passed": true
+    },
+    {
+      "name": "Token issuer uses configured JwtService",
+      "passed": true
+    },
+    {
+      "name": "JWT module and guard use same JwtService provider",
+      "passed": true
+    },
+    {
+      "name": "No hard-coded fallback secret was added",
+      "passed": true
+    },
+    {
+      "name": "Guard requires strict Bearer token format",
+      "passed": true
+    },
+    {
+      "name": "Guard rejects unavailable or inactive database accounts",
+      "passed": true
+    },
+    {
+      "name": "Guard enforces declared roles using current database role",
+      "passed": true
+    }
+  ],
+  "passed": 9,
+  "failed": 0,
+  "liveRuntimeTestsRun": false,
+  "productionCleared": false,
+  "limitations": [
+    "No live NestJS application authentication request was executed.",
+    "No HTTP authentication requests were sent.",
+    "No MongoDB connection or cross-tenant test was run.",
+    "Static source checks do not prove runtime dependency injection or authentication behavior."
+  ]
+}

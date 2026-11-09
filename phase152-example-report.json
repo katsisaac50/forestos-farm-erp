@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "1.0",
+  "phase": 152,
+  "batchId": "masulita-field-batch-2026-10-29-001",
+  "generatedAt": "2026-10-29",
+  "status": "review_required",
+  "summary": {
+    "input": 5,
+    "created": 2,
+    "updated": 1,
+    "unchanged": 0,
+    "conflicts": 0,
+    "quarantined": 2,
+    "masterRecords": 3
+  },
+  "accepted": [
+    {
+      "key": "forestry:plot-west-01",
+      "action": "updated",
+      "version": 3
+    },
+    {
+      "key": "apiary:hive-001",
+      "action": "created",
+      "version": 1
+    },
+    {
+      "key": "workforce:worker-task-001",
+      "action": "created",
+      "version": 1
+    }
+  ],
+  "conflicts": [],
+  "quarantined": [
+    {
+      "index": 3,
+      "recordId": "plot-west-01",
+      "key": "forestry:plot-west-01",
+      "errors": [
+        "duplicate key within incoming batch"
+      ]
+    },
+    {
+      "index": 4,
+      "recordId": "inspection-001",
+      "errors": [
+        "recordedAt must be an ISO date or timestamp"
+      ]
+    }
+  ],
+  "masterSnapshotHash": "b208fc3eee7107bed5898030a58e883b236f6fa3c411a1a68336b50e13219481",
+  "batchHash": "391d146f5fa999855cbc38d2ccfb6607546918c92d10ea8e975f45dd650f3024",
+  "records": [
+    {
+      "domain": "apiary",
+      "recordId": "hive-001",
+      "recordedAt": "2026-10-29",
+      "payload": {
+        "status": "active",
+        "colonyPresent": true
+      },
+      "payloadHash": "2c934ef879425e5843cac7e00ab03fd34223e5ebe46faeec59f605761395bae5",
+      "version": 1,
+      "createdAt": "2026-10-29",
+      "updatedAt": "2026-10-29",
+      "lastBatchId": "masulita-field-batch-2026-10-29-001"
+    },
+    {
+      "domain": "forestry",
+      "recordId": "plot-west-01",
+      "recordedAt": "2026-10-29",
+      "payload": {
+        "acres": 7,
+        "species": "eucalyptus"
+      },
+      "payloadHash": "533d261ad52b9954d7094f389baf68630ab0f56456eea3c829c5495b4c1ebb64",
+      "version": 3,
+      "createdAt": "2026-01-01",
+      "updatedAt": "2026-10-29",
+      "lastBatchId": "masulita-field-batch-2026-10-29-001"
+    },
+    {
+      "domain": "workforce",
+      "recordId": "worker-task-001",
+      "recordedAt": "2026-10-29",
+      "payload": {
+        "status": "completed",
+        "hours": 3.5
+      },
+      "payloadHash": "c5533e890386a003e1e7e043d5049ac8d78fe896c95038e016db4d781851516a",
+      "version": 1,
+      "createdAt": "2026-10-29",
+      "updatedAt": "2026-10-29",
+      "lastBatchId": "masulita-field-batch-2026-10-29-001"
+    }
+  ]
+}

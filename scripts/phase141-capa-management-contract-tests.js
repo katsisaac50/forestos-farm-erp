@@ -1,0 +1,35 @@
+const assert=require("assert"),{summarize,validate,isDate}=require("./phase141-capa-management");let n=0;
+function t(name,f){try{f();n++}catch(e){console.error("FAIL "+name+"\n"+e.stack);process.exitCode=1}}
+function b(o={}){return {id:"C1",sourceType:"inspection",sourceId:"I1",area:"Block A",problem:"Tree mortality",severity:"high",rootCause:"Missed watering",owner:"Field Lead",openedDate:"2026-10-20",dueDate:"2026-10-30",status:"in_progress",correctiveActions:[{id:"A1",title:"Repair line",owner:"Worker",dueDate:"2026-10-28",status:"in_progress",evidence:[]}],preventiveActions:[{id:"A2",title:"Daily check",owner:"Lead",dueDate:"2026-11-01",status:"open",evidence:[]},],...o}}
+const run=(c,now="2026-10-28")=>summarize({cases:Array.isArray(c)?c:[c]},now);
+t("valid date",()=>assert(isDate("2026-10-28")));t("invalid calendar date",()=>assert(!isDate("2026-02-30")));
+t("empty cases",()=>assert.equal(summarize({cases:[]},"2026-10-28").kpis.totalCases,0));
+t("total cases",()=>assert.equal(run(b()).kpis.totalCases,1));t("open count",()=>assert.equal(run(b({status:"open"})).kpis.openCases,1));
+t("in progress count",()=>assert.equal(run(b()).kpis.inProgressCases,1));t("pending verification count",()=>assert.equal(run(b({status:"pending_verification"})).kpis.pendingVerificationCases,1));
+t("closed count",()=>assert.equal(run(b({status:"closed"})).kpis.closedCases,1));t("cancelled count",()=>assert.equal(run(b({status:"cancelled"})).kpis.cancelledCases,1));
+t("overdue case",()=>assert.equal(run(b({dueDate:"2026-10-27"})).kpis.overdueCases,1));t("due today not overdue",()=>assert.equal(run(b({dueDate:"2026-10-28"})).kpis.overdueCases,0));
+t("closed overdue excluded",()=>assert.equal(run(b({status:"closed",dueDate:"2026-10-01"})).kpis.overdueCases,0));
+t("high critical open",()=>assert.equal(run([b(),b({id:"C2",severity:"critical",correctiveActions:[],preventiveActions:[]})]).kpis.highOrCriticalOpenCases,2));
+t("repeat count",()=>assert.equal(run(b({repeatIssue:true})).kpis.repeatIssueCases,1));t("corrective count",()=>assert.equal(run(b()).kpis.correctiveActions,1));
+t("preventive count",()=>assert.equal(run(b()).kpis.preventiveActions,1));
+t("blocked count",()=>assert.equal(run(b({correctiveActions:[{id:"A1",title:"Fix",owner:"A",dueDate:"2026-10-28",status:"blocked"}]})).kpis.blockedActions,1));
+t("overdue action",()=>assert.equal(run(b({correctiveActions:[{id:"A1",title:"Fix",owner:"A",dueDate:"2026-10-27",status:"open"}]})).kpis.overdueActions,1));
+t("completion rate",()=>assert.equal(run(b({correctiveActions:[{id:"A1",title:"Fix",owner:"A",dueDate:"2026-10-28",status:"completed"}],preventiveActions:[{id:"A2",title:"Check",owner:"B",dueDate:"2026-10-29",status:"cancelled"}]})).kpis.actionCompletionRatePercent,100));
+t("future review excluded",()=>assert.equal(run(b({effectivenessReview:{reviewDate:"2026-11-01",effective:true,reviewer:"Manager"}})).kpis.effectivenessReviewsDueOrRecorded,0));
+t("effective review rate",()=>assert.equal(run(b({effectivenessReview:{reviewDate:"2026-10-27",effective:true,reviewer:"Manager"}})).kpis.effectivenessRatePercent,100));
+t("ineffective review escalation",()=>assert(run(b({effectivenessReview:{reviewDate:"2026-10-27",effective:false,reviewer:"Manager"}})).escalations.some(e=>e.type==="ineffective_review")));
+t("overdue escalation",()=>assert(run(b({dueDate:"2026-10-01"})).escalations.some(e=>e.type==="overdue_case")));
+t("blocked escalation",()=>assert(run(b({correctiveActions:[{id:"A1",title:"Fix",owner:"A",dueDate:"2026-10-28",status:"blocked"}]})).escalations.some(e=>e.type==="blocked_action")));
+t("repeat escalation",()=>assert(run(b({repeatIssue:true})).escalations.some(e=>e.type==="repeat_issue")));
+t("closure exception",()=>assert(run(b({status:"closed"})).escalations.some(e=>e.type==="closure_control_exception")));
+t("valid closure controls",()=>assert(!run(b({status:"closed",effectivenessReview:{reviewDate:"2026-10-27",effective:true,reviewer:"Manager"},correctiveActions:[{id:"A1",title:"Fix",owner:"A",dueDate:"2026-10-28",status:"completed"}],preventiveActions:[{id:"A2",title:"Check",owner:"B",dueDate:"2026-10-29",status:"completed"}]})).escalations.some(e=>e.type==="closure_control_exception")));
+t("duplicate case IDs",()=>assert.throws(()=>validate({cases:[b(),b()]}),/duplicates/));t("duplicate action IDs",()=>assert.throws(()=>validate({cases:[b(),b({id:"C2"})]}),/duplicates/));
+t("missing owner",()=>assert.throws(()=>validate({cases:[b({owner:""})]}),/owner is required/));t("invalid severity",()=>assert.throws(()=>validate({cases:[b({severity:"urgent"})]}),/severity must be/));
+t("invalid case status",()=>assert.throws(()=>validate({cases:[b({status:"done"})]}),/status is invalid/));
+t("invalid action status",()=>assert.throws(()=>validate({cases:[b({correctiveActions:[{id:"A",title:"x",owner:"y",dueDate:"2026-10-28",status:"done"}]})]}),/status is invalid/));
+t("invalid evidence",()=>assert.throws(()=>validate({cases:[b({correctiveActions:[{id:"A",title:"x",owner:"y",dueDate:"2026-10-28",status:"open",evidence:[2]}]})]}),/evidence must be/));
+t("invalid review date",()=>assert.throws(()=>validate({cases:[b({effectivenessReview:{reviewDate:"bad",effective:true,reviewer:"Manager"}})]}),/reviewDate must be/));
+t("invalid as-of date",()=>assert.throws(()=>summarize({cases:[]},"bad"),/valid YYYY-MM-DD/));
+t("deterministic output",()=>assert.deepStrictEqual(run(b()),run(b())));
+t("overdue recommendation",()=>assert(run(b({dueDate:"2026-10-01"})).recommendations.length>0));
+console.log(n+" passed");

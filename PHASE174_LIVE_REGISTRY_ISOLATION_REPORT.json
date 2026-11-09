@@ -1,0 +1,17 @@
+{
+  "phase": 174,
+  "title": "Live Cross-Tenant Registry Isolation Probe",
+  "generatedAt": "2026-10-29T20:25:25.315Z",
+  "mode": "read-only HTTP GET",
+  "decision": "NOT VERIFIED — configuration incomplete",
+  "checks": [
+    {
+      "name": "Live registry isolation configuration",
+      "status": "SKIP",
+      "detail": "missing required opt-in settings: FORESTOS_TEST_API_BASE_URL, FORESTOS_TEST_TENANT_A_TOKEN, FORESTOS_TEST_TENANT_B_TOKEN, FORESTOS_TEST_TENANT_A_ID, FORESTOS_TEST_TENANT_B_ID, FORESTOS_TEST_TENANT_A_READ_PATH, FORESTOS_TEST_TENANT_B_READ_PATH, FORESTOS_TEST_TENANT_A_RECORD_MARKER, FORESTOS_TEST_TENANT_B_RECORD_MARKER"
+    }
+  ],
+  "limitations": [
+    "No HTTP requests were made because required dedicated non-production test configuration is incomplete."
+  ]
+}

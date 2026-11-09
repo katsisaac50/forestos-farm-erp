@@ -1,0 +1,19 @@
+{
+  "phase": 217,
+  "name": "Lockfile Generation Runner",
+  "status": "LOCAL_VALIDATION_PASSED_BUILD_UNVERIFIED",
+  "contract_test_files": 18,
+  "contract_test_failures": 0,
+  "javascript_files_syntax_checked": 221,
+  "javascript_syntax_failures": 0,
+  "json_files": 146,
+  "valid_json_files": 145,
+  "invalid_json_files": ["PHASE125_SCHEMA_INDEX_READINESS.json"],
+  "zip_integrity": "pending_packaging",
+  "remote_ci_executed": false,
+  "lockfile_generation_executed": false,
+  "api_build_executed": false,
+  "production_cleared": false,
+  "known_blocker": "apps/api/package-lock.json is absent in the source workspace",
+  "notes": "All discovered contract-test files passed. The existing malformed Phase 125 JSON file was left unchanged."
+}

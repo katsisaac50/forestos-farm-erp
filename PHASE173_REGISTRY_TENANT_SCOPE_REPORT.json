@@ -1,0 +1,56 @@
+{
+  "phase": 173,
+  "title": "Critical Registry Query Tenant-Scope Review",
+  "mode": "focused static source inspection",
+  "generatedAt": "2026-10-29T19:33:47.379Z",
+  "overall": "NOT CLEARED FOR PRODUCTION",
+  "summary": {
+    "checks": 6,
+    "sourceSignalsPassing": 6,
+    "sourceSignalsMissing": 0
+  },
+  "checks": [
+    {
+      "id": "REG-TENANT-001",
+      "control": "record snapshot read scoped by tenantId",
+      "passed": true,
+      "status": "SOURCE SIGNAL PRESENT"
+    },
+    {
+      "id": "REG-TENANT-002",
+      "control": "record update filter includes tenantId + domain + recordId",
+      "passed": true,
+      "status": "SOURCE SIGNAL PRESENT"
+    },
+    {
+      "id": "REG-TENANT-003",
+      "control": "batch idempotency lookup scoped by tenantId",
+      "passed": true,
+      "status": "SOURCE SIGNAL PRESENT"
+    },
+    {
+      "id": "REG-TENANT-004",
+      "control": "revision lookup and update scoped by tenantId",
+      "passed": true,
+      "status": "SOURCE SIGNAL PRESENT"
+    },
+    {
+      "id": "REG-TENANT-005",
+      "control": "tenant identity comes from authenticated claims",
+      "passed": true,
+      "status": "SOURCE SIGNAL PRESENT"
+    },
+    {
+      "id": "REG-TENANT-006",
+      "control": "transaction session is used for core writes",
+      "passed": true,
+      "status": "SOURCE SIGNAL PRESENT"
+    }
+  ],
+  "limitations": [
+    "These checks inspect source patterns and do not execute the API or database.",
+    "A source signal does not prove query semantics, authorization correctness, or absence of indirect data leaks.",
+    "Runtime cross-tenant read/write tests and full security review remain required.",
+    "The current registry controller has no explicit local role decorator visible; confirm the global guard and role policy before production."
+  ]
+}

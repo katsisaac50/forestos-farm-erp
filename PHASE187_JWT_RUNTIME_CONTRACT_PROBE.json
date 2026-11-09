@@ -1,0 +1,49 @@
+{
+  "phase": 187,
+  "title": "JWT Runtime Contract Probe",
+  "generatedAt": "2026-10-29T22:09:39.437Z",
+  "mode": "dependency-free-contract-probe-plus-static-contract-tests",
+  "checks": [
+    {
+      "name": "Dependency-free JWT contract probe",
+      "passed": 12,
+      "total": 12
+    },
+    {
+      "name": "Phase 187 source-level contract tests",
+      "passed": 8,
+      "total": 8
+    },
+    {
+      "name": "All scripts/*contract-tests.js suites",
+      "passed": 81,
+      "total": 81
+    },
+    {
+      "name": "NestJS build",
+      "passed": false,
+      "status": "not_run",
+      "reason": "Dependencies are not installed in this environment."
+    },
+    {
+      "name": "Live HTTP authentication and authorization",
+      "passed": false,
+      "status": "not_run"
+    },
+    {
+      "name": "MongoDB integration and cross-tenant isolation",
+      "passed": false,
+      "status": "not_run"
+    }
+  ],
+  "liveNestRuntimeTestsRun": false,
+  "httpTestsRun": false,
+  "mongodbTestsRun": false,
+  "productionCleared": false,
+  "limitations": [
+    "The dependency-free HS256 probe models expected token semantics with Node.js crypto; it does not invoke NestJS JwtService or the actual AuthGuard.",
+    "No live HTTP endpoints or MongoDB were used.",
+    "NestJS production build was not run because dependencies are not installed in this environment.",
+    "Passing source-level and modeled contract checks do not prove application runtime security."
+  ]
+}

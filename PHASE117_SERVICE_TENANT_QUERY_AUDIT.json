@@ -1,0 +1,899 @@
+{
+  "title": "ForestOS Phase 117 — Service-Level Tenant Query Review Queue",
+  "generatedAt": "2026-10-25T15:55:25.145Z",
+  "method": "Regex-based static triage of *.service.ts files only. Counts recognizable query method calls and mentions of organization/context/user signals; it does not parse TypeScript, resolve data flow, inspect every repository/helper/guard, or prove tenant isolation.",
+  "summary": {
+    "serviceFiles": 65,
+    "p1Review": 54,
+    "p2Review": 1,
+    "p3Confirm": 10,
+    "queryReadCallMarkers": 413,
+    "queryWriteCallMarkers": 148
+  },
+  "services": [
+    {
+      "service": "apps/api/src/alert-center/alert-center.service.ts",
+      "queryReadCallMarkers": 10,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/audit/audit.service.ts",
+      "queryReadCallMarkers": 1,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/backup-continuity/backup-continuity.service.ts",
+      "queryReadCallMarkers": 8,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/capital-allocation/capital-allocation.service.ts",
+      "queryReadCallMarkers": 9,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+      "queryReadCallMarkers": 14,
+      "queryWriteCallMarkers": 9,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/case-evidence/case-evidence.service.ts",
+      "queryReadCallMarkers": 38,
+      "queryWriteCallMarkers": 18,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/cashflow/cashflow.service.ts",
+      "queryReadCallMarkers": 8,
+      "queryWriteCallMarkers": 3,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/command-centre/command-centre.service.ts",
+      "queryReadCallMarkers": 14,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/corrective-actions/corrective-actions.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 1,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/cost-intelligence/cost-intelligence.service.ts",
+      "queryReadCallMarkers": 7,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/dashboard/dashboard.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/data-integrity/data-integrity.service.ts",
+      "queryReadCallMarkers": 7,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/evidence/evidence.service.ts",
+      "queryReadCallMarkers": 2,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/farm-map/farm-map.service.ts",
+      "queryReadCallMarkers": 1,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/field-inspections/field-inspections.service.ts",
+      "queryReadCallMarkers": 3,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 1,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/field-logs/field-logs.service.ts",
+      "queryReadCallMarkers": 1,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/field-navigation/field-navigation.service.ts",
+      "queryReadCallMarkers": 1,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/field-verification/field-verification.service.ts",
+      "queryReadCallMarkers": 3,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/finance/finance.service.ts",
+      "queryReadCallMarkers": 2,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-action-centre/financial-action-centre.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-audit-trail/financial-audit-trail.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-control-performance/financial-control-performance.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-control-report/financial-control-report.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-escalations/financial-escalations.service.ts",
+      "queryReadCallMarkers": 7,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-evidence/financial-evidence.service.ts",
+      "queryReadCallMarkers": 3,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-exceptions/financial-exceptions.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-governance/financial-governance.service.ts",
+      "queryReadCallMarkers": 5,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-investigation-cases/financial-investigation-cases.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 6,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-investigations/financial-investigation.service.ts",
+      "queryReadCallMarkers": 2,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-reconciliation/financial-reconciliation.service.ts",
+      "queryReadCallMarkers": 3,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/financial-reports/financial-reports.service.ts",
+      "queryReadCallMarkers": 1,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/harvest/harvest.service.ts",
+      "queryReadCallMarkers": 7,
+      "queryWriteCallMarkers": 4,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/inspections/inspections.service.ts",
+      "queryReadCallMarkers": 2,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/integration-workflows/integration-workflows.service.ts",
+      "queryReadCallMarkers": 10,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/inventory-control/inventory-control.service.ts",
+      "queryReadCallMarkers": 9,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/inventory/inventory.service.ts",
+      "queryReadCallMarkers": 1,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/investment/investment.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 3,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/maintenance/maintenance.service.ts",
+      "queryReadCallMarkers": 12,
+      "queryWriteCallMarkers": 4,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/management-intelligence/management-intelligence.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/monthly-financial-close/monthly-financial-close.service.ts",
+      "queryReadCallMarkers": 11,
+      "queryWriteCallMarkers": 4,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/notification-policies/notification-policies.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 4,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/nursery/nursery.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 4,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/performance-intelligence/performance-intelligence.service.ts",
+      "queryReadCallMarkers": 8,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/performance-strategy/performance-strategy.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/photo-evidence/photo-evidence.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/procurement/procurement.service.ts",
+      "queryReadCallMarkers": 23,
+      "queryWriteCallMarkers": 11,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/regeneration/regeneration.service.ts",
+      "queryReadCallMarkers": 8,
+      "queryWriteCallMarkers": 4,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/reinvestment-decision-engine/reinvestment-decision-engine.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/risk-management/risk-management.service.ts",
+      "queryReadCallMarkers": 7,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/sales/sales.service.ts",
+      "queryReadCallMarkers": 1,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/standard-operating-procedures/standard-operating-procedures.service.ts",
+      "queryReadCallMarkers": 11,
+      "queryWriteCallMarkers": 3,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/statement-matching/statement-matching.service.ts",
+      "queryReadCallMarkers": 10,
+      "queryWriteCallMarkers": 3,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/tasks/tasks.service.ts",
+      "queryReadCallMarkers": 1,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/workforce/workforce.service.ts",
+      "queryReadCallMarkers": 10,
+      "queryWriteCallMarkers": 4,
+      "organizationFieldMentions": 0,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+        "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+      ],
+      "priority": "P1_REVIEW"
+    },
+    {
+      "service": "apps/api/src/organizations/organizations.service.ts",
+      "queryReadCallMarkers": 6,
+      "queryWriteCallMarkers": 4,
+      "organizationFieldMentions": 11,
+      "organizationContextMentions": 0,
+      "authOrUserMentions": 7,
+      "reviewSignals": [
+        "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+      ],
+      "priority": "P2_REVIEW"
+    },
+    {
+      "service": "apps/api/src/apiary-actions/apiary-actions.service.ts",
+      "queryReadCallMarkers": 7,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 6,
+      "organizationContextMentions": 17,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    },
+    {
+      "service": "apps/api/src/apiary-intelligence/apiary-intelligence.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 4,
+      "organizationContextMentions": 8,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    },
+    {
+      "service": "apps/api/src/apiary-operations/apiary-operations.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 2,
+      "organizationContextMentions": 14,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    },
+    {
+      "service": "apps/api/src/field-capture/evidence-storage.service.ts",
+      "queryReadCallMarkers": 7,
+      "queryWriteCallMarkers": 3,
+      "organizationFieldMentions": 8,
+      "organizationContextMentions": 14,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    },
+    {
+      "service": "apps/api/src/field-capture/field-capture.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 2,
+      "organizationContextMentions": 10,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    },
+    {
+      "service": "apps/api/src/field-workforce/field-workforce.service.ts",
+      "queryReadCallMarkers": 8,
+      "queryWriteCallMarkers": 3,
+      "organizationFieldMentions": 8,
+      "organizationContextMentions": 20,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    },
+    {
+      "service": "apps/api/src/growth/growth.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 1,
+      "organizationFieldMentions": 5,
+      "organizationContextMentions": 8,
+      "authOrUserMentions": 1,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    },
+    {
+      "service": "apps/api/src/hives/hives.service.ts",
+      "queryReadCallMarkers": 1,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 1,
+      "organizationContextMentions": 8,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    },
+    {
+      "service": "apps/api/src/organizations/organization-access.service.ts",
+      "queryReadCallMarkers": 4,
+      "queryWriteCallMarkers": 0,
+      "organizationFieldMentions": 12,
+      "organizationContextMentions": 4,
+      "authOrUserMentions": 10,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    },
+    {
+      "service": "apps/api/src/plantations/plantations.service.ts",
+      "queryReadCallMarkers": 3,
+      "queryWriteCallMarkers": 2,
+      "organizationFieldMentions": 7,
+      "organizationContextMentions": 13,
+      "authOrUserMentions": 0,
+      "reviewSignals": [
+        "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+      ],
+      "priority": "P3_CONFIRM"
+    }
+  ],
+  "requiredManualReview": [
+    "Trace each controller route into its service and repository/helper calls.",
+    "Verify every read, update, and delete is scoped to the authorized organization, including identifier-based lookups.",
+    "Verify organization IDs are derived from trusted membership context, not accepted blindly from request bodies or query strings.",
+    "Test cross-tenant read/write denial and suspended-membership denial against a dedicated non-production database.",
+    "Record evidence and reviewer sign-off; do not treat static flags as confirmed vulnerabilities or clean signals as proof of safety."
+  ]
+}

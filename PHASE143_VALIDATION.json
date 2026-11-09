@@ -1,0 +1,44 @@
+{
+  "phase": 143,
+  "name": "Supervisor Verification & Field Evidence Management",
+  "validation_status": "PASS",
+  "suite_results": {
+    "phase143-supervisor-verification-evidence-contract-tests.js": {
+      "returncode": 0,
+      "stdout": "Phase 143 supervisor verification/evidence tests: 36 passed.",
+      "stderr": ""
+    },
+    "phase142-farm-task-execution-contract-tests.js": {
+      "returncode": 0,
+      "stdout": "41 passed",
+      "stderr": ""
+    },
+    "phase141-capa-management-contract-tests.js": {
+      "returncode": 0,
+      "stdout": "38 passed",
+      "stderr": ""
+    },
+    "phase140-farm-operations-inspections-contract-tests.js": {
+      "returncode": 0,
+      "stdout": "PASS valid report generated\nPASS phase identifier\nPASS inspection count\nPASS follow-up inspection count\nPASS issue counts summed\nPASS task count\nPASS open tasks exclude completed and cancelled\nPASS completed task count\nPASS overdue tasks use supplied clock\nPASS blocked tasks counted\nPASS high or critical open tasks counted\nPASS completion percentage calculated\nPASS overdue tasks produce escalation\nPASS blocked task produces escalation\nPASS inspection issue produces escalation\nPASS overdue recommendation appears\nPASS empty arrays valid\nPASS missing arrays default empty\nPASS non-array inspections rejected\nPASS invalid inspection date rejected\nPASS missing inspection area rejected\nPASS negative issue count rejected\nPASS invalid severity rejected\nPASS missing task owner rejected\nPASS invalid task type rejected\nPASS invalid status rejected\nPASS duplicate task ids rejected\nPASS completed tasks not overdue\nPASS completed task without evidence triggers recommendation\nPASS limitations describe offline scope\n\nPhase 140 contract tests: 30/30 passed",
+      "stderr": ""
+    },
+    "phase139-forestry-apiary-scorecards-contract-tests.js": {
+      "returncode": 0,
+      "stdout": "PASS valid scorecards\nPASS phase number\nPASS tree survival\nPASS trees per acre\nPASS maintenance cost per acre\nPASS colony occupancy\nPASS unoccupied hives\nPASS honey per colony\nPASS revenue per kg\nPASS apiary margin proxy\nPASS combined sales\nPASS combined costs\nPASS surplus proxy\nPASS forecast sum\nPASS forecast finding\nPASS low survival recommendation\nPASS low occupancy recommendation\nPASS negative apiary proxy finding\nPASS excess reinvestment finding\nPASS required inputs enforced\nPASS surviving trees cannot exceed planted\nPASS colonies cannot exceed hives\nPASS negative values rejected\nPASS infinite values rejected\nPASS zero denominators null\nPASS missing forecast period warning\nPASS optional datasets default\nPASS limitations explain proxy\nPASS all scorecard areas present\nPASS recommendations always an array\nPASS serialized report avoids NaN\n\nPhase 139 contract tests: 31 passed",
+      "stderr": ""
+    },
+    "phase138-management-kpi-analytics-contract-tests.js": {
+      "returncode": 0,
+      "stdout": "PASS computes action completion rate\nPASS zero action denominator yields null rate\nPASS counts overdue open actions\nPASS does not count completed action as overdue\nPASS counts critical open actions\nPASS counts blocked actions\nPASS computes incident closure rate\nPASS counts high severity incidents\nPASS computes effectiveness rate\nPASS counts repeat incidents\nPASS flags ineffective action\nPASS flags repeat incident after action\nPASS computes operational compliance rate\nPASS breaks compliance down by area\nPASS unknown area is grouped as unspecified\nPASS invalid top-level input is an error\nPASS invalid dataset type is an error\nPASS empty input datasets default to zero\nPASS uses supplied deterministic clock\nPASS reports routine recommendation when no flags\nPASS recommends overdue action review\nPASS nulls effectiveness rate with no reviews\nPASS nulls incident closure rate with no incidents\nPASS returns schema and phase identifiers\n24/24 Phase 138 contract tests passed",
+      "stderr": ""
+    }
+  },
+  "tests_counted": 176,
+  "zip_integrity": "PASS",
+  "limitations": [
+    "offline JSON only",
+    "evidence references are not opened or authenticated",
+    "no database/API/UI/authentication/notifications/sync"
+  ]
+}

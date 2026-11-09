@@ -1,0 +1,24 @@
+{
+  "phase": 203,
+  "title": "Lockfile Provenance Attestation Check",
+  "productionCleared": false,
+  "networkAccessAttempted": false,
+  "dependencyInstallExecuted": false,
+  "apiBuildExecuted": false,
+  "contractTestFiles": 97,
+  "contractTestFilesPassed": 97,
+  "contractTestFilesFailed": 0,
+  "javascriptFilesChecked": 197,
+  "javascriptSyntaxPassed": 197,
+  "javascriptSyntaxFailed": 0,
+  "jsonFilesChecked": 126,
+  "jsonValid": 125,
+  "jsonInvalid": [
+    {
+      "path": "PHASE125_SCHEMA_INDEX_READINESS.json",
+      "error": "Extra data: line 96 column 2 (char 3589)"
+    }
+  ],
+  "zipIntegrity": "pending",
+  "knownBlocker": "apps/api/package-lock.json missing; candidate provenance must be independently verified"
+}

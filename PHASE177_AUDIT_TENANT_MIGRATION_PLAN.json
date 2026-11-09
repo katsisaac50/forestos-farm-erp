@@ -1,0 +1,161 @@
+{
+  "phase": 177,
+  "title": "Tenant-Aware Audit Architecture & Migration Planning",
+  "generatedAt": "2026-11-09T05:11:38.792Z",
+  "mode": "read-only source inspection and migration planning",
+  "decision": "NOT CLEARED FOR PRODUCTION",
+  "summary": {
+    "checks": 6,
+    "signalsPresent": 3,
+    "reviewRequired": 3,
+    "uniqueAuditWriterCallSiteFiles": 14
+  },
+  "sourceChecks": [
+    {
+      "id": "SRC-01",
+      "name": "Operational audit schema has visible tenant field",
+      "status": "SIGNAL_PRESENT"
+    },
+    {
+      "id": "SRC-02",
+      "name": "Operational audit writer accepts explicit tenant context",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "SRC-03",
+      "name": "Operational audit listing applies tenant filter",
+      "status": "SIGNAL_PRESENT"
+    },
+    {
+      "id": "SRC-04",
+      "name": "Financial audit schema has visible tenant field",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "SRC-05",
+      "name": "Financial audit service shows tenant-context signal",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "SRC-06",
+      "name": "Call-site inventory was collected",
+      "status": "SIGNAL_PRESENT"
+    }
+  ],
+  "writerCallSiteFiles": [
+    "apps\\api\\src\\capital-allocation\\capital-allocation.service.ts",
+    "apps\\api\\src\\capital-spend-verification\\capital-spend-verification.service.ts",
+    "apps\\api\\src\\cashflow\\cashflow.service.ts",
+    "apps\\api\\src\\cost-intelligence\\cost-intelligence.service.ts",
+    "apps\\api\\src\\finance\\finance.service.ts",
+    "apps\\api\\src\\financial-investigations\\financial-investigation.service.ts",
+    "apps\\api\\src\\harvest\\harvest.service.ts",
+    "apps\\api\\src\\inspections\\inspections.service.ts",
+    "apps\\api\\src\\investment\\investment.service.ts",
+    "apps\\api\\src\\monthly-financial-close\\monthly-financial-close.service.ts",
+    "apps\\api\\src\\nursery\\nursery.service.ts",
+    "apps\\api\\src\\regeneration\\regeneration.service.ts",
+    "apps\\api\\src\\statement-matching\\statement-matching.service.ts",
+    "apps\\api\\src\\workforce\\workforce.service.ts"
+  ],
+  "migrationStages": [
+    {
+      "id": "MIG177-01",
+      "name": "Inventory and baseline",
+      "status": "PLANNED",
+      "actions": [
+        "Back up audit collections and record counts/indexes",
+        "Inventory every AuditService.record call site and financial snapshot source",
+        "Agree tenant ownership source for each source model"
+      ],
+      "exitCriteria": [
+        "Reviewed call-site inventory",
+        "Approved source-of-truth mapping"
+      ]
+    },
+    {
+      "id": "MIG177-02",
+      "name": "Schema compatibility",
+      "status": "PLANNED",
+      "actions": [
+        "Add optional tenantId to operational and financial audit schemas in a separate reviewed code change",
+        "Add compound indexes only after checking query patterns and duplicate/index build impact",
+        "Keep legacy entries readable while ownership remains unresolved"
+      ],
+      "exitCriteria": [
+        "Schema review approved",
+        "Index plan tested against representative data"
+      ]
+    },
+    {
+      "id": "MIG177-03",
+      "name": "Explicit tenant context",
+      "status": "PLANNED",
+      "actions": [
+        "Introduce a typed audit context carrying authenticated tenantId and actor ID",
+        "Update each writer to pass validated tenant context; do not infer tenant from email",
+        "Trace financial snapshot tenantId from verified source records"
+      ],
+      "exitCriteria": [
+        "All writer call sites classified",
+        "Missing-context behavior explicitly defined and tested"
+      ]
+    },
+    {
+      "id": "MIG177-04",
+      "name": "Backfill and reconciliation",
+      "status": "PLANNED",
+      "actions": [
+        "Backfill only records whose tenant can be deterministically established from authoritative source data",
+        "Mark ambiguous legacy records as unresolved in a controlled migration ledger; never guess",
+        "Run dry-run counts, duplicate checks, and tenant distribution reconciliation"
+      ],
+      "exitCriteria": [
+        "Dry-run reviewed",
+        "Unresolved records accounted for",
+        "Rollback/restore procedure rehearsed"
+      ]
+    },
+    {
+      "id": "MIG177-05",
+      "name": "Tenant-scoped reads and authorization",
+      "status": "PLANNED",
+      "actions": [
+        "Require authenticated tenant scope for list/read endpoints",
+        "Enforce role policy and tenant scope server-side, not from client-supplied tenant IDs",
+        "Add cross-tenant read/write and role-negative runtime tests"
+      ],
+      "exitCriteria": [
+        "Runtime tests pass in disposable environment",
+        "No unscoped audit list path remains"
+      ]
+    },
+    {
+      "id": "MIG177-06",
+      "name": "Controlled enforcement and release",
+      "status": "PLANNED",
+      "actions": [
+        "Deploy compatible schema first, then writers, then verified backfill, then scoped reads",
+        "Monitor missing-tenant events and reconciliation metrics",
+        "Only make tenant attribution required after all writers and legacy rows are reconciled"
+      ],
+      "exitCriteria": [
+        "Production build passes",
+        "Migration verification passes",
+        "Security review signs off"
+      ]
+    }
+  ],
+  "legacyDataPolicy": {
+    "rule": "Never infer tenant ownership from actor email or incomplete metadata.",
+    "knownTenant": "Backfill only from an authoritative, deterministic source with reconciliation evidence.",
+    "unknownTenant": "Leave unresolved, quarantine from tenant-scoped views, and route to an approved manual reconciliation workflow.",
+    "destructiveChanges": "No schema field is made required and no data is changed by this planner."
+  },
+  "limitations": [
+    "Read-only static inspection; no database connection, API execution, migration, or production build was performed.",
+    "A source signal is not proof of runtime enforcement.",
+    "Call-site file inventory does not count or prove the correctness of every call path.",
+    "Migration stages are a plan requiring engineering, security, data-owner, and operational approval."
+  ]
+}

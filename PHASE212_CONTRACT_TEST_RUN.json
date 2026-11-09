@@ -1,0 +1,10 @@
+{
+  "phase": 212,
+  "filesDiscovered": 93,
+  "passed": 93,
+  "failed": 0,
+  "timedOut": 0,
+  "failures": [],
+  "timeouts": [],
+  "note": "Runs all scripts matching scripts/*contract-tests.js; no live database tests or remote CI workflow are implied."
+}

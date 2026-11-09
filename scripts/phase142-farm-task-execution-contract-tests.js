@@ -1,0 +1,35 @@
+const assert=require("assert"),{report,validate,isDate}=require("./phase142-farm-task-execution");let n=0;function t(s,f){try{f();n++}catch(e){console.error("FAIL "+s+"\n"+e.stack);process.exitCode=1}}
+function b(o={}){return {id:"T1",title:"Weed Block A",type:"weeding",area:"Block A",owner:"Worker A",createdBy:"Supervisor",priority:"high",status:"in_progress",startDate:"2026-10-27",dueDate:"2026-10-29",estimatedMinutes:60,plannedQuantity:100,completedQuantity:25,unit:"rows",evidence:[],...o}}
+const r=(x,now="2026-10-28")=>report({tasks:Array.isArray(x)?x:[x]},now);
+t("valid date",()=>assert(isDate("2026-10-28")));t("invalid calendar date",()=>assert(!isDate("2026-02-30")));
+t("empty task list",()=>assert.equal(report({tasks:[]},"2026-10-28").kpis.totalTasks,0));t("total tasks",()=>assert.equal(r(b()).kpis.totalTasks,1));
+t("planned status count",()=>assert.equal(r(b({status:"planned"})).kpis.plannedTasks,1));t("assigned status count",()=>assert.equal(r(b({status:"assigned"})).kpis.assignedTasks,1));
+t("in progress count",()=>assert.equal(r(b()).kpis.inProgressTasks,1));t("blocked count",()=>assert.equal(r(b({status:"blocked"})).kpis.blockedTasks,1));
+t("submitted count",()=>assert.equal(r(b({status:"submitted"})).kpis.submittedForReview,1));t("verified count",()=>assert.equal(r(b({status:"verified",verifiedBy:"Manager",verifiedDate:"2026-10-28"})).kpis.verifiedTasks,1));
+t("returned count",()=>assert.equal(r(b({status:"returned"})).kpis.returnedTasks,1));t("cancelled count",()=>assert.equal(r(b({status:"cancelled"})).kpis.cancelledTasks,1));
+t("overdue task",()=>assert.equal(r(b({dueDate:"2026-10-27"})).kpis.overdueTasks,1));t("due today not overdue",()=>assert.equal(r(b({dueDate:"2026-10-28"})).kpis.overdueTasks,0));
+t("verified task not overdue",()=>assert.equal(r(b({status:"verified",startDate:"2026-09-30",dueDate:"2026-10-01",verifiedBy:"M",verifiedDate:"2026-10-28"})).kpis.overdueTasks,0));
+t("critical task counted",()=>assert.equal(r(b({priority:"critical"})).kpis.criticalUnverifiedTasks,1));t("verified not critical unverified",()=>assert.equal(r(b({priority:"critical",status:"verified",verifiedBy:"M",verifiedDate:"2026-10-28"})).kpis.criticalUnverifiedTasks,0));
+t("verification rate",()=>assert.equal(r([b({status:"verified",verifiedBy:"M",verifiedDate:"2026-10-28"}),b({id:"T2"})]).kpis.taskVerificationRatePercent,50));
+t("estimated minutes sum",()=>assert.equal(r([b(),b({id:"T2",estimatedMinutes:30})]).kpis.estimatedActiveMinutes,90));
+t("planned quantity sum",()=>assert.equal(r(b()).kpis.plannedQuantity,100));t("completed quantity sum",()=>assert.equal(r(b()).kpis.completedQuantity,25));
+t("blocked escalation",()=>assert(r(b({status:"blocked"})).escalations.some(e=>e.type==="blocked_task")));
+t("overdue escalation",()=>assert(r(b({dueDate:"2026-10-27"})).escalations.some(e=>e.type==="overdue_task")));
+t("critical escalation",()=>assert(r(b({priority:"critical"})).escalations.some(e=>e.type==="critical_task")));
+t("returned escalation",()=>assert(r(b({status:"returned"})).escalations.some(e=>e.type==="returned_task")));
+t("verified without verifier flagged",()=>assert(r(b({status:"verified"})).escalations.some(e=>e.type==="verification_record_exception")));
+t("quantity shortfall flagged",()=>assert(r(b({status:"verified",verifiedBy:"M",verifiedDate:"2026-10-28",completedQuantity:50,plannedQuantity:100})).escalations.some(e=>e.type==="quantity_shortfall")));
+t("owner summary created",()=>assert(r(b()).byOwner["Worker A"]));t("area summary created",()=>assert(r(b()).byArea["Block A"]));
+t("duplicate IDs rejected",()=>assert.throws(()=>validate({tasks:[b(),b()]}),/duplicates/));
+t("missing title rejected",()=>assert.throws(()=>validate({tasks:[b({title:""})]}),/title is required/));
+t("invalid type rejected",()=>assert.throws(()=>validate({tasks:[b({type:"random"})]}),/type is invalid/));
+t("invalid priority rejected",()=>assert.throws(()=>validate({tasks:[b({priority:"urgent"})]}),/priority is invalid/));
+t("invalid status rejected",()=>assert.throws(()=>validate({tasks:[b({status:"done"})]}),/status is invalid/));
+t("due before start rejected",()=>assert.throws(()=>validate({tasks:[b({startDate:"2026-10-29",dueDate:"2026-10-28"})]}),/cannot be before/));
+t("negative estimate rejected",()=>assert.throws(()=>validate({tasks:[b({estimatedMinutes:-1})]}),/estimatedMinutes/));
+t("negative quantity rejected",()=>assert.throws(()=>validate({tasks:[b({plannedQuantity:-1})]}),/plannedQuantity/));
+t("invalid evidence rejected",()=>assert.throws(()=>validate({tasks:[b({evidence:[1]})]}),/evidence must be/));
+t("invalid as-of date rejected",()=>assert.throws(()=>report({tasks:[]},"bad"),/valid YYYY-MM-DD/));
+t("deterministic report",()=>assert.deepStrictEqual(r(b()),r(b())));
+t("overdue recommendation",()=>assert(r(b({dueDate:"2026-10-27"})).recommendations.length>0));
+console.log(n+" passed");

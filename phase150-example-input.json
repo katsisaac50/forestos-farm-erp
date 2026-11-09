@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-10-29",
+  "businessName": "ForestOS Demo Farm",
+  "sections": {
+    "forestry": {
+      "metrics": {
+        "treeCount": 7000,
+        "plantedAcres": 7,
+        "survivalRate": 0.9,
+        "targetSurvivalRate": 0.9
+      },
+      "issues": []
+    },
+    "apiary": {
+      "metrics": {
+        "hives": 10,
+        "activeColonies": 1,
+        "targetActiveColonies": 3
+      },
+      "issues": []
+    },
+    "workforce": {
+      "metrics": {
+        "tasksDue": 12,
+        "tasksCompleted": 10,
+        "overdueTasks": 2
+      },
+      "issues": []
+    },
+    "inspections": {
+      "metrics": {
+        "openFindings": 2,
+        "criticalFindings": 1
+      },
+      "issues": [
+        {
+          "code": "HIGH_SEVERITY_INSPECTION",
+          "priority": "critical",
+          "message": "Review the flagged inspection finding and record containment evidence."
+        }
+      ]
+    },
+    "dataQuality": {
+      "status": "review_required",
+      "issues": [
+        {
+          "code": "STALE_SOURCE",
+          "priority": "medium",
+          "message": "Refresh the source snapshot before relying on this report for decisions."
+        }
+      ]
+    },
+    "correctiveActions": {
+      "actions": [
+        {
+          "actionId": "CAPA-001",
+          "status": "in_progress",
+          "priority": "high",
+          "dueDate": "2026-10-28",
+          "title": "Complete the outstanding fence repair"
+        }
+      ]
+    },
+    "decisionActions": {
+      "actions": [
+        {
+          "actionId": "DEC-001",
+          "status": "proposed",
+          "priority": "medium",
+          "dueDate": "2026-11-05",
+          "title": "Review the next apiary expansion step",
+          "recommendation": "Confirm budget, colony readiness, and owner before approval."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "phase": 192,
+  "title": "Dependency Resolution Diagnostics & Lockfile Recovery",
+  "generatedAt": "2026-10-29T22:32:44.720Z",
+  "apiPackage": "forestos-api",
+  "declaredDependencyCount": 15,
+  "registry": {
+    "requested": false,
+    "checked": false,
+    "passed": null,
+    "detail": "skipped; pass --check-registry to opt in"
+  },
+  "checks": [
+    {
+      "name": "API manifest has package name and version",
+      "passed": true,
+      "detail": "forestos-api@0.1.0"
+    },
+    {
+      "name": "Build script is declared",
+      "passed": true,
+      "detail": "nest build"
+    },
+    {
+      "name": "Dependency declarations are non-empty",
+      "passed": true,
+      "detail": "15 declared packages"
+    },
+    {
+      "name": "No dependency is duplicated across dependency groups",
+      "passed": true,
+      "detail": "no duplicate keys across dependencies/devDependencies"
+    },
+    {
+      "name": "Real API npm lockfile exists and aligns with manifest",
+      "passed": false,
+      "detail": "missing or invalid apps/api/package-lock.json"
+    },
+    {
+      "name": "npm executable is available",
+      "passed": true,
+      "detail": "10.9.2"
+    }
+  ],
+  "passed": 5,
+  "total": 6,
+  "cleanInstallExecuted": false,
+  "buildExecuted": false,
+  "productionCleared": false,
+  "blockers": [
+    "Real API npm lockfile exists and aligns with manifest"
+  ],
+  "nextActions": [
+    "Run npm run bootstrap:phase190:lockfile in a registry-enabled environment; inspect the generated lockfile and commit it."
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "phase": 206,
+  "title": "Lockfile Acceptance Gate",
+  "phase206ContractAssertions": 18,
+  "contractTestFiles": 100,
+  "contractTestFilesPassed": 100,
+  "contractTestFilesFailed": 0,
+  "contractAssertionsPassed": 1198,
+  "contractAssertionsFailed": 0,
+  "javascriptFilesChecked": 203,
+  "javascriptSyntaxPassed": 203,
+  "javascriptSyntaxFailed": 0,
+  "jsonFilesChecked": 132,
+  "jsonFilesValid": 131,
+  "preExistingInvalidJsonFiles": [
+    {
+      "path": "PHASE125_SCHEMA_INDEX_READINESS.json",
+      "issue": "Unexpected non-whitespace character after JSON at line 96 column 2"
+    }
+  ],
+  "zipIntegrity": "pending",
+  "lockfilePresent": false,
+  "apiBuildExecuted": false,
+  "cleanInstallExecuted": false,
+  "productionCleared": false
+}

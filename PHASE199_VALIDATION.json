@@ -1,0 +1,27 @@
+{
+  "phase": 199,
+  "title": "Build Evidence & Release Gate",
+  "validation": {
+    "phase199ContractAssertions": {
+      "passed": 15,
+      "failed": 0
+    },
+    "contractTestFiles": {
+      "passed": 93,
+      "failed": 0
+    },
+    "javascriptSyntaxFiles": {
+      "passed": 189,
+      "failed": 0
+    },
+    "validJsonFiles": 114,
+    "invalidJsonFiles": 1,
+    "zipIntegrity": "passed"
+  },
+  "knownExistingJsonIssue": "PHASE125_SCHEMA_INDEX_READINESS.json: Extra data at line 96 column 2",
+  "apiBuild": {
+    "status": "not executed",
+    "reason": "apps/api/package-lock.json and installed dependencies are absent in this package environment",
+    "productionCleared": false
+  }
+}

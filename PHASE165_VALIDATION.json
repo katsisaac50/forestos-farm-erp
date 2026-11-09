@@ -1,0 +1,23 @@
+{
+  "phase": 165,
+  "title": "Concurrency and Recovery Verification",
+  "static_contract_tests": "12/12 passed",
+  "live_mongodb_integration": "not_run_without_explicit_disposable_test_database",
+  "nestjs_build": "not_run_in_packaging_environment",
+  "scope": [
+    "competing same-revision batches",
+    "single-winner assertion",
+    "revision integrity",
+    "isolated test collections"
+  ],
+  "limitations": [
+    "static checks do not prove live transaction behaviour",
+    "transient network failures are not injected"
+  ],
+  "phase164_regression_contract_tests": "13/13 passed",
+  "all_phase_contract_scripts": {
+    "total": 59,
+    "passed": 59,
+    "failed": 0
+  }
+}

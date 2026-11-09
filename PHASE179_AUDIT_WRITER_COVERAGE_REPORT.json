@@ -1,0 +1,112 @@
+{
+  "phase": 179,
+  "generatedAt": "2026-10-29T21:07:02.317Z",
+  "status": "NOT_CLEARED_FOR_PRODUCTION",
+  "method": "Static text inventory; counts are signals and require manual call-chain review.",
+  "totals": {
+    "filesWithWriterCalls": 15,
+    "legacyWriterCalls": 41,
+    "tenantAwareWriterCalls": 2
+  },
+  "convertedCallSites": [
+    "apps/api/src/plantations/plantations.service.ts: plantation create and update use recordForTenant with validated OrganizationContext"
+  ],
+  "entries": [
+    {
+      "file": "apps/api/src/capital-allocation/capital-allocation.service.ts",
+      "legacyWriterCalls": 3,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+      "legacyWriterCalls": 5,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/cashflow/cashflow.service.ts",
+      "legacyWriterCalls": 3,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.service.ts",
+      "legacyWriterCalls": 2,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/finance/finance.service.ts",
+      "legacyWriterCalls": 2,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/financial-investigations/financial-investigation.service.ts",
+      "legacyWriterCalls": 2,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/harvest/harvest.service.ts",
+      "legacyWriterCalls": 4,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/inspections/inspections.service.ts",
+      "legacyWriterCalls": 1,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/investment/investment.service.ts",
+      "legacyWriterCalls": 3,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.service.ts",
+      "legacyWriterCalls": 4,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/nursery/nursery.service.ts",
+      "legacyWriterCalls": 2,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/plantations/plantations.service.ts",
+      "legacyWriterCalls": 0,
+      "tenantAwareWriterCalls": 2,
+      "status": "TENANT_AWARE_SIGNAL"
+    },
+    {
+      "file": "apps/api/src/regeneration/regeneration.service.ts",
+      "legacyWriterCalls": 4,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/statement-matching/statement-matching.service.ts",
+      "legacyWriterCalls": 2,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    },
+    {
+      "file": "apps/api/src/workforce/workforce.service.ts",
+      "legacyWriterCalls": 4,
+      "tenantAwareWriterCalls": 0,
+      "status": "REVIEW_OR_CONVERT"
+    }
+  ],
+  "limitations": [
+    "This inventory recognizes direct .audit.record and .audit.recordForTenant patterns only.",
+    "It does not prove runtime authorization or tenant isolation.",
+    "Legacy audit writers remain and may create unattributed events.",
+    "Do not infer tenant ownership from actor email or arbitrary metadata."
+  ]
+}

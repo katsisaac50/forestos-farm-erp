@@ -1,0 +1,65 @@
+{
+  "phase": 185,
+  "title": "Authentication Runtime Readiness - Static Contract Probe",
+  "generatedAt": "2026-11-04T12:53:15.333Z",
+  "mode": "static-contract-only",
+  "checks": [
+    {
+      "name": "guard strictly requires a Bearer token",
+      "passed": true
+    },
+    {
+      "name": "guard verifies JWT asynchronously with configured JwtService",
+      "passed": true
+    },
+    {
+      "name": "guard maps JWT verification failures to unauthorized",
+      "passed": true
+    },
+    {
+      "name": "guard validates JWT subject as a MongoDB ObjectId",
+      "passed": true
+    },
+    {
+      "name": "guard checks current account status in database",
+      "passed": true
+    },
+    {
+      "name": "guard enforces declared roles against database account role",
+      "passed": true
+    },
+    {
+      "name": "login only selects active user",
+      "passed": true
+    },
+    {
+      "name": "password comparison uses bcrypt",
+      "passed": true
+    },
+    {
+      "name": "setup requires configured owner setup key",
+      "passed": true
+    },
+    {
+      "name": "owner setup is one-time guarded by user count",
+      "passed": true
+    },
+    {
+      "name": "JWT secret policy rejects absent secret",
+      "passed": true
+    },
+    {
+      "name": "JWT secret policy accepts valid production secret",
+      "passed": true
+    }
+  ],
+  "passed": 12,
+  "failed": 0,
+  "limitations": [
+    "No NestJS process was started.",
+    "No live HTTP requests were sent.",
+    "No MongoDB connection was used.",
+    "Static checks do not prove runtime behavior or tenant isolation.",
+    "Guard verification uses the JwtService configured by AuthModule. Static checks do not prove live NestJS verification."
+  ]
+}

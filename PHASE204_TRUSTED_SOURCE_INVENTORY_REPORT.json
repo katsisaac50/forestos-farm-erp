@@ -1,0 +1,36 @@
+{
+  "phase": 204,
+  "title": "Trusted Source Inventory",
+  "generatedAt": "2026-10-30T19:29:59.121Z",
+  "readOnly": true,
+  "networkAccessAttempted": false,
+  "installExecuted": false,
+  "buildExecuted": false,
+  "productionCleared": false,
+  "status": "BLOCKED_NO_TRUSTED_CANDIDATE",
+  "manifest": {
+    "path": "apps/api/package.json",
+    "name": "forestos-api",
+    "version": "0.1.0",
+    "sha256": "a762ae27f19ca2ddb7598dfd73b36470d611431eb26f39ae22f7690b15a115a0"
+  },
+  "sources": [],
+  "blockers": [
+    "No structurally aligned lockfile was found in the API directory or tracked workspace lockfile paths."
+  ],
+  "nextActions": [
+    "Check the authoritative repository and CI artifacts from a trusted, registry-enabled environment.",
+    "Generate package-lock.json using the API manifest in that environment; capture Node/npm versions, registry, command, Git commit, and SHA-256 hashes.",
+    "Transfer the candidate and provenance sidecar back, verify them with Phase 203, then run Phase 201 install/build."
+  ],
+  "git": {
+    "repositoryAvailable": false,
+    "trackedLockfilePathsFound": 0,
+    "historyQueryAvailable": false
+  },
+  "summary": {
+    "candidatesInspected": 0,
+    "structurallyAlignedCandidates": 0,
+    "trustedProvenanceVerified": false
+  }
+}

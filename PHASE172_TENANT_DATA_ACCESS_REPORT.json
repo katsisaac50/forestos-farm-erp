@@ -1,0 +1,955 @@
+{
+  "phase": 172,
+  "title": "Tenant-Scoped Data Access Verification",
+  "mode": "read-only heuristic source inventory",
+  "generatedAt": "2026-10-29T19:14:56.461Z",
+  "overall": "NOT CLEARED FOR PRODUCTION",
+  "summary": {
+    "sourceFilesScanned": 133,
+    "filesWithDatabaseOperationSignals": 67,
+    "operationContextsFlaggedForReview": 387,
+    "findingsRequiringReview": 53
+  },
+  "inventory": [
+    {
+      "file": "apps/api/src/alert-center/alert-center.service.ts",
+      "queryCount": 10,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 10
+    },
+    {
+      "file": "apps/api/src/apiary-actions/apiary-actions.service.ts",
+      "queryCount": 7,
+      "tenantSignalContexts": 7,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/apiary-intelligence/apiary-intelligence.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 4,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/apiary-operations/apiary-operations.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 4,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/audit/audit.service.ts",
+      "queryCount": 1,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 1
+    },
+    {
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 2
+    },
+    {
+      "file": "apps/api/src/backup-continuity/backup-continuity.service.ts",
+      "queryCount": 8,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 8
+    },
+    {
+      "file": "apps/api/src/capital-allocation/capital-allocation.service.ts",
+      "queryCount": 10,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 10
+    },
+    {
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+      "queryCount": 18,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 18
+    },
+    {
+      "file": "apps/api/src/case-evidence/case-evidence.service.ts",
+      "queryCount": 47,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 47
+    },
+    {
+      "file": "apps/api/src/cashflow/cashflow.service.ts",
+      "queryCount": 8,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 8
+    },
+    {
+      "file": "apps/api/src/command-centre/command-centre.service.ts",
+      "queryCount": 14,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 14
+    },
+    {
+      "file": "apps/api/src/corrective-actions/corrective-actions.service.ts",
+      "queryCount": 6,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 6
+    },
+    {
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.service.ts",
+      "queryCount": 7,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 7
+    },
+    {
+      "file": "apps/api/src/dashboard/dashboard.service.ts",
+      "queryCount": 6,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 6
+    },
+    {
+      "file": "apps/api/src/data-integrity/data-integrity.service.ts",
+      "queryCount": 7,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 7
+    },
+    {
+      "file": "apps/api/src/evidence/evidence.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 2
+    },
+    {
+      "file": "apps/api/src/farm-map/farm-map.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 2
+    },
+    {
+      "file": "apps/api/src/field-capture/evidence-storage.service.ts",
+      "queryCount": 9,
+      "tenantSignalContexts": 8,
+      "contextsWithoutVisibleTenantSignal": 1
+    },
+    {
+      "file": "apps/api/src/field-capture/field-capture.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 4,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/field-inspections/field-inspections.service.ts",
+      "queryCount": 3,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 3
+    },
+    {
+      "file": "apps/api/src/field-logs/field-logs.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 2
+    },
+    {
+      "file": "apps/api/src/field-navigation/field-navigation.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 2
+    },
+    {
+      "file": "apps/api/src/field-verification/field-verification.service.ts",
+      "queryCount": 3,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 3
+    },
+    {
+      "file": "apps/api/src/field-workforce/field-workforce.service.ts",
+      "queryCount": 8,
+      "tenantSignalContexts": 8,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/finance/finance.service.ts",
+      "queryCount": 3,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 3
+    },
+    {
+      "file": "apps/api/src/financial-action-centre/financial-action-centre.service.ts",
+      "queryCount": 6,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 6
+    },
+    {
+      "file": "apps/api/src/financial-audit-trail/financial-audit-trail.service.ts",
+      "queryCount": 7,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 7
+    },
+    {
+      "file": "apps/api/src/financial-control-performance/financial-control-performance.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 4
+    },
+    {
+      "file": "apps/api/src/financial-control-report/financial-control-report.service.ts",
+      "queryCount": 6,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 6
+    },
+    {
+      "file": "apps/api/src/financial-escalations/financial-escalations.service.ts",
+      "queryCount": 7,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 7
+    },
+    {
+      "file": "apps/api/src/financial-evidence/financial-evidence.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 2
+    },
+    {
+      "file": "apps/api/src/financial-exceptions/financial-exceptions.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 4
+    },
+    {
+      "file": "apps/api/src/financial-governance/financial-governance.service.ts",
+      "queryCount": 5,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 5
+    },
+    {
+      "file": "apps/api/src/financial-investigation-cases/financial-investigation-cases.service.ts",
+      "queryCount": 6,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 6
+    },
+    {
+      "file": "apps/api/src/financial-investigations/financial-investigation.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 2
+    },
+    {
+      "file": "apps/api/src/financial-reconciliation/financial-reconciliation.service.ts",
+      "queryCount": 3,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 3
+    },
+    {
+      "file": "apps/api/src/financial-reports/financial-reports.service.ts",
+      "queryCount": 1,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 1
+    },
+    {
+      "file": "apps/api/src/growth/growth.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 4,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/harvest/harvest.service.ts",
+      "queryCount": 8,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 8
+    },
+    {
+      "file": "apps/api/src/hives/hives.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 2,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/inspections/inspections.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 2
+    },
+    {
+      "file": "apps/api/src/integration-workflows/integration-workflows.service.ts",
+      "queryCount": 11,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 11
+    },
+    {
+      "file": "apps/api/src/inventory/inventory.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 2,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/inventory-control/inventory-control.service.ts",
+      "queryCount": 10,
+      "tenantSignalContexts": 10,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/investment/investment.service.ts",
+      "queryCount": 7,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 7
+    },
+    {
+      "file": "apps/api/src/maintenance/maintenance.service.ts",
+      "queryCount": 12,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 12
+    },
+    {
+      "file": "apps/api/src/management-intelligence/management-intelligence.service.ts",
+      "queryCount": 6,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 6
+    },
+    {
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.service.ts",
+      "queryCount": 12,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 12
+    },
+    {
+      "file": "apps/api/src/notification-policies/notification-policies.service.ts",
+      "queryCount": 7,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 7
+    },
+    {
+      "file": "apps/api/src/nursery/nursery.service.ts",
+      "queryCount": 7,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 7
+    },
+    {
+      "file": "apps/api/src/organizations/organization-access.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 4,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/organizations/organizations.service.ts",
+      "queryCount": 6,
+      "tenantSignalContexts": 6,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/performance-intelligence/performance-intelligence.service.ts",
+      "queryCount": 8,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 8
+    },
+    {
+      "file": "apps/api/src/performance-strategy/performance-strategy.service.ts",
+      "queryCount": 5,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 5
+    },
+    {
+      "file": "apps/api/src/photo-evidence/photo-evidence.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 4
+    },
+    {
+      "file": "apps/api/src/plantations/plantations.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 4,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/procurement/procurement.service.ts",
+      "queryCount": 28,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 28
+    },
+    {
+      "file": "apps/api/src/regeneration/regeneration.service.ts",
+      "queryCount": 9,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 9
+    },
+    {
+      "file": "apps/api/src/registry-persistence/registry-persistence.service.ts",
+      "queryCount": 6,
+      "tenantSignalContexts": 6,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/reinvestment-decision-engine/reinvestment-decision-engine.service.ts",
+      "queryCount": 4,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 4
+    },
+    {
+      "file": "apps/api/src/risk-management/risk-management.service.ts",
+      "queryCount": 6,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 6
+    },
+    {
+      "file": "apps/api/src/sales/sales.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 2,
+      "contextsWithoutVisibleTenantSignal": 0
+    },
+    {
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.service.ts",
+      "queryCount": 12,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 12
+    },
+    {
+      "file": "apps/api/src/statement-matching/statement-matching.service.ts",
+      "queryCount": 11,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 11
+    },
+    {
+      "file": "apps/api/src/tasks/tasks.service.ts",
+      "queryCount": 2,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 2
+    },
+    {
+      "file": "apps/api/src/workforce/workforce.service.ts",
+      "queryCount": 11,
+      "tenantSignalContexts": 0,
+      "contextsWithoutVisibleTenantSignal": 11
+    }
+  ],
+  "findings": [
+    {
+      "id": "DATA-SCOPE-001",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/alert-center/alert-center.service.ts",
+      "queryCount": 10,
+      "contextsWithoutVisibleTenantSignal": 10,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-002",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/audit/audit.service.ts",
+      "queryCount": 1,
+      "contextsWithoutVisibleTenantSignal": 1,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-003",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "queryCount": 2,
+      "contextsWithoutVisibleTenantSignal": 2,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-004",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/backup-continuity/backup-continuity.service.ts",
+      "queryCount": 8,
+      "contextsWithoutVisibleTenantSignal": 8,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-005",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/capital-allocation/capital-allocation.service.ts",
+      "queryCount": 10,
+      "contextsWithoutVisibleTenantSignal": 10,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-006",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+      "queryCount": 18,
+      "contextsWithoutVisibleTenantSignal": 18,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-007",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/case-evidence/case-evidence.service.ts",
+      "queryCount": 47,
+      "contextsWithoutVisibleTenantSignal": 47,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-008",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/cashflow/cashflow.service.ts",
+      "queryCount": 8,
+      "contextsWithoutVisibleTenantSignal": 8,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-009",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/command-centre/command-centre.service.ts",
+      "queryCount": 14,
+      "contextsWithoutVisibleTenantSignal": 14,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-010",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/corrective-actions/corrective-actions.service.ts",
+      "queryCount": 6,
+      "contextsWithoutVisibleTenantSignal": 6,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-011",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.service.ts",
+      "queryCount": 7,
+      "contextsWithoutVisibleTenantSignal": 7,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-012",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/dashboard/dashboard.service.ts",
+      "queryCount": 6,
+      "contextsWithoutVisibleTenantSignal": 6,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-013",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/data-integrity/data-integrity.service.ts",
+      "queryCount": 7,
+      "contextsWithoutVisibleTenantSignal": 7,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-014",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/evidence/evidence.service.ts",
+      "queryCount": 2,
+      "contextsWithoutVisibleTenantSignal": 2,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-015",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/farm-map/farm-map.service.ts",
+      "queryCount": 2,
+      "contextsWithoutVisibleTenantSignal": 2,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-016",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/field-capture/evidence-storage.service.ts",
+      "queryCount": 9,
+      "contextsWithoutVisibleTenantSignal": 1,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-017",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/field-inspections/field-inspections.service.ts",
+      "queryCount": 3,
+      "contextsWithoutVisibleTenantSignal": 3,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-018",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/field-logs/field-logs.service.ts",
+      "queryCount": 2,
+      "contextsWithoutVisibleTenantSignal": 2,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-019",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/field-navigation/field-navigation.service.ts",
+      "queryCount": 2,
+      "contextsWithoutVisibleTenantSignal": 2,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-020",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/field-verification/field-verification.service.ts",
+      "queryCount": 3,
+      "contextsWithoutVisibleTenantSignal": 3,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-021",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/finance/finance.service.ts",
+      "queryCount": 3,
+      "contextsWithoutVisibleTenantSignal": 3,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-022",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-action-centre/financial-action-centre.service.ts",
+      "queryCount": 6,
+      "contextsWithoutVisibleTenantSignal": 6,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-023",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-audit-trail/financial-audit-trail.service.ts",
+      "queryCount": 7,
+      "contextsWithoutVisibleTenantSignal": 7,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-024",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-control-performance/financial-control-performance.service.ts",
+      "queryCount": 4,
+      "contextsWithoutVisibleTenantSignal": 4,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-025",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-control-report/financial-control-report.service.ts",
+      "queryCount": 6,
+      "contextsWithoutVisibleTenantSignal": 6,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-026",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-escalations/financial-escalations.service.ts",
+      "queryCount": 7,
+      "contextsWithoutVisibleTenantSignal": 7,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-027",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-evidence/financial-evidence.service.ts",
+      "queryCount": 2,
+      "contextsWithoutVisibleTenantSignal": 2,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-028",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-exceptions/financial-exceptions.service.ts",
+      "queryCount": 4,
+      "contextsWithoutVisibleTenantSignal": 4,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-029",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-governance/financial-governance.service.ts",
+      "queryCount": 5,
+      "contextsWithoutVisibleTenantSignal": 5,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-030",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-investigation-cases/financial-investigation-cases.service.ts",
+      "queryCount": 6,
+      "contextsWithoutVisibleTenantSignal": 6,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-031",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-investigations/financial-investigation.service.ts",
+      "queryCount": 2,
+      "contextsWithoutVisibleTenantSignal": 2,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-032",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-reconciliation/financial-reconciliation.service.ts",
+      "queryCount": 3,
+      "contextsWithoutVisibleTenantSignal": 3,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-033",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/financial-reports/financial-reports.service.ts",
+      "queryCount": 1,
+      "contextsWithoutVisibleTenantSignal": 1,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-034",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/harvest/harvest.service.ts",
+      "queryCount": 8,
+      "contextsWithoutVisibleTenantSignal": 8,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-035",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/inspections/inspections.service.ts",
+      "queryCount": 2,
+      "contextsWithoutVisibleTenantSignal": 2,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-036",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/integration-workflows/integration-workflows.service.ts",
+      "queryCount": 11,
+      "contextsWithoutVisibleTenantSignal": 11,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-037",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/investment/investment.service.ts",
+      "queryCount": 7,
+      "contextsWithoutVisibleTenantSignal": 7,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-038",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/maintenance/maintenance.service.ts",
+      "queryCount": 12,
+      "contextsWithoutVisibleTenantSignal": 12,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-039",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/management-intelligence/management-intelligence.service.ts",
+      "queryCount": 6,
+      "contextsWithoutVisibleTenantSignal": 6,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-040",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.service.ts",
+      "queryCount": 12,
+      "contextsWithoutVisibleTenantSignal": 12,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-041",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/notification-policies/notification-policies.service.ts",
+      "queryCount": 7,
+      "contextsWithoutVisibleTenantSignal": 7,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-042",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/nursery/nursery.service.ts",
+      "queryCount": 7,
+      "contextsWithoutVisibleTenantSignal": 7,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-043",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/performance-intelligence/performance-intelligence.service.ts",
+      "queryCount": 8,
+      "contextsWithoutVisibleTenantSignal": 8,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-044",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/performance-strategy/performance-strategy.service.ts",
+      "queryCount": 5,
+      "contextsWithoutVisibleTenantSignal": 5,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-045",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/photo-evidence/photo-evidence.service.ts",
+      "queryCount": 4,
+      "contextsWithoutVisibleTenantSignal": 4,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-046",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/procurement/procurement.service.ts",
+      "queryCount": 28,
+      "contextsWithoutVisibleTenantSignal": 28,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-047",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/regeneration/regeneration.service.ts",
+      "queryCount": 9,
+      "contextsWithoutVisibleTenantSignal": 9,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-048",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/reinvestment-decision-engine/reinvestment-decision-engine.service.ts",
+      "queryCount": 4,
+      "contextsWithoutVisibleTenantSignal": 4,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-049",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/risk-management/risk-management.service.ts",
+      "queryCount": 6,
+      "contextsWithoutVisibleTenantSignal": 6,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-050",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.service.ts",
+      "queryCount": 12,
+      "contextsWithoutVisibleTenantSignal": 12,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-051",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/statement-matching/statement-matching.service.ts",
+      "queryCount": 11,
+      "contextsWithoutVisibleTenantSignal": 11,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-052",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/tasks/tasks.service.ts",
+      "queryCount": 2,
+      "contextsWithoutVisibleTenantSignal": 2,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    },
+    {
+      "id": "DATA-SCOPE-053",
+      "severity": "HIGH",
+      "status": "REVIEW REQUIRED",
+      "file": "apps/api/src/workforce/workforce.service.ts",
+      "queryCount": 11,
+      "contextsWithoutVisibleTenantSignal": 11,
+      "description": "One or more database-operation contexts lack a nearby visible tenant/organization signal. This heuristic can produce false positives and does not prove a vulnerability.",
+      "requiredEvidence": "Inspect full method and helper call chain; verify tenant predicate is enforced server-side on every read/write; add cross-tenant runtime tests."
+    }
+  ],
+  "limitations": [
+    "Text heuristics do not understand dataflow, helper functions, decorators, middleware, or database query semantics.",
+    "A visible tenant string is not proof of correct tenant scoping.",
+    "No API requests or database operations are executed.",
+    "Production clearance requires code review and live cross-tenant read/write tests in a disposable environment."
+  ]
+}

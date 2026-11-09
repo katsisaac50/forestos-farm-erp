@@ -1,0 +1,63 @@
+{
+  "phase": 168,
+  "title": "Production Release Gate & Deployment Readiness",
+  "generatedAt": "2026-10-29T18:52:05.661Z",
+  "releaseDecision": "NOT READY — evidence incomplete",
+  "checks": [
+    {
+      "name": "API package manifest parses",
+      "status": "PASS",
+      "detail": "Valid JSON"
+    },
+    {
+      "name": "Production build command declared",
+      "status": "PASS",
+      "detail": "build=nest build"
+    },
+    {
+      "name": "NestJS production build",
+      "status": "NOT VERIFIED",
+      "detail": "Dependencies/Nest CLI absent; install dependencies and run npm run build in apps/api"
+    },
+    {
+      "name": "Required contract suite: phase164-transaction-integrity-contract-tests.js",
+      "status": "PASS",
+      "detail": "Phase 164 contract tests: 13/13 passed"
+    },
+    {
+      "name": "Required contract suite: phase165-concurrency-recovery-contract-tests.js",
+      "status": "PASS",
+      "detail": "Phase 165 concurrency/recovery contract tests: 12/12 passed"
+    },
+    {
+      "name": "Required contract suite: phase166-transaction-fault-injection-contract-tests.js",
+      "status": "PASS",
+      "detail": "Phase 166 fault-injection contract tests: 11/11 passed"
+    },
+    {
+      "name": "Required contract suite: phase167-recovery-idempotency-contract-tests.js",
+      "status": "PASS",
+      "detail": "Phase 167 recovery/idempotency contract tests: 15/15 passed"
+    },
+    {
+      "name": "Live MongoDB transaction evidence",
+      "status": "NOT VERIFIED",
+      "detail": "FORESTOS_TEST_MONGODB_URI is not configured"
+    },
+    {
+      "name": "Registry endpoint authorization review",
+      "status": "REVIEW REQUIRED",
+      "detail": "Controller exists; release gate does not certify tenant/role policy from source inspection"
+    },
+    {
+      "name": "Environment configuration template",
+      "status": "PASS",
+      "detail": "apps/api/.env.example"
+    }
+  ],
+  "limitations": [
+    "NestJS production compilation was not executed.",
+    "Live database transaction, rollback, concurrency, and recovery behaviour has not been verified by this gate.",
+    "A human security review of tenant derivation, role permissions, and endpoint exposure is still required."
+  ]
+}

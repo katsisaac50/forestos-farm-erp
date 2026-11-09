@@ -1,0 +1,13 @@
+{
+  "phase": 164,
+  "title": "Transaction Integrity Integration Tests",
+  "staticContractTests": "13/13 passed",
+  "liveMongoIntegration": "skipped: no FORESTOS_TEST_MONGODB_URI and explicit disposable test database configured",
+  "build": "not run in package-generation environment",
+  "limitations": [
+    "Static contract checks do not prove live database transaction behaviour.",
+    "The suite does not force a storage-engine failure after a write; it checks rejected operations, atomic multi-record results, stale revision rejection, version conflicts, and retry identity."
+  ],
+  "existingPhaseContractTestScripts": "58 passed, 0 failed",
+  "integrationHarnessSyntax": "passed"
+}

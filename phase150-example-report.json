@@ -1,0 +1,236 @@
+{
+  "schemaVersion": "150.1",
+  "reportType": "management_command_centre",
+  "generatedAt": "2026-10-29",
+  "businessName": "ForestOS Demo Farm",
+  "businessHealth": "urgent_attention",
+  "executiveSummary": "Immediate management review is required for critical or blocked operational exposure.",
+  "scorecards": {
+    "forestry": {
+      "status": "on_track",
+      "supplied": true,
+      "metrics": {
+        "treeCount": 7000,
+        "plantedAcres": 7,
+        "survivalRate": 0.9,
+        "targetSurvivalRate": 0.9
+      },
+      "issueCount": 0
+    },
+    "apiary": {
+      "status": "on_track",
+      "supplied": true,
+      "metrics": {
+        "hives": 10,
+        "activeColonies": 1,
+        "targetActiveColonies": 3
+      },
+      "issueCount": 0
+    },
+    "workforce": {
+      "status": "on_track",
+      "supplied": true,
+      "metrics": {
+        "tasksDue": 12,
+        "tasksCompleted": 10,
+        "overdueTasks": 2
+      },
+      "issueCount": 0
+    },
+    "inspections": {
+      "status": "urgent_attention",
+      "supplied": true,
+      "metrics": {
+        "openFindings": 2,
+        "criticalFindings": 1
+      },
+      "issueCount": 1
+    },
+    "dataQuality": {
+      "status": "review_required",
+      "supplied": true,
+      "metrics": null,
+      "issueCount": 1
+    },
+    "correctiveActions": {
+      "status": "on_track",
+      "supplied": true,
+      "metrics": null,
+      "issueCount": 0
+    },
+    "decisionActions": {
+      "status": "on_track",
+      "supplied": true,
+      "metrics": null,
+      "issueCount": 0
+    }
+  },
+  "kpiSnapshot": {
+    "forestry": {
+      "treeCount": 7000,
+      "plantedAcres": 7,
+      "survivalRate": 0.9,
+      "targetSurvivalRate": 0.9
+    },
+    "apiary": {
+      "hives": 10,
+      "activeColonies": 1,
+      "targetActiveColonies": 3
+    },
+    "workforce": {
+      "tasksDue": 12,
+      "tasksCompleted": 10,
+      "overdueTasks": 2
+    },
+    "inspections": {
+      "openFindings": 2,
+      "criticalFindings": 1
+    },
+    "dataQuality": null,
+    "correctiveActions": null,
+    "decisionActions": null
+  },
+  "counts": {
+    "sectionsSupplied": 7,
+    "sectionsMissing": 0,
+    "issuesTracked": 4,
+    "criticalOpen": 1,
+    "overdueItems": 1,
+    "correctiveActionsOpen": 1,
+    "correctiveActionsOverdue": 1,
+    "decisionActionsOpen": 1
+  },
+  "topPriorities": [
+    {
+      "id": "HIGH_SEVERITY_INSPECTION",
+      "section": "inspections",
+      "title": "Review the flagged inspection finding and record containment evidence.",
+      "priority": "critical",
+      "dueDate": null,
+      "overdue": false,
+      "status": "open",
+      "source": "inspections",
+      "recommendation": "Assign an accountable owner, set a due date, and record closure evidence.",
+      "actionType": "review"
+    },
+    {
+      "id": "CAPA-001",
+      "section": "correctiveActions",
+      "title": "Complete the outstanding fence repair",
+      "priority": "high",
+      "dueDate": "2026-10-28",
+      "overdue": true,
+      "status": "in_progress",
+      "source": "correctiveActions",
+      "recommendation": "Confirm ownership, due date, evidence, and next review step.",
+      "actionType": "corrective_action"
+    },
+    {
+      "id": "DEC-001",
+      "section": "decisionActions",
+      "title": "Review the next apiary expansion step",
+      "priority": "medium",
+      "dueDate": "2026-11-05",
+      "overdue": false,
+      "status": "proposed",
+      "source": "decisionActions",
+      "recommendation": "Confirm budget, colony readiness, and owner before approval.",
+      "actionType": "decision"
+    },
+    {
+      "id": "STALE_SOURCE",
+      "section": "dataQuality",
+      "title": "Refresh the source snapshot before relying on this report for decisions.",
+      "priority": "medium",
+      "dueDate": null,
+      "overdue": false,
+      "status": "open",
+      "source": "dataQuality",
+      "recommendation": "Assign an accountable owner, set a due date, and record closure evidence.",
+      "actionType": "review"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "critical",
+      "title": "Resolve critical operational exposure",
+      "detail": "1 critical open item(s) require accountable ownership and prompt review."
+    },
+    {
+      "priority": "high",
+      "title": "Review overdue corrective actions",
+      "detail": "1 corrective action(s) are past due; re-plan or escalate with evidence."
+    },
+    {
+      "priority": "medium",
+      "title": "Close the management decision loop",
+      "detail": "1 decision/action proposal(s) remain open; record owner, decision, and next step."
+    }
+  ],
+  "issueRegister": [
+    {
+      "id": "HIGH_SEVERITY_INSPECTION",
+      "section": "inspections",
+      "title": "Review the flagged inspection finding and record containment evidence.",
+      "priority": "critical",
+      "dueDate": null,
+      "overdue": false,
+      "status": "open",
+      "source": "inspections",
+      "recommendation": "Assign an accountable owner, set a due date, and record closure evidence.",
+      "actionType": "review"
+    },
+    {
+      "id": "CAPA-001",
+      "section": "correctiveActions",
+      "title": "Complete the outstanding fence repair",
+      "priority": "high",
+      "dueDate": "2026-10-28",
+      "overdue": true,
+      "status": "in_progress",
+      "source": "correctiveActions",
+      "recommendation": "Confirm ownership, due date, evidence, and next review step.",
+      "actionType": "corrective_action"
+    },
+    {
+      "id": "DEC-001",
+      "section": "decisionActions",
+      "title": "Review the next apiary expansion step",
+      "priority": "medium",
+      "dueDate": "2026-11-05",
+      "overdue": false,
+      "status": "proposed",
+      "source": "decisionActions",
+      "recommendation": "Confirm budget, colony readiness, and owner before approval.",
+      "actionType": "decision"
+    },
+    {
+      "id": "STALE_SOURCE",
+      "section": "dataQuality",
+      "title": "Refresh the source snapshot before relying on this report for decisions.",
+      "priority": "medium",
+      "dueDate": null,
+      "overdue": false,
+      "status": "open",
+      "source": "dataQuality",
+      "recommendation": "Assign an accountable owner, set a due date, and record closure evidence.",
+      "actionType": "review"
+    }
+  ],
+  "provenance": {
+    "inputMode": "local_json_snapshot",
+    "suppliedSections": [
+      "forestry",
+      "apiary",
+      "workforce",
+      "inspections",
+      "dataQuality",
+      "correctiveActions",
+      "decisionActions"
+    ],
+    "missingSections": [],
+    "liveConnectors": false,
+    "generatedFromProvidedInputOnly": true,
+    "note": "Missing metrics and sections are not treated as zero. No live system, database, or external source was queried."
+  }
+}

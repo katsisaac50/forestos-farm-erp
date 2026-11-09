@@ -1,0 +1,19 @@
+{
+  "phase": 189,
+  "name": "Reproducible API Build Readiness",
+  "contractTestSuites": {"passed": 83, "failed": 0, "total": 83},
+  "phase189ContractTests": {"passed": 12, "failed": 0, "total": 12},
+  "javascriptSyntaxChecks": {"passed": 164, "failed": 0, "total": 164},
+  "jsonFiles": {"valid": 95, "invalid": 1, "total": 96},
+  "knownPreExistingJsonIssue": "PHASE125_SCHEMA_INDEX_READINESS.json has extra data at line 96, column 2.",
+  "buildPreflight": {"passed": 5, "blocked": 2, "total": 7},
+  "apiBuildExecuted": false,
+  "liveHttpTestsExecuted": false,
+  "mongodbIntegrationTestsExecuted": false,
+  "productionCleared": false,
+  "knownBlockers": [
+    "API dependency lockfile absent at packaging time",
+    "NestJS API dependencies not installed in packaging environment",
+    "Production build and live HTTP authentication tests not executed"
+  ]
+}

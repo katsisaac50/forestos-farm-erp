@@ -1,0 +1,16 @@
+{
+  "phase": 163,
+  "title": "Registry Batch Live Integration Probe",
+  "generatedAt": "2026-10-29T16:04:03.700Z",
+  "mode": "opt-in POST + idempotent replay",
+  "checks": [
+    {
+      "name": "Write-safety preconditions",
+      "status": "BLOCKED",
+      "detail": "requires API URL, dedicated token, tenant ID, FORESTOS_TEST_ALLOW_WRITES=YES, and a test database name containing a standalone test marker"
+    }
+  ],
+  "limitations": [
+    "No request was sent; write probe requires explicit opt-in and a clearly named disposable test database."
+  ]
+}

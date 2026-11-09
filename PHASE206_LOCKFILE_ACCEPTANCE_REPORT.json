@@ -1,0 +1,34 @@
+{
+  "phase": 206,
+  "title": "Lockfile Acceptance Gate",
+  "generatedAt": "2026-10-30T01:14:39.890Z",
+  "networkAccessAttempted": false,
+  "installExecuted": false,
+  "buildExecuted": false,
+  "productionCleared": false,
+  "imported": false,
+  "status": "BLOCKED_EXPLICIT_REVIEW_REQUIRED",
+  "blockers": [
+    "Requires --candidate PATH --sha256 EXPECTED_SHA256 --confirm-trusted-source after independent provenance review."
+  ],
+  "nextActions": [
+    "Independently verify the source repository/CI artifact and expected SHA-256 before using the confirmation flag.",
+    "After import, run npm ci from apps/api and then npm run build; record actual outcomes.",
+    "A successful import is not proof of dependency installation, compilation, runtime correctness, or production readiness."
+  ],
+  "manifest": {
+    "name": "forestos-api",
+    "version": "0.1.0",
+    "sha256": "84937ecee64daaa8079b8a20b3e89d5a3cce10a0f9d184d4913ce16d42f49e93"
+  },
+  "validation": {
+    "contractTestFilesPassed": 100,
+    "contractTestFilesFailed": 0,
+    "contractAssertionsPassed": 1198,
+    "javascriptSyntaxPassed": 203,
+    "javascriptSyntaxFailed": 0,
+    "jsonFilesChecked": 132,
+    "jsonFilesValid": 131,
+    "preExistingInvalidJsonFiles": 1
+  }
+}

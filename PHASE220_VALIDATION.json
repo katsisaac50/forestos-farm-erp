@@ -1,0 +1,9 @@
+{
+  "phase": 220,
+  "validationType": "local contract validation",
+  "remoteWorkflowExecuted": false,
+  "apiBuildExecuted": false,
+  "productionCleared": false,
+  "knownBlocker": "apps/api/package-lock.json is absent in this workspace",
+  "testCommand": "node scripts/phase220_authoritative_build_gate_contract_tests.js"
+}

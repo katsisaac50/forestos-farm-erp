@@ -1,0 +1,25 @@
+{
+  "phase": 184,
+  "title": "JWT Startup Safety Gate",
+  "generatedAt": "2026-10-29T21:50:37.380Z",
+  "implementation": "apps/api/src/auth/jwt-secret-policy.js",
+  "integration": "apps/api/src/auth/auth.module.ts resolves JWT_SECRET before JwtModule registration",
+  "requiredEnvironmentVariable": "JWT_SECRET",
+  "productionMinimumCharacters": 32,
+  "rejects": [
+    "missing or blank secret",
+    "known placeholder values",
+    "production secrets shorter than 32 characters",
+    "production repeated-character values"
+  ],
+  "noFallbackSecret": true,
+  "liveRuntimeTestsRun": false,
+  "productionBuildRun": false,
+  "releaseStatus": "NOT_CLEARED_FOR_PRODUCTION",
+  "requiredFollowUp": [
+    "configure secret through deployment secret manager",
+    "run NestJS build",
+    "test startup failure in controlled production-like process",
+    "run live HTTP auth and cross-tenant isolation tests"
+  ]
+}

@@ -1,0 +1,2035 @@
+{
+  "title": "ForestOS Phase 118 — Route-to-Service Tenant Remediation Matrix",
+  "generatedAt": "2026-10-25T15:55:25.189Z",
+  "method": "Static heuristic join of Phase 116 controller route inventory and Phase 117 service query signals. Same-directory service candidates and property-name mentions are not a confirmed call graph.",
+  "summary": {
+    "controllers": 59,
+    "routes": 222,
+    "p1RouteAndServiceReview": 47,
+    "p1RouteReview": 3,
+    "p2ServiceReview": 0,
+    "p3VerifyEachRoute": 9,
+    "controllersWithoutContextSignal": 50
+  },
+  "status": "REVIEW_MATRIX_ONLY_NOT_A_SECURITY_FINDING_OR_PRODUCTION_CERTIFICATION",
+  "controllers": [
+    {
+      "controller": "apps/api/src/alert-center/alert-center.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "POST /refresh",
+        "PATCH /:id/state"
+      ],
+      "routeCount": 3,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/alert-center/alert-center.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/backup-continuity/backup-continuity.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /records",
+        "POST /records",
+        "POST /records/:id/verify",
+        "POST /recovery-drill"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/backup-continuity/backup-continuity.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/capital-allocation/capital-allocation.controller.ts",
+      "routes": [
+        "POST /policy",
+        "POST /proposals",
+        "PATCH /proposals/:id/review"
+      ],
+      "routeCount": 3,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/capital-allocation/capital-allocation.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "routes": [
+        "GET /reconciliation",
+        "PATCH /:id/review",
+        "PATCH /:id/evidence-reference",
+        "POST /:id/correction-request",
+        "POST /:id/reversal"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/capital-spend-verification/capital-spend-verification.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "routes": [
+        "POST /upload",
+        "GET /:id/download",
+        "GET /recovery-escalations/provider-health",
+        "POST /recovery-escalations/events/:id/replay",
+        "GET /recovery-escalations/scheduler-status",
+        "POST /recovery-escalations/run",
+        "GET /recovery-escalations/events",
+        "GET /recovery-escalations/audit-summary",
+        "GET /recovery-escalations/delivery-status",
+        "POST /recovery-escalations/deliver",
+        "POST /recovery-escalations/retry-failed",
+        "GET /recovery-alerts",
+        "GET /recovery-incidents",
+        "POST /recovery-incidents",
+        "PATCH /recovery-incidents/:id",
+        "POST /recovery-incidents/:id/approve",
+        "POST /recovery-incidents/:id/close",
+        "GET /operations/health",
+        "POST /operations/reconcile",
+        "GET /:id/history",
+        "POST /:id/review",
+        "POST /:id/quarantine"
+      ],
+      "routeCount": 22,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/case-evidence/case-evidence.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/cashflow/cashflow.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /positions",
+        "POST /positions",
+        "GET /plans",
+        "POST /plans",
+        "GET /decisions",
+        "POST /decisions"
+      ],
+      "routeCount": 7,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/cashflow/cashflow.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/command-centre/command-centre.controller.ts",
+      "routes": [
+        "GET /dashboard"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/command-centre/command-centre.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/corrective-actions/corrective-actions.controller.ts",
+      "routes": [
+        "GET /analytics",
+        "POST /from-inspection/:inspectionId",
+        "POST /:id/update",
+        "POST /:id/review"
+      ],
+      "routeCount": 4,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/corrective-actions/corrective-actions.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/cost-intelligence/cost-intelligence.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /plans",
+        "POST /plans",
+        "GET /allocations",
+        "POST /allocations"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/cost-intelligence/cost-intelligence.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/dashboard/dashboard.controller.ts",
+      "routes": [
+        "GET /summary"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/dashboard/dashboard.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/data-integrity/data-integrity.controller.ts",
+      "routes": [
+        "GET /report"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/data-integrity/data-integrity.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/evidence/evidence.controller.ts",
+      "routes": [
+        "GET /:id/image"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/evidence/evidence.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/farm-map/farm-map.controller.ts",
+      "routes": [
+        "POST /:id/archive"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/farm-map/farm-map.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/field-inspections/field-inspections.controller.ts",
+      "routes": [
+        "POST /:id/submit",
+        "POST /:id/review"
+      ],
+      "routeCount": 2,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/field-inspections/field-inspections.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/field-logs/field-logs.controller.ts",
+      "routes": [
+        "PATCH /:id"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/field-logs/field-logs.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/field-navigation/field-navigation.controller.ts",
+      "routes": [
+        "POST /:id/archive"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/field-navigation/field-navigation.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/field-verification/field-verification.controller.ts",
+      "routes": [
+        "PATCH /:id/approve",
+        "PATCH /:id/reject"
+      ],
+      "routeCount": 2,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/field-verification/field-verification.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/finance/finance.controller.ts",
+      "routes": [
+        "PATCH /:id"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/finance/finance.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/financial-action-centre/financial-action-centre.controller.ts",
+      "routes": [
+        "PATCH /:actionId"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/financial-action-centre/financial-action-centre.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/financial-escalations/financial-escalations.controller.ts",
+      "routes": [
+        "PATCH /:escalationId"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/financial-escalations/financial-escalations.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/financial-evidence/financial-evidence.controller.ts",
+      "routes": [
+        "PATCH /:evidenceId/review"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/financial-evidence/financial-evidence.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/financial-investigation-cases/financial-investigation-cases.controller.ts",
+      "routes": [
+        "GET /:id",
+        "PATCH /:id",
+        "POST /:id/second-review",
+        "POST /:id/reopen"
+      ],
+      "routeCount": 4,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/financial-investigation-cases/financial-investigation-cases.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/financial-investigations/financial-investigation.controller.ts",
+      "routes": [
+        "PATCH /:id"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/financial-investigations/financial-investigation.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/financial-reconciliation/financial-reconciliation.controller.ts",
+      "routes": [
+        "PATCH /:id/review"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/financial-reconciliation/financial-reconciliation.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/financial-reports/financial-reports.controller.ts",
+      "routes": [
+        "GET /monthly"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/financial-reports/financial-reports.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/harvest/harvest.controller.ts",
+      "routes": [
+        "GET /plans",
+        "POST /plans",
+        "PATCH /plans/:id",
+        "GET /quotes",
+        "POST /quotes",
+        "GET /costs",
+        "POST /costs",
+        "GET /scenario/:planId"
+      ],
+      "routeCount": 8,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/harvest/harvest.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/inspections/inspections.controller.ts",
+      "routes": [
+        "PATCH /:id"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/inspections/inspections.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/integration-workflows/integration-workflows.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /events",
+        "POST /events",
+        "POST /events/:id/process",
+        "POST /events/:id/cancel"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/integration-workflows/integration-workflows.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/inventory-control/inventory-control.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /items",
+        "POST /items",
+        "PATCH /items/:id",
+        "GET /movements",
+        "POST /movements"
+      ],
+      "routeCount": 6,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/inventory-control/inventory-control.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/inventory/inventory.controller.ts",
+      "routes": [
+        "PATCH /:id"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/inventory/inventory.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/investment/investment.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /scenarios",
+        "POST /scenarios",
+        "PATCH /scenarios/:id/status",
+        "POST /decisions"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/investment/investment.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/maintenance/maintenance.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /assets",
+        "POST /assets",
+        "PATCH /assets/:id",
+        "GET /records",
+        "POST /records",
+        "PATCH /records/:id",
+        "GET /parts",
+        "POST /parts",
+        "PATCH /parts/:id"
+      ],
+      "routeCount": 10,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/maintenance/maintenance.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/management-intelligence/management-intelligence.controller.ts",
+      "routes": [
+        "GET /dashboard"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/management-intelligence/management-intelligence.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/monthly-financial-close/monthly-financial-close.controller.ts",
+      "routes": [
+        "GET /versions/:month",
+        "PATCH /:id/review",
+        "PATCH /:id/reopen"
+      ],
+      "routeCount": 3,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/monthly-financial-close/monthly-financial-close.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/notification-policies/notification-policies.controller.ts",
+      "routes": [
+        "POST /evaluate",
+        "PATCH /:policyKey",
+        "GET /:policyKey/history"
+      ],
+      "routeCount": 3,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/notification-policies/notification-policies.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/nursery/nursery.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /batches",
+        "POST /batches",
+        "GET /movements",
+        "POST /movements"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/nursery/nursery.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/performance-intelligence/performance-intelligence.controller.ts",
+      "routes": [
+        "GET /catalog",
+        "POST /apply"
+      ],
+      "routeCount": 2,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/performance-intelligence/performance-intelligence.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/performance-strategy/performance-strategy.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "POST /targets",
+        "PATCH /targets/:id",
+        "POST /targets/:id/updates",
+        "GET /targets/:id/history"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/performance-strategy/performance-strategy.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/photo-evidence/photo-evidence.controller.ts",
+      "routes": [
+        "POST /upload",
+        "GET /:id/file",
+        "PATCH /:id/approve",
+        "PATCH /:id/reject"
+      ],
+      "routeCount": 4,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/photo-evidence/photo-evidence.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/procurement/procurement.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /suppliers",
+        "POST /suppliers",
+        "PATCH /suppliers/:id",
+        "GET /requests",
+        "POST /requests",
+        "PATCH /requests/:id",
+        "GET /orders",
+        "POST /orders",
+        "PATCH /orders/:id",
+        "GET /receipts",
+        "POST /receipts"
+      ],
+      "routeCount": 12,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/procurement/procurement.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/regeneration/regeneration.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /plans",
+        "POST /plans",
+        "PATCH /plans/:id",
+        "GET /costs",
+        "POST /costs",
+        "GET /survival-checks",
+        "POST /survival-checks"
+      ],
+      "routeCount": 8,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/regeneration/regeneration.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/risk-management/risk-management.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /risks",
+        "POST /risks",
+        "PATCH /risks/:id",
+        "GET /actions",
+        "POST /actions",
+        "PATCH /actions/:id"
+      ],
+      "routeCount": 7,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/risk-management/risk-management.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/sales/sales.controller.ts",
+      "routes": [
+        "PATCH /:id"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/sales/sales.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "routes": [
+        "GET /overview",
+        "GET /templates",
+        "POST /seed-defaults",
+        "POST /templates",
+        "PATCH /templates/:id/status",
+        "GET /my-runs",
+        "GET /runs",
+        "POST /runs",
+        "PATCH /runs/:id"
+      ],
+      "routeCount": 9,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/standard-operating-procedures/standard-operating-procedures.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/statement-matching/statement-matching.controller.ts",
+      "routes": [
+        "GET /imports",
+        "GET /imports/:importId",
+        "POST /imports",
+        "GET /imports/:importId/rows/:rowId/candidates",
+        "POST /imports/:importId/rows/:rowId/decision"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/statement-matching/statement-matching.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/tasks/tasks.controller.ts",
+      "routes": [
+        "PATCH /:id"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/tasks/tasks.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/workforce/workforce.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /workers",
+        "POST /workers",
+        "GET /tasks",
+        "POST /tasks",
+        "PATCH /tasks/:id",
+        "GET /entries",
+        "POST /entries"
+      ],
+      "routeCount": 8,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/workforce/workforce.service.ts",
+          "referencedByController": true,
+          "priority": "P1_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD",
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL",
+            "WRITE_MARKERS_WITHOUT_VISIBLE_ORGANIZATION_FIELD"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_AND_SERVICE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/auth/auth.controller.ts",
+      "routes": [
+        "POST /setup-owner",
+        "POST /login",
+        "POST /users",
+        "GET /me"
+      ],
+      "routeCount": 4,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [],
+      "heuristicServicePropertyMentions": [
+        "users"
+      ],
+      "priority": "P1_ROUTE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/health.controller.ts",
+      "routes": [
+        "GET /ready"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [],
+      "heuristicServicePropertyMentions": [],
+      "priority": "P1_ROUTE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/organizations/organizations.controller.ts",
+      "routes": [
+        "POST /memberships",
+        "GET /:id/memberships",
+        "GET /:id/audit"
+      ],
+      "routeCount": 3,
+      "controllerContextSignal": false,
+      "controllerClassification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/organizations/organization-access.service.ts",
+          "referencedByController": false,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        },
+        {
+          "service": "apps/api/src/organizations/organizations.service.ts",
+          "referencedByController": true,
+          "priority": "P2_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P1_ROUTE_REVIEW",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/apiary-actions/apiary-actions.controller.ts",
+      "routes": [
+        "GET /summary",
+        "GET /:id/history",
+        "PATCH /:id"
+      ],
+      "routeCount": 3,
+      "controllerContextSignal": true,
+      "controllerClassification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/apiary-actions/apiary-actions.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "actions"
+      ],
+      "priority": "P3_VERIFY_EACH_ROUTE",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/apiary-intelligence/apiary-intelligence.controller.ts",
+      "routes": [
+        "GET /dashboard",
+        "GET /productivity"
+      ],
+      "routeCount": 2,
+      "controllerContextSignal": true,
+      "controllerClassification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/apiary-intelligence/apiary-intelligence.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [],
+      "priority": "P3_VERIFY_EACH_ROUTE",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/apiary-operations/apiary-operations.controller.ts",
+      "routes": [
+        "GET /inspections",
+        "POST /inspections",
+        "GET /harvests",
+        "POST /harvests",
+        "GET /harvest-summary"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": true,
+      "controllerClassification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/apiary-operations/apiary-operations.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "operations"
+      ],
+      "priority": "P3_VERIFY_EACH_ROUTE",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/field-capture/field-capture.controller.ts",
+      "routes": [
+        "POST /:id/evidence",
+        "GET /:id/evidence/:evidenceId",
+        "DELETE /:id/evidence/:evidenceId",
+        "GET /governance/summary",
+        "PATCH /:id/review"
+      ],
+      "routeCount": 5,
+      "controllerContextSignal": true,
+      "controllerClassification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/field-capture/evidence-storage.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        },
+        {
+          "service": "apps/api/src/field-capture/field-capture.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "evidence",
+        "captures"
+      ],
+      "priority": "P3_VERIFY_EACH_ROUTE",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "routes": [
+        "GET /workers",
+        "POST /workers",
+        "GET /tasks",
+        "POST /tasks",
+        "PATCH /tasks/:id/status",
+        "GET /tasks/summary",
+        "GET /tasks/:id/history"
+      ],
+      "routeCount": 7,
+      "controllerContextSignal": true,
+      "controllerClassification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/field-workforce/field-workforce.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "workforce"
+      ],
+      "priority": "P3_VERIFY_EACH_ROUTE",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/growth/growth.controller.ts",
+      "routes": [
+        "GET /trend"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": true,
+      "controllerClassification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/growth/growth.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "service"
+      ],
+      "priority": "P3_VERIFY_EACH_ROUTE",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/hives/hives.controller.ts",
+      "routes": [
+        "PATCH /:id"
+      ],
+      "routeCount": 1,
+      "controllerContextSignal": true,
+      "controllerClassification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/hives/hives.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "hives"
+      ],
+      "priority": "P3_VERIFY_EACH_ROUTE",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/organizations/organization-access.controller.ts",
+      "routes": [
+        "GET /mine",
+        "GET /context"
+      ],
+      "routeCount": 2,
+      "controllerContextSignal": true,
+      "controllerClassification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/organizations/organization-access.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        },
+        {
+          "service": "apps/api/src/organizations/organizations.service.ts",
+          "referencedByController": false,
+          "priority": "P2_REVIEW",
+          "reviewSignals": [
+            "QUERY_MARKERS_WITHOUT_VISIBLE_ORG_CONTEXT_SIGNAL"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "access"
+      ],
+      "priority": "P3_VERIFY_EACH_ROUTE",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "controller": "apps/api/src/plantations/plantations.controller.ts",
+      "routes": [
+        "GET /intelligence",
+        "PATCH /:id"
+      ],
+      "routeCount": 2,
+      "controllerContextSignal": true,
+      "controllerClassification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE",
+      "sameDirectoryServiceCandidates": [
+        {
+          "service": "apps/api/src/plantations/plantations.service.ts",
+          "referencedByController": true,
+          "priority": "P3_CONFIRM",
+          "reviewSignals": [
+            "STATIC_SCOPE_SIGNALS_PRESENT_REVIEW_QUERY_BY_QUERY"
+          ]
+        }
+      ],
+      "heuristicServicePropertyMentions": [
+        "plantations"
+      ],
+      "priority": "P3_VERIFY_EACH_ROUTE",
+      "requiredEvidence": [
+        "Confirm actual controller-to-service call path; directory proximity is not proof.",
+        "For every read, update, and delete, verify organization scope is part of the database predicate or is enforced by a verified shared layer.",
+        "Verify organization ID comes from authenticated active membership, not untrusted request input.",
+        "Add positive same-tenant and negative cross-tenant integration tests for each sensitive route.",
+        "Record reviewer, test evidence, and disposition before closing."
+      ]
+    }
+  ],
+  "closureCriteria": [
+    "Every route has an identified real call path, not merely a same-folder candidate.",
+    "Every tenant-owned read/write/delete has verified organization scoping or a documented, tested enforcement layer.",
+    "Cross-tenant access tests fail safely; same-tenant tests continue to pass.",
+    "Suspended/inactive memberships are denied.",
+    "Full dependency-installed API/web builds and database-backed tests pass in a dedicated non-production environment.",
+    "A security reviewer signs off the evidence and unresolved risks."
+  ]
+}

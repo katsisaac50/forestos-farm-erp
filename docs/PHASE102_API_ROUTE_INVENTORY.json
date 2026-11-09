@@ -1,0 +1,4663 @@
+{
+  "summary": {
+    "generatedAt": "2026-10-25T15:46:46.924Z",
+    "controllerFilesScanned": 66,
+    "routeDecoratorsFound": 285,
+    "routesWithAuthReviewSignal": 184,
+    "routesWithTenantScopeReviewSignal": 236,
+    "caveat": "Static heuristics only. These counts are review signals, not confirmed vulnerabilities; guards may be global or delegated and tenant scoping may be inside called services."
+  },
+  "routes": [
+    {
+      "verb": "GET",
+      "path": "/alert-center/dashboard",
+      "controller": "AlertCenterController",
+      "file": "apps/api/src/alert-center/alert-center.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/alert-center/refresh",
+      "controller": "AlertCenterController",
+      "file": "apps/api/src/alert-center/alert-center.controller.ts",
+      "line": 12,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/alert-center/:id/state",
+      "controller": "AlertCenterController",
+      "file": "apps/api/src/alert-center/alert-center.controller.ts",
+      "line": 13,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/apiary-actions",
+      "controller": "ApiaryActionsController",
+      "file": "apps/api/src/apiary-actions/apiary-actions.controller.ts",
+      "line": 18,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/apiary-actions/summary",
+      "controller": "ApiaryActionsController",
+      "file": "apps/api/src/apiary-actions/apiary-actions.controller.ts",
+      "line": 23,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/apiary-actions/:id/history",
+      "controller": "ApiaryActionsController",
+      "file": "apps/api/src/apiary-actions/apiary-actions.controller.ts",
+      "line": 28,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/apiary-actions",
+      "controller": "ApiaryActionsController",
+      "file": "apps/api/src/apiary-actions/apiary-actions.controller.ts",
+      "line": 33,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "PATCH",
+      "path": "/apiary-actions/:id",
+      "controller": "ApiaryActionsController",
+      "file": "apps/api/src/apiary-actions/apiary-actions.controller.ts",
+      "line": 39,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/apiary-intelligence/dashboard",
+      "controller": "ApiaryIntelligenceController",
+      "file": "apps/api/src/apiary-intelligence/apiary-intelligence.controller.ts",
+      "line": 16,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/apiary-intelligence/productivity",
+      "controller": "ApiaryIntelligenceController",
+      "file": "apps/api/src/apiary-intelligence/apiary-intelligence.controller.ts",
+      "line": 20,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/apiary-operations/inspections",
+      "controller": "ApiaryOperationsController",
+      "file": "apps/api/src/apiary-operations/apiary-operations.controller.ts",
+      "line": 21,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/apiary-operations/inspections",
+      "controller": "ApiaryOperationsController",
+      "file": "apps/api/src/apiary-operations/apiary-operations.controller.ts",
+      "line": 30,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/apiary-operations/harvests",
+      "controller": "ApiaryOperationsController",
+      "file": "apps/api/src/apiary-operations/apiary-operations.controller.ts",
+      "line": 40,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/apiary-operations/harvests",
+      "controller": "ApiaryOperationsController",
+      "file": "apps/api/src/apiary-operations/apiary-operations.controller.ts",
+      "line": 49,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/apiary-operations/harvest-summary",
+      "controller": "ApiaryOperationsController",
+      "file": "apps/api/src/apiary-operations/apiary-operations.controller.ts",
+      "line": 59,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/audit",
+      "controller": "AuditController",
+      "file": "apps/api/src/audit/audit.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/auth/setup-owner",
+      "controller": "AuthController",
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": true,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/auth/login",
+      "controller": "AuthController",
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "line": 19,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": true,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/auth/users",
+      "controller": "AuthController",
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "line": 24,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": true,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/auth/me",
+      "controller": "AuthController",
+      "file": "apps/api/src/auth/auth.controller.ts",
+      "line": 31,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": true,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/backup-continuity/dashboard",
+      "controller": "BackupContinuityController",
+      "file": "apps/api/src/backup-continuity/backup-continuity.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/backup-continuity/records",
+      "controller": "BackupContinuityController",
+      "file": "apps/api/src/backup-continuity/backup-continuity.controller.ts",
+      "line": 12,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/backup-continuity/records",
+      "controller": "BackupContinuityController",
+      "file": "apps/api/src/backup-continuity/backup-continuity.controller.ts",
+      "line": 13,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/backup-continuity/records/:id/verify",
+      "controller": "BackupContinuityController",
+      "file": "apps/api/src/backup-continuity/backup-continuity.controller.ts",
+      "line": 14,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/backup-continuity/recovery-drill",
+      "controller": "BackupContinuityController",
+      "file": "apps/api/src/backup-continuity/backup-continuity.controller.ts",
+      "line": 15,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/capital-allocation",
+      "controller": "CapitalAllocationController",
+      "file": "apps/api/src/capital-allocation/capital-allocation.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/capital-allocation/policy",
+      "controller": "CapitalAllocationController",
+      "file": "apps/api/src/capital-allocation/capital-allocation.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/capital-allocation/proposals",
+      "controller": "CapitalAllocationController",
+      "file": "apps/api/src/capital-allocation/capital-allocation.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/capital-allocation/proposals/:id/review",
+      "controller": "CapitalAllocationController",
+      "file": "apps/api/src/capital-allocation/capital-allocation.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/capital-spend-verification/reconciliation",
+      "controller": "CapitalSpendVerificationController",
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/capital-spend-verification",
+      "controller": "CapitalSpendVerificationController",
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/capital-spend-verification",
+      "controller": "CapitalSpendVerificationController",
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/capital-spend-verification/:id/review",
+      "controller": "CapitalSpendVerificationController",
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/capital-spend-verification/:id/evidence-reference",
+      "controller": "CapitalSpendVerificationController",
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/capital-spend-verification/:id/correction-request",
+      "controller": "CapitalSpendVerificationController",
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/capital-spend-verification/:id/reversal",
+      "controller": "CapitalSpendVerificationController",
+      "file": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/upload",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/:id/download",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 17,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/recovery-escalations/provider-health",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 26,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/recovery-escalations/events/:id/replay",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 28,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/recovery-escalations/scheduler-status",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 30,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/recovery-escalations/run",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 32,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/recovery-escalations/events",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 34,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/recovery-escalations/audit-summary",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 36,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/recovery-escalations/delivery-status",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 38,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/recovery-escalations/deliver",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 40,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/recovery-escalations/retry-failed",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 42,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/recovery-alerts",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 44,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/recovery-incidents",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 46,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/recovery-incidents",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 48,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/case-evidence/recovery-incidents/:id",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 50,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/recovery-incidents/:id/approve",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 52,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/recovery-incidents/:id/close",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 54,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/operations/health",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 56,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/operations/reconcile",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 58,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 63,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/case-evidence/:id/history",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 64,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/:id/review",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 65,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/case-evidence/:id/quarantine",
+      "controller": "CaseEvidenceController",
+      "file": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "line": 66,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/cashflow/dashboard",
+      "controller": "CashflowController",
+      "file": "apps/api/src/cashflow/cashflow.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/cashflow/positions",
+      "controller": "CashflowController",
+      "file": "apps/api/src/cashflow/cashflow.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/cashflow/positions",
+      "controller": "CashflowController",
+      "file": "apps/api/src/cashflow/cashflow.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/cashflow/plans",
+      "controller": "CashflowController",
+      "file": "apps/api/src/cashflow/cashflow.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/cashflow/plans",
+      "controller": "CashflowController",
+      "file": "apps/api/src/cashflow/cashflow.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/cashflow/decisions",
+      "controller": "CashflowController",
+      "file": "apps/api/src/cashflow/cashflow.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/cashflow/decisions",
+      "controller": "CashflowController",
+      "file": "apps/api/src/cashflow/cashflow.controller.ts",
+      "line": 15,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/command-centre/dashboard",
+      "controller": "CommandCentreController",
+      "file": "apps/api/src/command-centre/command-centre.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/corrective-actions",
+      "controller": "CorrectiveActionsController",
+      "file": "apps/api/src/corrective-actions/corrective-actions.controller.ts",
+      "line": 9,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/corrective-actions/analytics",
+      "controller": "CorrectiveActionsController",
+      "file": "apps/api/src/corrective-actions/corrective-actions.controller.ts",
+      "line": 10,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/corrective-actions",
+      "controller": "CorrectiveActionsController",
+      "file": "apps/api/src/corrective-actions/corrective-actions.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/corrective-actions/from-inspection/:inspectionId",
+      "controller": "CorrectiveActionsController",
+      "file": "apps/api/src/corrective-actions/corrective-actions.controller.ts",
+      "line": 12,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/corrective-actions/:id/update",
+      "controller": "CorrectiveActionsController",
+      "file": "apps/api/src/corrective-actions/corrective-actions.controller.ts",
+      "line": 13,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/corrective-actions/:id/review",
+      "controller": "CorrectiveActionsController",
+      "file": "apps/api/src/corrective-actions/corrective-actions.controller.ts",
+      "line": 14,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/cost-intelligence/dashboard",
+      "controller": "CostIntelligenceController",
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/cost-intelligence/plans",
+      "controller": "CostIntelligenceController",
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/cost-intelligence/plans",
+      "controller": "CostIntelligenceController",
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/cost-intelligence/allocations",
+      "controller": "CostIntelligenceController",
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/cost-intelligence/allocations",
+      "controller": "CostIntelligenceController",
+      "file": "apps/api/src/cost-intelligence/cost-intelligence.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/dashboard/summary",
+      "controller": "DashboardController",
+      "file": "apps/api/src/dashboard/dashboard.controller.ts",
+      "line": 5,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/data-integrity/report",
+      "controller": "DataIntegrityController",
+      "file": "apps/api/src/data-integrity/data-integrity.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/evidence",
+      "controller": "EvidenceController",
+      "file": "apps/api/src/evidence/evidence.controller.ts",
+      "line": 6,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/evidence",
+      "controller": "EvidenceController",
+      "file": "apps/api/src/evidence/evidence.controller.ts",
+      "line": 7,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/evidence/:id/image",
+      "controller": "EvidenceController",
+      "file": "apps/api/src/evidence/evidence.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/farm-map",
+      "controller": "FarmMapController",
+      "file": "apps/api/src/farm-map/farm-map.controller.ts",
+      "line": 10,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/farm-map",
+      "controller": "FarmMapController",
+      "file": "apps/api/src/farm-map/farm-map.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/farm-map/:id/archive",
+      "controller": "FarmMapController",
+      "file": "apps/api/src/farm-map/farm-map.controller.ts",
+      "line": 14,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/field-capture",
+      "controller": "FieldCaptureController",
+      "file": "apps/api/src/field-capture/field-capture.controller.ts",
+      "line": 19,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/field-capture/:id/evidence",
+      "controller": "FieldCaptureController",
+      "file": "apps/api/src/field-capture/field-capture.controller.ts",
+      "line": 24,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/field-capture/:id/evidence/:evidenceId",
+      "controller": "FieldCaptureController",
+      "file": "apps/api/src/field-capture/field-capture.controller.ts",
+      "line": 31,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "DELETE",
+      "path": "/field-capture/:id/evidence/:evidenceId",
+      "controller": "FieldCaptureController",
+      "file": "apps/api/src/field-capture/field-capture.controller.ts",
+      "line": 44,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/field-capture/governance/summary",
+      "controller": "FieldCaptureController",
+      "file": "apps/api/src/field-capture/field-capture.controller.ts",
+      "line": 54,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/field-capture",
+      "controller": "FieldCaptureController",
+      "file": "apps/api/src/field-capture/field-capture.controller.ts",
+      "line": 59,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "PATCH",
+      "path": "/field-capture/:id/review",
+      "controller": "FieldCaptureController",
+      "file": "apps/api/src/field-capture/field-capture.controller.ts",
+      "line": 63,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/field-inspections",
+      "controller": "FieldInspectionsController",
+      "file": "apps/api/src/field-inspections/field-inspections.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/field-inspections",
+      "controller": "FieldInspectionsController",
+      "file": "apps/api/src/field-inspections/field-inspections.controller.ts",
+      "line": 16,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/field-inspections/:id/submit",
+      "controller": "FieldInspectionsController",
+      "file": "apps/api/src/field-inspections/field-inspections.controller.ts",
+      "line": 21,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/field-inspections/:id/review",
+      "controller": "FieldInspectionsController",
+      "file": "apps/api/src/field-inspections/field-inspections.controller.ts",
+      "line": 26,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/field-logs",
+      "controller": "FieldLogsController",
+      "file": "apps/api/src/field-logs/field-logs.controller.ts",
+      "line": 4,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/field-logs",
+      "controller": "FieldLogsController",
+      "file": "apps/api/src/field-logs/field-logs.controller.ts",
+      "line": 5,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/field-logs/:id",
+      "controller": "FieldLogsController",
+      "file": "apps/api/src/field-logs/field-logs.controller.ts",
+      "line": 6,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/field-navigation",
+      "controller": "FieldNavigationController",
+      "file": "apps/api/src/field-navigation/field-navigation.controller.ts",
+      "line": 12,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/field-navigation",
+      "controller": "FieldNavigationController",
+      "file": "apps/api/src/field-navigation/field-navigation.controller.ts",
+      "line": 17,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/field-navigation/:id/archive",
+      "controller": "FieldNavigationController",
+      "file": "apps/api/src/field-navigation/field-navigation.controller.ts",
+      "line": 25,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/field-verification",
+      "controller": "FieldVerificationController",
+      "file": "apps/api/src/field-verification/field-verification.controller.ts",
+      "line": 10,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/field-verification",
+      "controller": "FieldVerificationController",
+      "file": "apps/api/src/field-verification/field-verification.controller.ts",
+      "line": 15,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/field-verification/:id/approve",
+      "controller": "FieldVerificationController",
+      "file": "apps/api/src/field-verification/field-verification.controller.ts",
+      "line": 20,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/field-verification/:id/reject",
+      "controller": "FieldVerificationController",
+      "file": "apps/api/src/field-verification/field-verification.controller.ts",
+      "line": 23,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/field-workforce/workers",
+      "controller": "FieldWorkforceController",
+      "file": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "line": 17,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/field-workforce/workers",
+      "controller": "FieldWorkforceController",
+      "file": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "line": 21,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/field-workforce/tasks",
+      "controller": "FieldWorkforceController",
+      "file": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "line": 26,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/field-workforce/tasks",
+      "controller": "FieldWorkforceController",
+      "file": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "line": 30,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "PATCH",
+      "path": "/field-workforce/tasks/:id/status",
+      "controller": "FieldWorkforceController",
+      "file": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "line": 35,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/field-workforce/tasks/summary",
+      "controller": "FieldWorkforceController",
+      "file": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "line": 40,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/field-workforce/tasks/:id/history",
+      "controller": "FieldWorkforceController",
+      "file": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "line": 44,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/finance",
+      "controller": "FinanceController",
+      "file": "apps/api/src/finance/finance.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/finance",
+      "controller": "FinanceController",
+      "file": "apps/api/src/finance/finance.controller.ts",
+      "line": 16,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/finance/:id",
+      "controller": "FinanceController",
+      "file": "apps/api/src/finance/finance.controller.ts",
+      "line": 21,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-action-centre",
+      "controller": "FinancialActionCentreController",
+      "file": "apps/api/src/financial-action-centre/financial-action-centre.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/financial-action-centre/:actionId",
+      "controller": "FinancialActionCentreController",
+      "file": "apps/api/src/financial-action-centre/financial-action-centre.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-audit-trail",
+      "controller": "FinancialAuditTrailController",
+      "file": "apps/api/src/financial-audit-trail/financial-audit-trail.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-control-performance",
+      "controller": "FinancialControlPerformanceController",
+      "file": "apps/api/src/financial-control-performance/financial-control-performance.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-control-report",
+      "controller": "FinancialControlReportController",
+      "file": "apps/api/src/financial-control-report/financial-control-report.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-escalations",
+      "controller": "FinancialEscalationsController",
+      "file": "apps/api/src/financial-escalations/financial-escalations.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/financial-escalations/:escalationId",
+      "controller": "FinancialEscalationsController",
+      "file": "apps/api/src/financial-escalations/financial-escalations.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-evidence",
+      "controller": "FinancialEvidenceController",
+      "file": "apps/api/src/financial-evidence/financial-evidence.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/financial-evidence",
+      "controller": "FinancialEvidenceController",
+      "file": "apps/api/src/financial-evidence/financial-evidence.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/financial-evidence/:evidenceId/review",
+      "controller": "FinancialEvidenceController",
+      "file": "apps/api/src/financial-evidence/financial-evidence.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-exceptions",
+      "controller": "FinancialExceptionsController",
+      "file": "apps/api/src/financial-exceptions/financial-exceptions.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-governance",
+      "controller": "FinancialGovernanceController",
+      "file": "apps/api/src/financial-governance/financial-governance.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-investigation-cases",
+      "controller": "FinancialInvestigationCasesController",
+      "file": "apps/api/src/financial-investigation-cases/financial-investigation-cases.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-investigation-cases/:id",
+      "controller": "FinancialInvestigationCasesController",
+      "file": "apps/api/src/financial-investigation-cases/financial-investigation-cases.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/financial-investigation-cases",
+      "controller": "FinancialInvestigationCasesController",
+      "file": "apps/api/src/financial-investigation-cases/financial-investigation-cases.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/financial-investigation-cases/:id",
+      "controller": "FinancialInvestigationCasesController",
+      "file": "apps/api/src/financial-investigation-cases/financial-investigation-cases.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/financial-investigation-cases/:id/second-review",
+      "controller": "FinancialInvestigationCasesController",
+      "file": "apps/api/src/financial-investigation-cases/financial-investigation-cases.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/financial-investigation-cases/:id/reopen",
+      "controller": "FinancialInvestigationCasesController",
+      "file": "apps/api/src/financial-investigation-cases/financial-investigation-cases.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-investigations",
+      "controller": "FinancialInvestigationController",
+      "file": "apps/api/src/financial-investigations/financial-investigation.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/financial-investigations",
+      "controller": "FinancialInvestigationController",
+      "file": "apps/api/src/financial-investigations/financial-investigation.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/financial-investigations/:id",
+      "controller": "FinancialInvestigationController",
+      "file": "apps/api/src/financial-investigations/financial-investigation.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-reconciliation",
+      "controller": "FinancialReconciliationController",
+      "file": "apps/api/src/financial-reconciliation/financial-reconciliation.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/financial-reconciliation",
+      "controller": "FinancialReconciliationController",
+      "file": "apps/api/src/financial-reconciliation/financial-reconciliation.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/financial-reconciliation/:id/review",
+      "controller": "FinancialReconciliationController",
+      "file": "apps/api/src/financial-reconciliation/financial-reconciliation.controller.ts",
+      "line": 19,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/financial-reports/monthly",
+      "controller": "FinancialReportsController",
+      "file": "apps/api/src/financial-reports/financial-reports.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/growth",
+      "controller": "GrowthController",
+      "file": "apps/api/src/growth/growth.controller.ts",
+      "line": 14,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/growth",
+      "controller": "GrowthController",
+      "file": "apps/api/src/growth/growth.controller.ts",
+      "line": 17,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/growth/trend",
+      "controller": "GrowthController",
+      "file": "apps/api/src/growth/growth.controller.ts",
+      "line": 22,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/harvest/plans",
+      "controller": "HarvestController",
+      "file": "apps/api/src/harvest/harvest.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/harvest/plans",
+      "controller": "HarvestController",
+      "file": "apps/api/src/harvest/harvest.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/harvest/plans/:id",
+      "controller": "HarvestController",
+      "file": "apps/api/src/harvest/harvest.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/harvest/quotes",
+      "controller": "HarvestController",
+      "file": "apps/api/src/harvest/harvest.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/harvest/quotes",
+      "controller": "HarvestController",
+      "file": "apps/api/src/harvest/harvest.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/harvest/costs",
+      "controller": "HarvestController",
+      "file": "apps/api/src/harvest/harvest.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/harvest/costs",
+      "controller": "HarvestController",
+      "file": "apps/api/src/harvest/harvest.controller.ts",
+      "line": 15,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/harvest/scenario/:planId",
+      "controller": "HarvestController",
+      "file": "apps/api/src/harvest/harvest.controller.ts",
+      "line": 16,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/health",
+      "controller": "HealthController",
+      "file": "apps/api/src/health.controller.ts",
+      "line": 7,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": true,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/health/ready",
+      "controller": "HealthController",
+      "file": "apps/api/src/health.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": true,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/hives",
+      "controller": "HivesController",
+      "file": "apps/api/src/hives/hives.controller.ts",
+      "line": 22,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/hives",
+      "controller": "HivesController",
+      "file": "apps/api/src/hives/hives.controller.ts",
+      "line": 27,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "PATCH",
+      "path": "/hives/:id",
+      "controller": "HivesController",
+      "file": "apps/api/src/hives/hives.controller.ts",
+      "line": 36,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/inspections",
+      "controller": "InspectionsController",
+      "file": "apps/api/src/inspections/inspections.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/inspections",
+      "controller": "InspectionsController",
+      "file": "apps/api/src/inspections/inspections.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/inspections/:id",
+      "controller": "InspectionsController",
+      "file": "apps/api/src/inspections/inspections.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/integration-workflows/dashboard",
+      "controller": "IntegrationWorkflowsController",
+      "file": "apps/api/src/integration-workflows/integration-workflows.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/integration-workflows/events",
+      "controller": "IntegrationWorkflowsController",
+      "file": "apps/api/src/integration-workflows/integration-workflows.controller.ts",
+      "line": 12,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/integration-workflows/events",
+      "controller": "IntegrationWorkflowsController",
+      "file": "apps/api/src/integration-workflows/integration-workflows.controller.ts",
+      "line": 13,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/integration-workflows/events/:id/process",
+      "controller": "IntegrationWorkflowsController",
+      "file": "apps/api/src/integration-workflows/integration-workflows.controller.ts",
+      "line": 14,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/integration-workflows/events/:id/cancel",
+      "controller": "IntegrationWorkflowsController",
+      "file": "apps/api/src/integration-workflows/integration-workflows.controller.ts",
+      "line": 15,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/inventory-control/dashboard",
+      "controller": "InventoryControlController",
+      "file": "apps/api/src/inventory-control/inventory-control.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/inventory-control/items",
+      "controller": "InventoryControlController",
+      "file": "apps/api/src/inventory-control/inventory-control.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/inventory-control/items",
+      "controller": "InventoryControlController",
+      "file": "apps/api/src/inventory-control/inventory-control.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/inventory-control/items/:id",
+      "controller": "InventoryControlController",
+      "file": "apps/api/src/inventory-control/inventory-control.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/inventory-control/movements",
+      "controller": "InventoryControlController",
+      "file": "apps/api/src/inventory-control/inventory-control.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/inventory-control/movements",
+      "controller": "InventoryControlController",
+      "file": "apps/api/src/inventory-control/inventory-control.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/inventory",
+      "controller": "InventoryController",
+      "file": "apps/api/src/inventory/inventory.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/inventory",
+      "controller": "InventoryController",
+      "file": "apps/api/src/inventory/inventory.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/inventory/:id",
+      "controller": "InventoryController",
+      "file": "apps/api/src/inventory/inventory.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/investment/dashboard",
+      "controller": "InvestmentController",
+      "file": "apps/api/src/investment/investment.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/investment/scenarios",
+      "controller": "InvestmentController",
+      "file": "apps/api/src/investment/investment.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/investment/scenarios",
+      "controller": "InvestmentController",
+      "file": "apps/api/src/investment/investment.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/investment/scenarios/:id/status",
+      "controller": "InvestmentController",
+      "file": "apps/api/src/investment/investment.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/investment/decisions",
+      "controller": "InvestmentController",
+      "file": "apps/api/src/investment/investment.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/maintenance/dashboard",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/maintenance/assets",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/maintenance/assets",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/maintenance/assets/:id",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/maintenance/records",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/maintenance/records",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/maintenance/records/:id",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/maintenance/parts",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 15,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/maintenance/parts",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 16,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/maintenance/parts/:id",
+      "controller": "MaintenanceController",
+      "file": "apps/api/src/maintenance/maintenance.controller.ts",
+      "line": 17,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/management-intelligence/dashboard",
+      "controller": "ManagementIntelligenceController",
+      "file": "apps/api/src/management-intelligence/management-intelligence.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/monthly-financial-close",
+      "controller": "MonthlyFinancialCloseController",
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/monthly-financial-close/versions/:month",
+      "controller": "MonthlyFinancialCloseController",
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.controller.ts",
+      "line": 16,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/monthly-financial-close",
+      "controller": "MonthlyFinancialCloseController",
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.controller.ts",
+      "line": 19,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/monthly-financial-close/:id/review",
+      "controller": "MonthlyFinancialCloseController",
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.controller.ts",
+      "line": 24,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/monthly-financial-close/:id/reopen",
+      "controller": "MonthlyFinancialCloseController",
+      "file": "apps/api/src/monthly-financial-close/monthly-financial-close.controller.ts",
+      "line": 29,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/notification-policies/evaluate",
+      "controller": "NotificationPoliciesController",
+      "file": "apps/api/src/notification-policies/notification-policies.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/notification-policies",
+      "controller": "NotificationPoliciesController",
+      "file": "apps/api/src/notification-policies/notification-policies.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/notification-policies",
+      "controller": "NotificationPoliciesController",
+      "file": "apps/api/src/notification-policies/notification-policies.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/notification-policies/:policyKey",
+      "controller": "NotificationPoliciesController",
+      "file": "apps/api/src/notification-policies/notification-policies.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/notification-policies/:policyKey/history",
+      "controller": "NotificationPoliciesController",
+      "file": "apps/api/src/notification-policies/notification-policies.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/nursery/dashboard",
+      "controller": "NurseryController",
+      "file": "apps/api/src/nursery/nursery.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/nursery/batches",
+      "controller": "NurseryController",
+      "file": "apps/api/src/nursery/nursery.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/nursery/batches",
+      "controller": "NurseryController",
+      "file": "apps/api/src/nursery/nursery.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/nursery/movements",
+      "controller": "NurseryController",
+      "file": "apps/api/src/nursery/nursery.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/nursery/movements",
+      "controller": "NurseryController",
+      "file": "apps/api/src/nursery/nursery.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/organization-access/mine",
+      "controller": "OrganizationAccessController",
+      "file": "apps/api/src/organizations/organization-access.controller.ts",
+      "line": 22,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/organization-access/context",
+      "controller": "OrganizationAccessController",
+      "file": "apps/api/src/organizations/organization-access.controller.ts",
+      "line": 29,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/organizations",
+      "controller": "OrganizationsController",
+      "file": "apps/api/src/organizations/organizations.controller.ts",
+      "line": 5,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/organizations",
+      "controller": "OrganizationsController",
+      "file": "apps/api/src/organizations/organizations.controller.ts",
+      "line": 6,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/organizations/memberships",
+      "controller": "OrganizationsController",
+      "file": "apps/api/src/organizations/organizations.controller.ts",
+      "line": 7,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/organizations/:id/memberships",
+      "controller": "OrganizationsController",
+      "file": "apps/api/src/organizations/organizations.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/organizations/:id/audit",
+      "controller": "OrganizationsController",
+      "file": "apps/api/src/organizations/organizations.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/performance-intelligence/catalog",
+      "controller": "PerformanceIntelligenceController",
+      "file": "apps/api/src/performance-intelligence/performance-intelligence.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/performance-intelligence/apply",
+      "controller": "PerformanceIntelligenceController",
+      "file": "apps/api/src/performance-intelligence/performance-intelligence.controller.ts",
+      "line": 12,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/performance-strategy/dashboard",
+      "controller": "PerformanceStrategyController",
+      "file": "apps/api/src/performance-strategy/performance-strategy.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/performance-strategy/targets",
+      "controller": "PerformanceStrategyController",
+      "file": "apps/api/src/performance-strategy/performance-strategy.controller.ts",
+      "line": 12,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/performance-strategy/targets/:id",
+      "controller": "PerformanceStrategyController",
+      "file": "apps/api/src/performance-strategy/performance-strategy.controller.ts",
+      "line": 13,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/performance-strategy/targets/:id/updates",
+      "controller": "PerformanceStrategyController",
+      "file": "apps/api/src/performance-strategy/performance-strategy.controller.ts",
+      "line": 14,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/performance-strategy/targets/:id/history",
+      "controller": "PerformanceStrategyController",
+      "file": "apps/api/src/performance-strategy/performance-strategy.controller.ts",
+      "line": 15,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/photo-evidence",
+      "controller": "PhotoEvidenceController",
+      "file": "apps/api/src/photo-evidence/photo-evidence.controller.ts",
+      "line": 16,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/photo-evidence/upload",
+      "controller": "PhotoEvidenceController",
+      "file": "apps/api/src/photo-evidence/photo-evidence.controller.ts",
+      "line": 17,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/photo-evidence/:id/file",
+      "controller": "PhotoEvidenceController",
+      "file": "apps/api/src/photo-evidence/photo-evidence.controller.ts",
+      "line": 23,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/photo-evidence/:id/approve",
+      "controller": "PhotoEvidenceController",
+      "file": "apps/api/src/photo-evidence/photo-evidence.controller.ts",
+      "line": 30,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/photo-evidence/:id/reject",
+      "controller": "PhotoEvidenceController",
+      "file": "apps/api/src/photo-evidence/photo-evidence.controller.ts",
+      "line": 31,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/plantations",
+      "controller": "PlantationsController",
+      "file": "apps/api/src/plantations/plantations.controller.ts",
+      "line": 23,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/plantations/intelligence",
+      "controller": "PlantationsController",
+      "file": "apps/api/src/plantations/plantations.controller.ts",
+      "line": 29,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "POST",
+      "path": "/plantations",
+      "controller": "PlantationsController",
+      "file": "apps/api/src/plantations/plantations.controller.ts",
+      "line": 36,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "PATCH",
+      "path": "/plantations/:id",
+      "controller": "PlantationsController",
+      "file": "apps/api/src/plantations/plantations.controller.ts",
+      "line": 47,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": true,
+      "orgFilterSignal": false,
+      "reviewSignals": []
+    },
+    {
+      "verb": "GET",
+      "path": "/procurement/dashboard",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/procurement/suppliers",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/procurement/suppliers",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/procurement/suppliers/:id",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/procurement/requests",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/procurement/requests",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/procurement/requests/:id",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/procurement/orders",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 15,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/procurement/orders",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 16,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/procurement/orders/:id",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 17,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/procurement/receipts",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 18,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/procurement/receipts",
+      "controller": "ProcurementController",
+      "file": "apps/api/src/procurement/procurement.controller.ts",
+      "line": 19,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/regeneration/dashboard",
+      "controller": "RegenerationController",
+      "file": "apps/api/src/regeneration/regeneration.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/regeneration/plans",
+      "controller": "RegenerationController",
+      "file": "apps/api/src/regeneration/regeneration.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/regeneration/plans",
+      "controller": "RegenerationController",
+      "file": "apps/api/src/regeneration/regeneration.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/regeneration/plans/:id",
+      "controller": "RegenerationController",
+      "file": "apps/api/src/regeneration/regeneration.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/regeneration/costs",
+      "controller": "RegenerationController",
+      "file": "apps/api/src/regeneration/regeneration.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/regeneration/costs",
+      "controller": "RegenerationController",
+      "file": "apps/api/src/regeneration/regeneration.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/regeneration/survival-checks",
+      "controller": "RegenerationController",
+      "file": "apps/api/src/regeneration/regeneration.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/regeneration/survival-checks",
+      "controller": "RegenerationController",
+      "file": "apps/api/src/regeneration/regeneration.controller.ts",
+      "line": 15,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/reinvestment-decision-engine",
+      "controller": "ReinvestmentDecisionEngineController",
+      "file": "apps/api/src/reinvestment-decision-engine/reinvestment-decision-engine.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/risk-management/dashboard",
+      "controller": "RiskManagementController",
+      "file": "apps/api/src/risk-management/risk-management.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/risk-management/risks",
+      "controller": "RiskManagementController",
+      "file": "apps/api/src/risk-management/risk-management.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/risk-management/risks",
+      "controller": "RiskManagementController",
+      "file": "apps/api/src/risk-management/risk-management.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/risk-management/risks/:id",
+      "controller": "RiskManagementController",
+      "file": "apps/api/src/risk-management/risk-management.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/risk-management/actions",
+      "controller": "RiskManagementController",
+      "file": "apps/api/src/risk-management/risk-management.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/risk-management/actions",
+      "controller": "RiskManagementController",
+      "file": "apps/api/src/risk-management/risk-management.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/risk-management/actions/:id",
+      "controller": "RiskManagementController",
+      "file": "apps/api/src/risk-management/risk-management.controller.ts",
+      "line": 15,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/sales",
+      "controller": "SalesController",
+      "file": "apps/api/src/sales/sales.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/sales",
+      "controller": "SalesController",
+      "file": "apps/api/src/sales/sales.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/sales/:id",
+      "controller": "SalesController",
+      "file": "apps/api/src/sales/sales.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/sops/overview",
+      "controller": "StandardOperatingProceduresController",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "line": 10,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/sops/templates",
+      "controller": "StandardOperatingProceduresController",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "line": 11,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/sops/seed-defaults",
+      "controller": "StandardOperatingProceduresController",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "line": 12,
+      "classGuarded": true,
+      "methodGuard": true,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/sops/templates",
+      "controller": "StandardOperatingProceduresController",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "line": 13,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/sops/templates/:id/status",
+      "controller": "StandardOperatingProceduresController",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "line": 14,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/sops/my-runs",
+      "controller": "StandardOperatingProceduresController",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "line": 16,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/sops/runs",
+      "controller": "StandardOperatingProceduresController",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "line": 21,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/sops/runs",
+      "controller": "StandardOperatingProceduresController",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "line": 22,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/sops/runs/:id",
+      "controller": "StandardOperatingProceduresController",
+      "file": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "line": 23,
+      "classGuarded": true,
+      "methodGuard": false,
+      "jwtGuardMentioned": true,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/statement-matching/imports",
+      "controller": "StatementMatchingController",
+      "file": "apps/api/src/statement-matching/statement-matching.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/statement-matching/imports/:importId",
+      "controller": "StatementMatchingController",
+      "file": "apps/api/src/statement-matching/statement-matching.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/statement-matching/imports",
+      "controller": "StatementMatchingController",
+      "file": "apps/api/src/statement-matching/statement-matching.controller.ts",
+      "line": 17,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/statement-matching/imports/:importId/rows/:rowId/candidates",
+      "controller": "StatementMatchingController",
+      "file": "apps/api/src/statement-matching/statement-matching.controller.ts",
+      "line": 23,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/statement-matching/imports/:importId/rows/:rowId/decision",
+      "controller": "StatementMatchingController",
+      "file": "apps/api/src/statement-matching/statement-matching.controller.ts",
+      "line": 28,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/tasks",
+      "controller": "TasksController",
+      "file": "apps/api/src/tasks/tasks.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/tasks",
+      "controller": "TasksController",
+      "file": "apps/api/src/tasks/tasks.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/tasks/:id",
+      "controller": "TasksController",
+      "file": "apps/api/src/tasks/tasks.controller.ts",
+      "line": 2,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/workforce/dashboard",
+      "controller": "WorkforceController",
+      "file": "apps/api/src/workforce/workforce.controller.ts",
+      "line": 8,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/workforce/workers",
+      "controller": "WorkforceController",
+      "file": "apps/api/src/workforce/workforce.controller.ts",
+      "line": 9,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/workforce/workers",
+      "controller": "WorkforceController",
+      "file": "apps/api/src/workforce/workforce.controller.ts",
+      "line": 10,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/workforce/tasks",
+      "controller": "WorkforceController",
+      "file": "apps/api/src/workforce/workforce.controller.ts",
+      "line": 11,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/workforce/tasks",
+      "controller": "WorkforceController",
+      "file": "apps/api/src/workforce/workforce.controller.ts",
+      "line": 12,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "PATCH",
+      "path": "/workforce/tasks/:id",
+      "controller": "WorkforceController",
+      "file": "apps/api/src/workforce/workforce.controller.ts",
+      "line": 13,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "GET",
+      "path": "/workforce/entries",
+      "controller": "WorkforceController",
+      "file": "apps/api/src/workforce/workforce.controller.ts",
+      "line": 14,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    },
+    {
+      "verb": "POST",
+      "path": "/workforce/entries",
+      "controller": "WorkforceController",
+      "file": "apps/api/src/workforce/workforce.controller.ts",
+      "line": 15,
+      "classGuarded": false,
+      "methodGuard": false,
+      "jwtGuardMentioned": false,
+      "publicDecoratorMentioned": false,
+      "orgContextSignal": false,
+      "orgFilterSignal": false,
+      "reviewSignals": [
+        "review-auth-guard",
+        "review-tenant-scope"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "phase": 162,
+  "title": "Live API Readiness Smoke Test",
+  "phase162ContractTests": { "passed": 10, "total": 10 },
+  "existingPhaseContractTestScripts": { "run": 56, "failed": 0 },
+  "liveApiSmokeTest": "skipped; FORESTOS_TEST_API_BASE_URL not configured",
+  "nestBuild": "not run",
+  "productionReadinessClaim": false,
+  "limitations": [
+    "Contract tests inspect runner guardrails and are not live API integration tests.",
+    "No live API endpoint or test token was provided.",
+    "HTTP status checks do not prove tenant isolation, authorization completeness, business correctness, database transactions, or durability."
+  ]
+}

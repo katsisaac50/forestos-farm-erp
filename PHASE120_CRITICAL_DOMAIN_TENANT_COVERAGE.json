@@ -1,0 +1,181 @@
+{
+  "title": "ForestOS Phase 120 — Critical Domain Tenant Coverage Queue",
+  "generatedAt": "2026-10-25T18:17:29.295Z",
+  "method": "Static source-pattern triage of selected domain controllers and services. Signals can be false positives or false negatives; absence of a signal is not proof of enforcement.",
+  "status": "TRIAGE_ONLY_NOT_A_SECURITY_FINDING_OR_PRODUCTION_CERTIFICATION",
+  "summary": {
+    "domainsReviewed": 7,
+    "domainsNotFound": 0,
+    "p1Review": 5,
+    "p2Review": 2,
+    "p3Verify": 0
+  },
+  "domains": [
+    {
+      "domain": "sales",
+      "status": "STATIC_SOURCE_REVIEW",
+      "controller": "apps/api/src/sales/sales.controller.ts",
+      "service": "apps/api/src/sales/sales.service.ts",
+      "routes": 3,
+      "writeRoutes": 2,
+      "visibleControllerTenantContextSignal": false,
+      "visibleServiceTenantContextSignal": false,
+      "serviceQueryCallMarkers": 3,
+      "signals": [
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_CONTROLLER",
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_SERVICE",
+        "UNSCOPED_LOOKING_QUERY_PATTERN",
+        "WRITE_ROUTES_WITHOUT_VISIBLE_TENANT_CONTEXT"
+      ],
+      "priority": "P1_REVIEW",
+      "requiredEvidence": [
+        "Trace the actual controller-to-service path; static pattern matching is not a call graph.",
+        "Verify organization scope in every read/write predicate or in a proven shared enforcement layer.",
+        "Test same-tenant allow and cross-tenant deny for list, detail, create, update, delete and dashboard/aggregate routes where applicable.",
+        "Record reviewer, runtime test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "domain": "inventory",
+      "status": "STATIC_SOURCE_REVIEW",
+      "controller": "apps/api/src/inventory/inventory.controller.ts",
+      "service": "apps/api/src/inventory/inventory.service.ts",
+      "routes": 3,
+      "writeRoutes": 2,
+      "visibleControllerTenantContextSignal": false,
+      "visibleServiceTenantContextSignal": false,
+      "serviceQueryCallMarkers": 3,
+      "signals": [
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_CONTROLLER",
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_SERVICE",
+        "UNSCOPED_LOOKING_QUERY_PATTERN",
+        "WRITE_ROUTES_WITHOUT_VISIBLE_TENANT_CONTEXT"
+      ],
+      "priority": "P1_REVIEW",
+      "requiredEvidence": [
+        "Trace the actual controller-to-service path; static pattern matching is not a call graph.",
+        "Verify organization scope in every read/write predicate or in a proven shared enforcement layer.",
+        "Test same-tenant allow and cross-tenant deny for list, detail, create, update, delete and dashboard/aggregate routes where applicable.",
+        "Record reviewer, runtime test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "domain": "procurement",
+      "status": "STATIC_SOURCE_REVIEW",
+      "controller": "apps/api/src/procurement/procurement.controller.ts",
+      "service": "apps/api/src/procurement/procurement.service.ts",
+      "routes": 12,
+      "writeRoutes": 7,
+      "visibleControllerTenantContextSignal": false,
+      "visibleServiceTenantContextSignal": false,
+      "serviceQueryCallMarkers": 34,
+      "signals": [
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_CONTROLLER",
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_SERVICE",
+        "UNSCOPED_LOOKING_QUERY_PATTERN",
+        "WRITE_ROUTES_WITHOUT_VISIBLE_TENANT_CONTEXT"
+      ],
+      "priority": "P1_REVIEW",
+      "requiredEvidence": [
+        "Trace the actual controller-to-service path; static pattern matching is not a call graph.",
+        "Verify organization scope in every read/write predicate or in a proven shared enforcement layer.",
+        "Test same-tenant allow and cross-tenant deny for list, detail, create, update, delete and dashboard/aggregate routes where applicable.",
+        "Record reviewer, runtime test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "domain": "finance",
+      "status": "STATIC_SOURCE_REVIEW",
+      "controller": "apps/api/src/finance/finance.controller.ts",
+      "service": "apps/api/src/finance/finance.service.ts",
+      "routes": 3,
+      "writeRoutes": 2,
+      "visibleControllerTenantContextSignal": false,
+      "visibleServiceTenantContextSignal": false,
+      "serviceQueryCallMarkers": 4,
+      "signals": [
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_CONTROLLER",
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_SERVICE",
+        "UNSCOPED_LOOKING_QUERY_PATTERN",
+        "WRITE_ROUTES_WITHOUT_VISIBLE_TENANT_CONTEXT"
+      ],
+      "priority": "P1_REVIEW",
+      "requiredEvidence": [
+        "Trace the actual controller-to-service path; static pattern matching is not a call graph.",
+        "Verify organization scope in every read/write predicate or in a proven shared enforcement layer.",
+        "Test same-tenant allow and cross-tenant deny for list, detail, create, update, delete and dashboard/aggregate routes where applicable.",
+        "Record reviewer, runtime test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "domain": "workforce",
+      "status": "STATIC_SOURCE_REVIEW",
+      "controller": "apps/api/src/workforce/workforce.controller.ts",
+      "service": "apps/api/src/workforce/workforce.service.ts",
+      "routes": 8,
+      "writeRoutes": 4,
+      "visibleControllerTenantContextSignal": false,
+      "visibleServiceTenantContextSignal": false,
+      "serviceQueryCallMarkers": 14,
+      "signals": [
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_CONTROLLER",
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_SERVICE",
+        "UNSCOPED_LOOKING_QUERY_PATTERN",
+        "WRITE_ROUTES_WITHOUT_VISIBLE_TENANT_CONTEXT"
+      ],
+      "priority": "P1_REVIEW",
+      "requiredEvidence": [
+        "Trace the actual controller-to-service path; static pattern matching is not a call graph.",
+        "Verify organization scope in every read/write predicate or in a proven shared enforcement layer.",
+        "Test same-tenant allow and cross-tenant deny for list, detail, create, update, delete and dashboard/aggregate routes where applicable.",
+        "Record reviewer, runtime test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "domain": "evidence",
+      "status": "STATIC_SOURCE_REVIEW",
+      "controller": "apps/api/src/evidence/evidence.controller.ts",
+      "service": "apps/api/src/evidence/evidence.service.ts",
+      "routes": 3,
+      "writeRoutes": 1,
+      "visibleControllerTenantContextSignal": false,
+      "visibleServiceTenantContextSignal": false,
+      "serviceQueryCallMarkers": 3,
+      "signals": [
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_CONTROLLER",
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_SERVICE",
+        "WRITE_ROUTES_WITHOUT_VISIBLE_TENANT_CONTEXT"
+      ],
+      "priority": "P2_REVIEW",
+      "requiredEvidence": [
+        "Trace the actual controller-to-service path; static pattern matching is not a call graph.",
+        "Verify organization scope in every read/write predicate or in a proven shared enforcement layer.",
+        "Test same-tenant allow and cross-tenant deny for list, detail, create, update, delete and dashboard/aggregate routes where applicable.",
+        "Record reviewer, runtime test evidence, and disposition before closing."
+      ]
+    },
+    {
+      "domain": "audit",
+      "status": "STATIC_SOURCE_REVIEW",
+      "controller": "apps/api/src/audit/audit.controller.ts",
+      "service": "apps/api/src/audit/audit.service.ts",
+      "routes": 1,
+      "writeRoutes": 0,
+      "visibleControllerTenantContextSignal": false,
+      "visibleServiceTenantContextSignal": false,
+      "serviceQueryCallMarkers": 2,
+      "signals": [
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_CONTROLLER",
+        "NO_VISIBLE_TENANT_CONTEXT_SIGNAL_IN_SERVICE",
+        "UNSCOPED_LOOKING_QUERY_PATTERN"
+      ],
+      "priority": "P2_REVIEW",
+      "requiredEvidence": [
+        "Trace the actual controller-to-service path; static pattern matching is not a call graph.",
+        "Verify organization scope in every read/write predicate or in a proven shared enforcement layer.",
+        "Test same-tenant allow and cross-tenant deny for list, detail, create, update, delete and dashboard/aggregate routes where applicable.",
+        "Record reviewer, runtime test evidence, and disposition before closing."
+      ]
+    }
+  ]
+}

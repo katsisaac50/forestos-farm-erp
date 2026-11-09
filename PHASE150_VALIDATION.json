@@ -1,0 +1,98 @@
+{
+  "phase": 150,
+  "name": "Management Command Centre",
+  "sourceZip": "ForestOS_Phase149_Corrective_Action_Lifecycle_Verification_Engine.zip",
+  "sourceZipIntegrity": "passed",
+  "phase150ContractTests": {
+    "passed": 76,
+    "failed": 0
+  },
+  "priorSuites": [
+    {
+      "phase": 138,
+      "file": "phase138-management-kpi-analytics-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": null
+    },
+    {
+      "phase": 139,
+      "file": "phase139-forestry-apiary-scorecards-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 31
+    },
+    {
+      "phase": 140,
+      "file": "phase140-farm-operations-inspections-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 30
+    },
+    {
+      "phase": 141,
+      "file": "phase141-capa-management-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 38
+    },
+    {
+      "phase": 142,
+      "file": "phase142-farm-task-execution-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 41
+    },
+    {
+      "phase": 143,
+      "file": "phase143-supervisor-verification-evidence-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 36
+    },
+    {
+      "phase": 144,
+      "file": "phase144-recurring-failure-intelligence-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 36
+    },
+    {
+      "phase": 145,
+      "file": "phase145-unified-farm-operations-dashboard-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 55
+    },
+    {
+      "phase": 146,
+      "file": "phase146-automated-data-integration-pipeline-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 52
+    },
+    {
+      "phase": 147,
+      "file": "phase147-data-quality-reconciliation-engine-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 59
+    },
+    {
+      "phase": 148,
+      "file": "phase148-decision-action-intelligence-engine-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 65
+    },
+    {
+      "phase": 149,
+      "file": "phase149-corrective-action-lifecycle-verification-engine-contract-tests.js",
+      "returncode": 0,
+      "reportedTests": 59
+    }
+  ],
+  "priorReportedTestsTotal": 502,
+  "allReportedTestsTotal": 578,
+  "smokeTest": {
+    "passed": true,
+    "businessHealth": "urgent_attention",
+    "missingSections": 0,
+    "output": "phase150-example-report.json"
+  },
+  "limitations": [
+    "Offline JSON snapshot only; no live database or connector integrations.",
+    "No authentication, role enforcement, or production write path.",
+    "No notifications, background scheduler, or evidence verification.",
+    "Data quality depends on supplied snapshot; missing data is reported as unknown."
+  ]
+}

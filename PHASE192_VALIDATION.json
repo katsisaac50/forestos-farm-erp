@@ -1,0 +1,16 @@
+{
+  "phase": 192,
+  "title": "Dependency Resolution Diagnostics & Lockfile Recovery",
+  "phase192ContractTests": { "passed": 12, "failed": 0 },
+  "allContractTestSuites": { "passed": 86, "failed": 0 },
+  "javascriptSyntax": { "filesChecked": 175, "failed": 0 },
+  "jsonValidation": { "filesChecked": 102, "valid": 101, "invalid": 1, "preExistingInvalidFile": "PHASE125_SCHEMA_INDEX_READINESS.json" },
+  "dependencyDiagnostics": { "checksPassed": 5, "checksTotal": 6, "blocker": "apps/api/package-lock.json is missing" },
+  "registryGenerationAttempt": { "attempted": true, "completed": false, "reason": "npm package-lock-only operation exceeded the packaging execution window", "lockfileFabricated": false },
+  "registryPingExecuted": false,
+  "cleanInstallExecuted": false,
+  "nestBuildExecuted": false,
+  "liveHttpTestsExecuted": false,
+  "mongodbIntegrationTestsExecuted": false,
+  "productionCleared": false
+}

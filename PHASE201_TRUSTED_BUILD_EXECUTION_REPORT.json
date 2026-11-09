@@ -1,0 +1,51 @@
+{
+  "phase": 201,
+  "title": "Trusted Build Execution Gate",
+  "generatedAt": "2026-11-09T06:29:41.409Z",
+  "mode": "install",
+  "productionCleared": false,
+  "installExecuted": true,
+  "buildExecuted": false,
+  "installExitCode": null,
+  "buildExitCode": null,
+  "checks": {
+    "manifestValid": true,
+    "lockfileExists": true,
+    "lockfileAligned": true,
+    "nodeModulesExists": true,
+    "nestCliExists": true,
+    "installPrerequisites": true,
+    "buildPrerequisites": true
+  },
+  "evidence": {
+    "manifest": {
+      "path": "apps/api/package.json",
+      "name": "forestos-api",
+      "version": "0.1.0",
+      "sha256": "789ffdf001b8ccb7f62459f2c1676021699e6065d33017aaf4e0db30aca605f4"
+    },
+    "lockfile": {
+      "sha256": "54486b6a5c658f2c570a2b27b57831edf17dd80bf4aa751b61b008d0bcdb87df",
+      "lockfileVersion": 3,
+      "aligned": true
+    },
+    "runtime": {
+      "node": "v26.13.0",
+      "npm": null
+    },
+    "install": {
+      "status": null,
+      "signal": null,
+      "error": "spawnSync npm.cmd EINVAL",
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "blockers": [
+    "npm ci did not complete successfully; inspect evidence.install output/error."
+  ],
+  "nextActions": [
+    "Keep production clearance disabled until runtime, database, authentication, security, and deployment checks pass."
+  ],
+  "status": "READY_FOR_EXPLICIT_BUILD"
+}

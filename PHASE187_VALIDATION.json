@@ -1,0 +1,27 @@
+{
+  "phase": 187,
+  "title": "JWT Runtime Contract Probe Validation",
+  "contractProbe": {
+    "passed": 12,
+    "total": 12
+  },
+  "phaseContractTests": {
+    "passed": 8,
+    "total": 8
+  },
+  "allContractTestSuites": {
+    "passed": 81,
+    "failed": 0
+  },
+  "javascriptSyntaxChecks": {
+    "passed": 159,
+    "failed": 0,
+    "scope": "all scripts/*.js plus apps/api/src/auth/jwt-secret-policy.js"
+  },
+  "targetedJsonValidation": "passed",
+  "zipIntegrity": "pending packaging",
+  "liveNestRuntimeTestsRun": false,
+  "httpTestsRun": false,
+  "mongodbTestsRun": false,
+  "productionCleared": false
+}

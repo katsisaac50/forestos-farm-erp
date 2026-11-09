@@ -1,0 +1,18 @@
+{
+  "phase": 214,
+  "title": "Build Stabilisation Preflight",
+  "contractTestFiles": 15,
+  "contractTestFilesPassed": 15,
+  "contractTestFilesFailed": 0,
+  "javascriptSyntaxFilesChecked": 215,
+  "javascriptSyntaxFailures": 0,
+  "jsonFilesChecked": 143,
+  "validJsonFiles": 142,
+  "invalidJsonFiles": ["PHASE125_SCHEMA_INDEX_READINESS.json"],
+  "preflightAssessment": "BUILD_PREFLIGHT_BLOCKED",
+  "preflightBlocker": "apps/api/package-lock.json is missing",
+  "networkAccess": false,
+  "dependencyInstallExecuted": false,
+  "apiBuildExecuted": false,
+  "productionCleared": false
+}

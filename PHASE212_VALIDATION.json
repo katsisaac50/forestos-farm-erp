@@ -1,0 +1,41 @@
+{
+  "phase": 212,
+  "title": "CI Build Outcome Evidence",
+  "localContractChecks": {
+    "phase210": "20/20 passed",
+    "phase211": "18/18 passed",
+    "phase212": "18/18 passed"
+  },
+  "javascriptSyntax": {
+    "filesChecked": 211,
+    "passed": 211,
+    "failed": 0,
+    "failures": []
+  },
+  "jsonValidation": {
+    "filesChecked": 141,
+    "valid": 140,
+    "invalid": 1,
+    "failures": [
+      {
+        "file": "PHASE125_SCHEMA_INDEX_READINESS.json",
+        "error": "Extra data: line 96 column 2 (char 3589)"
+      }
+    ]
+  },
+  "zipIntegrity": "checked after archive creation",
+  "remoteGitHubActionsExecuted": false,
+  "dependencyInstallCompleted": false,
+  "nestjsBuildExecuted": false,
+  "productionCleared": false,
+  "notes": [
+    "Contract tests validate workflow structure and evidence logic only; they do not execute the remote workflow.",
+    "Existing invalid JSON is documented and unchanged."
+  ],
+  "contractTestScripts": {
+    "discovered": 93,
+    "passed": 93,
+    "failed": 0,
+    "timedOut": 0
+  }
+}

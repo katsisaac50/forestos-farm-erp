@@ -1,0 +1,17 @@
+services:
+  mongo-test:
+    image: mongo:7
+    profiles: ["test"]
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_DATABASE: forestos_test
+    volumes:
+      - forestos_mongo_test_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://127.0.0.1:27017/forestos_test", "--eval", "db.runCommand({ping:1}).ok"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+volumes:
+  forestos_mongo_test_data:

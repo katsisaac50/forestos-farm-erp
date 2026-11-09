@@ -1,0 +1,14 @@
+{
+  "phase": 160,
+  "title": "Runtime Verification Orchestrator",
+  "status": "contract_checks_passed_runtime_checks_skipped",
+  "phase160_contract_tests": {"passed": 8, "total": 8},
+  "all_discovered_phase_contract_test_scripts": {"passed": 162, "failed": 0},
+  "api_build": "SKIPPED: NestJS dependencies and local CLI are not installed",
+  "live_mongodb_integration": "SKIPPED: FORESTOS_TEST_MONGODB_URI was not provided",
+  "notes": [
+    "Static contract checks do not establish runtime correctness.",
+    "The live MongoDB runner requires a disposable test database and uses a database-name safety gate.",
+    "The runtime verification report is generated when scripts/phase160-runtime-verification.js is executed."
+  ]
+}

@@ -1,0 +1,110 @@
+name: ForestOS API Verified Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_build:
+        description: 'Type BUILD to generate/validate the lockfile, install dependencies, and compile the API'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verified-api-build:
+    if: ${{ inputs.confirm_build == 'BUILD' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout selected source commit
+        uses: actions/checkout@v4
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Record build environment
+        shell: bash
+        run: |
+          mkdir -p phase211-evidence
+          git rev-parse HEAD | tee phase211-evidence/source-commit.txt
+          node --version | tee phase211-evidence/node-version.txt
+          npm --version | tee phase211-evidence/npm-version.txt
+          npm config get registry | tee phase211-evidence/npm-registry.txt
+      - name: Generate lockfile in CI if absent
+        id: lockfile
+        working-directory: apps/api
+        timeout-minutes: 6
+        shell: bash
+        run: |
+          if [ ! -f package-lock.json ]; then
+            npm install --package-lock-only --ignore-scripts --no-audit --no-fund --fetch-retries=0 --fetch-timeout=30000
+          fi
+      - name: Validate lockfile and manifest alignment
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const manifest = JSON.parse(fs.readFileSync('apps/api/package.json', 'utf8'));
+          const lock = JSON.parse(fs.readFileSync('apps/api/package-lock.json', 'utf8'));
+          const root = lock.packages && lock.packages[''];
+          if (!root) throw new Error('Lockfile missing packages[""] metadata');
+          if (![2, 3].includes(lock.lockfileVersion)) throw new Error(`Unsupported lockfileVersion: ${lock.lockfileVersion}`);
+          if (lock.name !== manifest.name || lock.version !== manifest.version || root.name !== manifest.name || root.version !== manifest.version) throw new Error('Lockfile package identity/version mismatch');
+          for (const key of ['dependencies', 'devDependencies', 'optionalDependencies']) {
+            const stable = value => JSON.stringify(Object.fromEntries(Object.entries(value || {}).sort(([a], [b]) => a.localeCompare(b))));
+            if (stable(root[key]) !== stable(manifest[key])) throw new Error(`Root ${key} mismatch`);
+          }
+          console.log('Lockfile structural and root-manifest checks passed.');
+          NODE
+      - name: Clean dependency installation
+        id: install
+        working-directory: apps/api
+        timeout-minutes: 10
+        run: npm ci --no-audit --no-fund --fetch-retries=0 --fetch-timeout=30000
+      - name: Compile NestJS API
+        id: build
+        working-directory: apps/api
+        timeout-minutes: 6
+        run: npm run build
+      - name: Capture result and fingerprints
+        if: always()
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const cp = require('node:child_process');
+          const exists = p => fs.existsSync(p);
+          const hash = p => exists(p) ? crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex') : null;
+          const report = {
+            phase: 212,
+            sourceCommit: cp.execFileSync('git', ['rev-parse', 'HEAD'], {encoding:'utf8'}).trim(),
+            nodeVersion: process.version,
+            npmVersion: cp.execFileSync('npm', ['--version'], {encoding:'utf8'}).trim(),
+            registry: cp.execFileSync('npm', ['config', 'get', 'registry'], {encoding:'utf8'}).trim(),
+            manifestSha256: hash('apps/api/package.json'),
+            lockfileSha256: hash('apps/api/package-lock.json'),
+            lockfilePresent: exists('apps/api/package-lock.json'),
+            nodeModulesPresent: exists('apps/api/node_modules'),
+            buildOutputPresent: exists('apps/api/dist'),
+            lockfileStepOutcome: '${{ steps.lockfile.outcome }}',
+            installStepOutcome: '${{ steps.install.outcome }}',
+            buildStepOutcome: '${{ steps.build.outcome }}',
+            apiBuildSucceeded: '${{ steps.build.outcome }}' === 'success' && '${{ steps.install.outcome }}' === 'success' && '${{ steps.lockfile.outcome }}' === 'success',
+            jobConclusion: '${{ job.status }}',
+            productionCleared: false,
+            note: 'Step outcomes are authoritative for this run. dist alone does not prove this run compiled successfully; review logs and job conclusion.'
+          };
+          fs.mkdirSync('phase211-evidence', {recursive:true});
+          fs.writeFileSync('phase211-evidence/PHASE212_BUILD_EVIDENCE.json', JSON.stringify(report, null, 2) + '\n');
+          NODE
+          cp apps/api/package.json phase211-evidence/package.json
+          if [ -f apps/api/package-lock.json ]; then cp apps/api/package-lock.json phase211-evidence/package-lock.json; fi
+      - name: Upload build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forestos-phase212-build-evidence-${{ github.sha }}
+          if-no-files-found: warn
+          path: phase211-evidence/

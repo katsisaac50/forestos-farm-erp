@@ -1,0 +1,17 @@
+{
+  "phase": 170,
+  "title": "Runtime Authorization & Cross-Tenant Verification Probe",
+  "generatedAt": "2026-10-29T19:02:50.980Z",
+  "mode": "read-only HTTP GET",
+  "decision": "NOT VERIFIED — configuration incomplete",
+  "checks": [
+    {
+      "name": "Runtime authorization probe configuration",
+      "status": "SKIP",
+      "detail": "missing opt-in configuration: FORESTOS_TEST_API_BASE_URL, FORESTOS_TEST_TENANT_A_TOKEN, FORESTOS_TEST_TENANT_B_TOKEN, FORESTOS_TEST_TENANT_A_ID, FORESTOS_TEST_TENANT_B_ID, FORESTOS_TEST_TENANT_A_READ_PATH, FORESTOS_TEST_TENANT_B_READ_PATH"
+    }
+  ],
+  "limitations": [
+    "No HTTP requests were made. Configure two dedicated test tenants and their read-only endpoint paths to run the probe."
+  ]
+}

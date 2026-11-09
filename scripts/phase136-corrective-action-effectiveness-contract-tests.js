@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+"use strict";
+const assert=require("assert");
+const {evaluate}=require("./phase136-corrective-action-effectiveness.js");
+let passed=0;
+function test(name,fn){try{fn();passed++;console.log(`PASS ${name}`);}catch(e){console.error(`FAIL ${name}: ${e.stack||e}`);process.exitCode=1;}}
+const base={reviewId:"REV-001",incidentId:"INC-001",actionId:"ACT-001",rootCause:"Inspection checklist was not followed",intendedOutcome:"Reduce repeat equipment failures",preMetric:{name:"repeat_failures",value:5,unit:"count"},postMetric:{name:"repeat_failures",value:1,unit:"count"},evidenceReference:"evidence://inspection-audit-2026-01",reviewer:"Operations Manager",incidentAt:"2026-01-01T10:00:00Z",reviewedAt:"2026-02-01T10:00:00Z",outcome:"EFFECTIVE",repeatIncident:false};
+const report=rows=>evaluate({reviews:rows}), has=(r,c)=>r.findings.some(f=>f.code===c);
+test("accepts a complete effective review",()=>{const r=report([base]);assert.strictEqual(r.summary.validReviews,1);assert.strictEqual(r.summary.effective,1);});
+test("rejects unsupported top-level input",()=>assert(evaluate({items:[]}).error));
+test("detects missing required fields",()=>{const x={...base};delete x.reviewer;assert(has(report([x]),"MISSING_FIELD"));});
+test("detects duplicate review IDs",()=>assert(has(report([base,{...base,actionId:"ACT-002"}]),"DUPLICATE_REVIEW_ID")));
+test("validates pre metric numeric value",()=>assert(has(report([{...base,preMetric:{name:"x",value:"five"}}]),"INVALID_PRE_METRIC")));
+test("validates post metric numeric value",()=>assert(has(report([{...base,postMetric:{name:"x",value:Infinity}}]),"INVALID_POST_METRIC")));
+test("requires comparable metric names",()=>assert(has(report([{...base,postMetric:{name:"other",value:1}}]),"METRIC_MISMATCH")));
+test("validates review date",()=>assert(has(report([{...base,reviewedAt:"yesterday-ish"}]),"INVALID_REVIEW_DATE")));
+test("validates optional incident date",()=>assert(has(report([{...base,incidentAt:"bad-date"}]),"INVALID_INCIDENT_DATE")));
+test("review cannot precede incident",()=>assert(has(report([{...base,reviewedAt:"2025-12-01T00:00:00Z"}]),"REVIEW_PRECEDES_INCIDENT")));
+test("rejects invalid outcome",()=>assert(has(report([{...base,outcome:"GOOD"}]),"INVALID_OUTCOME")));
+test("ineffective outcome requires follow-up",()=>assert(has(report([{...base,outcome:"INEFFECTIVE"}]),"FOLLOW_UP_NOT_LINKED")));
+test("linked follow-up satisfies linkage finding",()=>assert(!has(report([{...base,outcome:"INEFFECTIVE",followUpActionId:"ACT-002"}]),"FOLLOW_UP_NOT_LINKED")));
+test("partial outcome calls for residual-risk review",()=>assert(has(report([{...base,outcome:"PARTIALLY_EFFECTIVE"}]),"PARTIAL_EFFECTIVENESS_REVIEW")));
+test("inconclusive outcome calls for more evidence",()=>assert(has(report([{...base,outcome:"INCONCLUSIVE"}]),"INCONCLUSIVE_REVIEW")));
+test("repeat incident escalates review",()=>assert(has(report([{...base,repeatIncident:true}]),"REPEAT_INCIDENT_AFTER_ACTION")));
+test("repeat incident flag must be boolean",()=>assert(has(report([{...base,repeatIncident:"yes"}]),"INVALID_REPEAT_INCIDENT_FLAG")));
+test("requires valid follow-up action ID if supplied",()=>assert(has(report([{...base,followUpActionId:" "}]),"INVALID_FOLLOW_UP_ID")));
+test("detects mixed outcomes for same action",()=>assert(has(report([base,{...base,reviewId:"REV-002",outcome:"INEFFECTIVE",followUpActionId:"ACT-002"}]),"MIXED_ACTION_EFFECTIVENESS")));
+test("summarizes action and repeat counts",()=>{const r=report([base,{...base,reviewId:"REV-002",actionId:"ACT-002",repeatIncident:true}]);assert.strictEqual(r.summary.actionsReviewed,2);assert.strictEqual(r.summary.repeatIncidents,1);});
+test("non-object row is flagged",()=>assert(has(report([null]),"INVALID_REVIEW")));
+test("counts errors and high-severity findings",()=>{const r=report([{...base,outcome:"INEFFECTIVE"}]);assert(r.summary.errorFindings>=0);assert(r.summary.highSeverityFindings>=1);});
+test("handles empty reviews array",()=>assert.strictEqual(report([]).summary.totalReviews,0));
+console.log(`${passed}/23 Phase 136 contract tests passed`);
+if (passed !== 23)process.exitCode=1;

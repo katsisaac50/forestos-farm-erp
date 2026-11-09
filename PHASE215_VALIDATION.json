@@ -1,0 +1,9 @@
+{
+  "phase": 215,
+  "contractAssertions": 12,
+  "lockfilePresentInWorkspace": false,
+  "dependencyInstallExecuted": false,
+  "apiBuildExecuted": false,
+  "productionCleared": false,
+  "knownExistingInvalidJson": "PHASE125_SCHEMA_INDEX_READINESS.json"
+}

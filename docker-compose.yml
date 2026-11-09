@@ -1,0 +1,8 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports: ["27017:27017"]
+    volumes: [forestos_mongo_data:/data/db]
+volumes:
+  forestos_mongo_data:

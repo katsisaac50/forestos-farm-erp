@@ -1,0 +1,27 @@
+{
+  "phase": 194,
+  "title": "Dependency Recovery & Actual API Compilation Orchestrator",
+  "generatedAt": "2026-10-29T22:39:35.061Z",
+  "mode": "preflight",
+  "apiPackage": "forestos-api@0.1.0",
+  "npmVersion": "10.9.2",
+  "lockfile": {
+    "exists": false,
+    "aligned": false
+  },
+  "install": {
+    "attempted": false,
+    "succeeded": false,
+    "detail": "not run"
+  },
+  "build": {
+    "attempted": false,
+    "succeeded": false,
+    "detail": "not run"
+  },
+  "productionCleared": false,
+  "nextActions": [
+    "Generate and review an aligned apps/api/package-lock.json in a registry-enabled environment, then rerun preflight.",
+    "This report never grants production clearance; runtime, database, authorization and deployment checks remain separate gates."
+  ]
+}

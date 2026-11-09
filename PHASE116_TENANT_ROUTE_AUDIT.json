@@ -1,0 +1,707 @@
+{
+  "title": "ForestOS Phase 116 — Domain Route Tenant Enforcement Inventory",
+  "generatedAt": "2026-10-25T15:55:25.100Z",
+  "method": "Static source inspection only; detects controller-level references to OrganizationAccessService/resolveContext and does not prove service query scoping.",
+  "summary": {
+    "controllersWithRoutes": 59,
+    "contextPresent": 9,
+    "noContextReference": 50,
+    "totalRoutes": 222
+  },
+  "controllers": [
+    {
+      "controller": "apps/api/src/alert-center/alert-center.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 3,
+      "routes": [
+        "GET /dashboard",
+        "POST /refresh",
+        "PATCH /:id/state"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/apiary-actions/apiary-actions.controller.ts",
+      "tenantContextPresent": true,
+      "routeCount": 3,
+      "routes": [
+        "GET /summary",
+        "GET /:id/history",
+        "PATCH /:id"
+      ],
+      "classification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE"
+    },
+    {
+      "controller": "apps/api/src/apiary-intelligence/apiary-intelligence.controller.ts",
+      "tenantContextPresent": true,
+      "routeCount": 2,
+      "routes": [
+        "GET /dashboard",
+        "GET /productivity"
+      ],
+      "classification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE"
+    },
+    {
+      "controller": "apps/api/src/apiary-operations/apiary-operations.controller.ts",
+      "tenantContextPresent": true,
+      "routeCount": 5,
+      "routes": [
+        "GET /inspections",
+        "POST /inspections",
+        "GET /harvests",
+        "POST /harvests",
+        "GET /harvest-summary"
+      ],
+      "classification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE"
+    },
+    {
+      "controller": "apps/api/src/auth/auth.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 4,
+      "routes": [
+        "POST /setup-owner",
+        "POST /login",
+        "POST /users",
+        "GET /me"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/backup-continuity/backup-continuity.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 5,
+      "routes": [
+        "GET /dashboard",
+        "GET /records",
+        "POST /records",
+        "POST /records/:id/verify",
+        "POST /recovery-drill"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/capital-allocation/capital-allocation.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 3,
+      "routes": [
+        "POST /policy",
+        "POST /proposals",
+        "PATCH /proposals/:id/review"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/capital-spend-verification/capital-spend-verification.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 5,
+      "routes": [
+        "GET /reconciliation",
+        "PATCH /:id/review",
+        "PATCH /:id/evidence-reference",
+        "POST /:id/correction-request",
+        "POST /:id/reversal"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/case-evidence/case-evidence.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 22,
+      "routes": [
+        "POST /upload",
+        "GET /:id/download",
+        "GET /recovery-escalations/provider-health",
+        "POST /recovery-escalations/events/:id/replay",
+        "GET /recovery-escalations/scheduler-status",
+        "POST /recovery-escalations/run",
+        "GET /recovery-escalations/events",
+        "GET /recovery-escalations/audit-summary",
+        "GET /recovery-escalations/delivery-status",
+        "POST /recovery-escalations/deliver",
+        "POST /recovery-escalations/retry-failed",
+        "GET /recovery-alerts",
+        "GET /recovery-incidents",
+        "POST /recovery-incidents",
+        "PATCH /recovery-incidents/:id",
+        "POST /recovery-incidents/:id/approve",
+        "POST /recovery-incidents/:id/close",
+        "GET /operations/health",
+        "POST /operations/reconcile",
+        "GET /:id/history",
+        "POST /:id/review",
+        "POST /:id/quarantine"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/cashflow/cashflow.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 7,
+      "routes": [
+        "GET /dashboard",
+        "GET /positions",
+        "POST /positions",
+        "GET /plans",
+        "POST /plans",
+        "GET /decisions",
+        "POST /decisions"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/command-centre/command-centre.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "GET /dashboard"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/corrective-actions/corrective-actions.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 4,
+      "routes": [
+        "GET /analytics",
+        "POST /from-inspection/:inspectionId",
+        "POST /:id/update",
+        "POST /:id/review"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/cost-intelligence/cost-intelligence.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 5,
+      "routes": [
+        "GET /dashboard",
+        "GET /plans",
+        "POST /plans",
+        "GET /allocations",
+        "POST /allocations"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/dashboard/dashboard.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "GET /summary"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/data-integrity/data-integrity.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "GET /report"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/evidence/evidence.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "GET /:id/image"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/farm-map/farm-map.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "POST /:id/archive"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/field-capture/field-capture.controller.ts",
+      "tenantContextPresent": true,
+      "routeCount": 5,
+      "routes": [
+        "POST /:id/evidence",
+        "GET /:id/evidence/:evidenceId",
+        "DELETE /:id/evidence/:evidenceId",
+        "GET /governance/summary",
+        "PATCH /:id/review"
+      ],
+      "classification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE"
+    },
+    {
+      "controller": "apps/api/src/field-inspections/field-inspections.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 2,
+      "routes": [
+        "POST /:id/submit",
+        "POST /:id/review"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/field-logs/field-logs.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/field-navigation/field-navigation.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "POST /:id/archive"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/field-verification/field-verification.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 2,
+      "routes": [
+        "PATCH /:id/approve",
+        "PATCH /:id/reject"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/field-workforce/field-workforce.controller.ts",
+      "tenantContextPresent": true,
+      "routeCount": 7,
+      "routes": [
+        "GET /workers",
+        "POST /workers",
+        "GET /tasks",
+        "POST /tasks",
+        "PATCH /tasks/:id/status",
+        "GET /tasks/summary",
+        "GET /tasks/:id/history"
+      ],
+      "classification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE"
+    },
+    {
+      "controller": "apps/api/src/finance/finance.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/financial-action-centre/financial-action-centre.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:actionId"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/financial-escalations/financial-escalations.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:escalationId"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/financial-evidence/financial-evidence.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:evidenceId/review"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/financial-investigation-cases/financial-investigation-cases.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 4,
+      "routes": [
+        "GET /:id",
+        "PATCH /:id",
+        "POST /:id/second-review",
+        "POST /:id/reopen"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/financial-investigations/financial-investigation.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/financial-reconciliation/financial-reconciliation.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:id/review"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/financial-reports/financial-reports.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "GET /monthly"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/growth/growth.controller.ts",
+      "tenantContextPresent": true,
+      "routeCount": 1,
+      "routes": [
+        "GET /trend"
+      ],
+      "classification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE"
+    },
+    {
+      "controller": "apps/api/src/harvest/harvest.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 8,
+      "routes": [
+        "GET /plans",
+        "POST /plans",
+        "PATCH /plans/:id",
+        "GET /quotes",
+        "POST /quotes",
+        "GET /costs",
+        "POST /costs",
+        "GET /scenario/:planId"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/health.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "GET /ready"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/hives/hives.controller.ts",
+      "tenantContextPresent": true,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:id"
+      ],
+      "classification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE"
+    },
+    {
+      "controller": "apps/api/src/inspections/inspections.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/integration-workflows/integration-workflows.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 5,
+      "routes": [
+        "GET /dashboard",
+        "GET /events",
+        "POST /events",
+        "POST /events/:id/process",
+        "POST /events/:id/cancel"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/inventory-control/inventory-control.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 6,
+      "routes": [
+        "GET /dashboard",
+        "GET /items",
+        "POST /items",
+        "PATCH /items/:id",
+        "GET /movements",
+        "POST /movements"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/inventory/inventory.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/investment/investment.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 5,
+      "routes": [
+        "GET /dashboard",
+        "GET /scenarios",
+        "POST /scenarios",
+        "PATCH /scenarios/:id/status",
+        "POST /decisions"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/maintenance/maintenance.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 10,
+      "routes": [
+        "GET /dashboard",
+        "GET /assets",
+        "POST /assets",
+        "PATCH /assets/:id",
+        "GET /records",
+        "POST /records",
+        "PATCH /records/:id",
+        "GET /parts",
+        "POST /parts",
+        "PATCH /parts/:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/management-intelligence/management-intelligence.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "GET /dashboard"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/monthly-financial-close/monthly-financial-close.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 3,
+      "routes": [
+        "GET /versions/:month",
+        "PATCH /:id/review",
+        "PATCH /:id/reopen"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/notification-policies/notification-policies.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 3,
+      "routes": [
+        "POST /evaluate",
+        "PATCH /:policyKey",
+        "GET /:policyKey/history"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/nursery/nursery.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 5,
+      "routes": [
+        "GET /dashboard",
+        "GET /batches",
+        "POST /batches",
+        "GET /movements",
+        "POST /movements"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/organizations/organization-access.controller.ts",
+      "tenantContextPresent": true,
+      "routeCount": 2,
+      "routes": [
+        "GET /mine",
+        "GET /context"
+      ],
+      "classification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE"
+    },
+    {
+      "controller": "apps/api/src/organizations/organizations.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 3,
+      "routes": [
+        "POST /memberships",
+        "GET /:id/memberships",
+        "GET /:id/audit"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/performance-intelligence/performance-intelligence.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 2,
+      "routes": [
+        "GET /catalog",
+        "POST /apply"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/performance-strategy/performance-strategy.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 5,
+      "routes": [
+        "GET /dashboard",
+        "POST /targets",
+        "PATCH /targets/:id",
+        "POST /targets/:id/updates",
+        "GET /targets/:id/history"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/photo-evidence/photo-evidence.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 4,
+      "routes": [
+        "POST /upload",
+        "GET /:id/file",
+        "PATCH /:id/approve",
+        "PATCH /:id/reject"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/plantations/plantations.controller.ts",
+      "tenantContextPresent": true,
+      "routeCount": 2,
+      "routes": [
+        "GET /intelligence",
+        "PATCH /:id"
+      ],
+      "classification": "CONTEXT_ENFORCEMENT_PRESENT_REVIEW_EACH_ROUTE"
+    },
+    {
+      "controller": "apps/api/src/procurement/procurement.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 12,
+      "routes": [
+        "GET /dashboard",
+        "GET /suppliers",
+        "POST /suppliers",
+        "PATCH /suppliers/:id",
+        "GET /requests",
+        "POST /requests",
+        "PATCH /requests/:id",
+        "GET /orders",
+        "POST /orders",
+        "PATCH /orders/:id",
+        "GET /receipts",
+        "POST /receipts"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/regeneration/regeneration.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 8,
+      "routes": [
+        "GET /dashboard",
+        "GET /plans",
+        "POST /plans",
+        "PATCH /plans/:id",
+        "GET /costs",
+        "POST /costs",
+        "GET /survival-checks",
+        "POST /survival-checks"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/risk-management/risk-management.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 7,
+      "routes": [
+        "GET /dashboard",
+        "GET /risks",
+        "POST /risks",
+        "PATCH /risks/:id",
+        "GET /actions",
+        "POST /actions",
+        "PATCH /actions/:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/sales/sales.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/standard-operating-procedures/standard-operating-procedures.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 9,
+      "routes": [
+        "GET /overview",
+        "GET /templates",
+        "POST /seed-defaults",
+        "POST /templates",
+        "PATCH /templates/:id/status",
+        "GET /my-runs",
+        "GET /runs",
+        "POST /runs",
+        "PATCH /runs/:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/statement-matching/statement-matching.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 5,
+      "routes": [
+        "GET /imports",
+        "GET /imports/:importId",
+        "POST /imports",
+        "GET /imports/:importId/rows/:rowId/candidates",
+        "POST /imports/:importId/rows/:rowId/decision"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/tasks/tasks.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 1,
+      "routes": [
+        "PATCH /:id"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    },
+    {
+      "controller": "apps/api/src/workforce/workforce.controller.ts",
+      "tenantContextPresent": false,
+      "routeCount": 8,
+      "routes": [
+        "GET /dashboard",
+        "GET /workers",
+        "POST /workers",
+        "GET /tasks",
+        "POST /tasks",
+        "PATCH /tasks/:id",
+        "GET /entries",
+        "POST /entries"
+      ],
+      "classification": "NO_ORGANIZATION_CONTEXT_ENFORCEMENT_FOUND"
+    }
+  ]
+}

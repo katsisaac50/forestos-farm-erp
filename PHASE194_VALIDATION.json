@@ -1,0 +1,36 @@
+{
+  "phase": 194,
+  "title": "Dependency Recovery & Actual API Compilation Orchestrator",
+  "validation": {
+    "phase194ContractTests": {
+      "passed": 13,
+      "failed": 0
+    },
+    "allContractTestScripts": {
+      "passed": 88,
+      "failed": 0
+    },
+    "javascriptSyntax": {
+      "passed": 179,
+      "failed": 0
+    },
+    "jsonFiles": {
+      "valid": 104,
+      "invalid": 1,
+      "total": 105
+    },
+    "zipIntegrity": "will be checked after archive creation"
+  },
+  "knownExistingIssue": {
+    "file": "PHASE125_SCHEMA_INDEX_READINESS.json",
+    "error": "Extra data at line 96 column 2",
+    "fixedInPhase194": false
+  },
+  "apiBuild": {
+    "lockfileExists": false,
+    "cleanInstallExecuted": false,
+    "buildExecuted": false,
+    "productionCleared": false,
+    "reason": "The API lockfile is absent and dependencies are not installed; preflight is intentionally read-only."
+  }
+}

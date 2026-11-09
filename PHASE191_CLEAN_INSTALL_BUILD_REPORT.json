@@ -1,0 +1,49 @@
+{
+  "phase": 191,
+  "title": "Clean Installation and Build Verification Gate",
+  "generatedAt": "2026-11-04T07:18:20.938Z",
+  "mode": "build",
+  "apiPackage": "forestos-api",
+  "checks": [
+    {
+      "name": "API manifest valid",
+      "passed": true,
+      "detail": "forestos-api"
+    },
+    {
+      "name": "npm lockfile valid and aligned",
+      "passed": true,
+      "detail": "valid npm lockfile v3"
+    },
+    {
+      "name": "NestJS CLI declared",
+      "passed": true,
+      "detail": "^10.4.9"
+    },
+    {
+      "name": "TypeScript config present",
+      "passed": true,
+      "detail": "apps/api/tsconfig.json"
+    },
+    {
+      "name": "Node and npm available",
+      "passed": true,
+      "detail": "Node v26.13.0; npm 12.2.1"
+    }
+  ],
+  "passed": 5,
+  "total": 5,
+  "installExecuted": false,
+  "buildExecuted": true,
+  "productionCleared": false,
+  "blockers": [],
+  "nextActions": [
+    "Run controlled HTTP authentication and tenant-isolation integration tests."
+  ],
+  "command": "npm run build",
+  "exitCode": 0,
+  "timedOut": false,
+  "spawnError": null,
+  "outputTail": "\nnpm notice run forestos-api@0.1.0 build\nnpm notice run nest build\n",
+  "commandPassed": true
+}

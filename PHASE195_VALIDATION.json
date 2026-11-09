@@ -1,0 +1,20 @@
+{
+  "phase": 195,
+  "title": "Registry & Lockfile Recovery Diagnostics",
+  "validation": {
+    "phase195ContractTests": { "passed": 12, "failed": 0 },
+    "allContractTestSuites": { "passed": 89, "failed": 0 },
+    "javascriptSyntax": { "passed": 181, "failed": 0 },
+    "jsonFiles": { "total": 107, "valid": 106, "invalid": 1 },
+    "zipIntegrity": "pending packaging check"
+  },
+  "environmentEvidence": {
+    "apiManifestValid": true,
+    "apiLockfileExists": false,
+    "registryPing": "failed: EAI_AGAIN resolving registry.npmjs.org",
+    "cleanInstallExecuted": false,
+    "apiBuildExecuted": false,
+    "productionCleared": false
+  },
+  "knownPreExistingIssue": "PHASE125_SCHEMA_INDEX_READINESS.json has trailing extra data at line 96; preserved and not silently rewritten."
+}

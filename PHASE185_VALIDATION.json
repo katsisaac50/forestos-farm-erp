@@ -1,0 +1,9 @@
+{
+  "phase": 185,
+  "title": "Authentication Runtime Readiness",
+  "validationMode": "source-level contract checks",
+  "liveNestBuild": "not run",
+  "liveHttpTests": "not run",
+  "liveMongoDbTests": "not run",
+  "productionClearance": false
+}

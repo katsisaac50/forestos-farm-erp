@@ -1,0 +1,27 @@
+{
+  "phase": 205,
+  "title": "Authoritative Lockfile Handoff",
+  "generatedAt": "2026-10-30T19:29:59.191Z",
+  "networkAccessAttempted": false,
+  "installExecuted": false,
+  "buildExecuted": false,
+  "productionCleared": false,
+  "status": "BLOCKED_OR_REVIEW_REQUIRED",
+  "source": null,
+  "candidate": null,
+  "blockers": [
+    "Trusted-source retrieval requires all three arguments: --repo PATH --expected-remote URL --commit FULL_COMMIT_HASH."
+  ],
+  "nextActions": [
+    "Use only an authoritative repository URL and a full commit hash obtained independently from a trusted maintainer or CI record.",
+    "Review PROVENANCE.json; exact origin string matching does not independently authenticate the remote or commit.",
+    "After independent review, validate candidate with Phase 202/203 and use Phase 201 for clean install/build.",
+    "This tool never fetches from the network, installs packages, runs compilation, or clears production."
+  ],
+  "apiManifest": {
+    "path": "apps/api/package.json",
+    "name": "forestos-api",
+    "version": "0.1.0",
+    "sha256": "a762ae27f19ca2ddb7598dfd73b36470d611431eb26f39ae22f7690b15a115a0"
+  }
+}

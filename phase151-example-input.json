@@ -1,0 +1,105 @@
+{
+  "generatedAt": "2026-10-29",
+  "receivedAt": "2026-10-29",
+  "batchId": "FORESTOS-DEMO-151",
+  "feeds": {
+    "forestry": [
+      {
+        "recordId": "FOREST-PLOT-001",
+        "recordedAt": "2026-10-28",
+        "status": "inspected",
+        "priority": "low",
+        "source": "field-log",
+        "payload": {
+          "plot": "A",
+          "plantedAcres": 7,
+          "treeCount": 7000
+        }
+      },
+      {
+        "recordId": "FOREST-PLOT-001",
+        "recordedAt": "2026-10-29",
+        "status": "updated",
+        "priority": "medium",
+        "source": "field-log",
+        "payload": {
+          "plot": "A",
+          "note": "duplicate demonstration"
+        }
+      }
+    ],
+    "apiary": [
+      {
+        "recordId": "HIVE-001",
+        "recordedAt": "2026-10-29",
+        "status": "active",
+        "priority": "medium",
+        "source": "apiary-log",
+        "payload": {
+          "hiveNumber": 1,
+          "activeColonies": 1
+        }
+      }
+    ],
+    "workforce": [
+      {
+        "recordId": "TASK-001",
+        "recordedAt": "2026-10-29",
+        "status": "completed",
+        "priority": "low",
+        "source": "daily-log",
+        "payload": {
+          "task": "Inspect eucalyptus plot"
+        }
+      }
+    ],
+    "inspections": [
+      {
+        "recordId": "INSP-001",
+        "recordedAt": "2026-10-29",
+        "status": "open",
+        "priority": "high",
+        "source": "inspection-log",
+        "payload": {
+          "finding": "Follow up on field inspection"
+        }
+      }
+    ],
+    "dataQuality": [
+      {
+        "recordId": "DQ-001",
+        "recordedAt": "2026-10-29",
+        "status": "review_required",
+        "priority": "medium",
+        "source": "gateway-demo",
+        "payload": {
+          "note": "Example import"
+        }
+      }
+    ],
+    "correctiveActions": [
+      {
+        "recordId": "CAPA-001",
+        "recordedAt": "2026-10-29",
+        "status": "in_progress",
+        "priority": "high",
+        "source": "capa-log",
+        "payload": {
+          "title": "Close corrective action evidence"
+        }
+      }
+    ],
+    "decisionActions": [
+      {
+        "recordId": "DEC-001",
+        "recordedAt": "2026-10-29",
+        "status": "proposed",
+        "priority": "medium",
+        "source": "decision-log",
+        "payload": {
+          "title": "Review next apiary expansion"
+        }
+      }
+    ]
+  }
+}

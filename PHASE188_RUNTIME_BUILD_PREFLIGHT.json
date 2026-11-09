@@ -1,0 +1,32 @@
+{
+  "phase": 188,
+  "purpose": "runtime authentication test preflight",
+  "checks": [
+    {
+      "name": "API package manifest exists and parses",
+      "passed": true
+    },
+    {
+      "name": "build script is configured",
+      "passed": true
+    },
+    {
+      "name": "Nest CLI dependency declared",
+      "passed": true
+    },
+    {
+      "name": "installed API dependencies available",
+      "passed": true
+    },
+    {
+      "name": "HTTP smoke probe is opt-in and read-only",
+      "passed": true
+    }
+  ],
+  "passed": 5,
+  "total": 5,
+  "buildExecuted": false,
+  "liveHttpTestsExecuted": false,
+  "productionCleared": false,
+  "note": "Preflight reports prerequisites only; it does not run the NestJS build or make HTTP requests."
+}

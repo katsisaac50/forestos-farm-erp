@@ -1,0 +1,142 @@
+name: Tenant Security Regression
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-contract:
+    name: Source contract regression tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check Phase 106 HTTP harness syntax
+        run: node --check scripts/phase106-live-tenant-http-tests.js
+
+      - name: Run Phase 105 executable tenant contract tests
+        run: node scripts/phase105-tenant-contract-tests.js
+
+      - name: Check Phase 114 fixture integrity audit syntax
+        run: node --check scripts/phase114-fixture-integrity-audit.js
+
+      - name: Check Phase 114 fixture integrity contract syntax
+        run: node --check scripts/phase114-fixture-integrity-contract-tests.js
+
+      - name: Run Phase 114 fixture integrity contract tests
+        run: node scripts/phase114-fixture-integrity-contract-tests.js
+      - name: Phase 115 auth and membership probe contract
+        run: node scripts/phase115-auth-membership-contract-tests.js
+      - name: Phase 116 tenant route audit contract
+        run: node scripts/phase116-tenant-route-audit-contract-tests.js
+      - name: Phase 117 service tenant query audit syntax
+        run: node --check scripts/phase117-service-tenant-query-audit.js
+      - name: Phase 117 service tenant query contract
+        run: node scripts/phase117-service-tenant-query-contract-tests.js
+      - name: Phase 118 route-service matrix syntax
+        run: node --check scripts/phase118-route-service-remediation-matrix.js
+      - name: Phase 118 route-service matrix contract
+        run: node scripts/phase118-route-service-contract-tests.js
+      - name: Phase 119 plantation tenant probe syntax
+        run: node --check scripts/phase119-plantation-tenant-read-probe.js
+      - name: Phase 119 plantation tenant contract
+        run: node scripts/phase119-plantation-tenant-contract-tests.js
+
+      - name: Check Phase 113 MongoDB preflight syntax
+        run: node --check scripts/phase113-mongodb-runtime-preflight.js
+
+      - name: Check Phase 113 runtime preflight contract syntax
+        run: node --check scripts/phase113-runtime-preflight-contract-tests.js
+
+      - name: Run Phase 113 runtime preflight contract tests
+        run: node scripts/phase113-runtime-preflight-contract-tests.js
+
+      - name: Check Phase 112 model fixture audit syntax
+        run: node --check scripts/phase112-model-fixture-contract-tests.js
+
+      - name: Run Phase 112 model fixture contract audit
+        run: node scripts/phase112-model-fixture-contract-tests.js
+
+      - name: Check Phase 111 membership reference contract syntax
+        run: node --check scripts/phase111-membership-reference-contract-tests.js
+
+      - name: Run Phase 111 membership reference contract tests
+        run: node scripts/phase111-membership-reference-contract-tests.js
+
+      - name: Check Phase 110 live readiness probe syntax
+        run: node --check scripts/phase110-live-readiness-probe.js
+
+      - name: Run Phase 110 live readiness contract tests
+        run: node scripts/phase110-live-readiness-contract-tests.js
+
+      - name: Check Phase 109 schema alignment contract syntax
+        run: node --check scripts/phase109-schema-alignment-contract-tests.js
+
+      - name: Run Phase 109 schema alignment contract tests
+        run: node scripts/phase109-schema-alignment-contract-tests.js
+
+      - name: Check Phase 108 fixture seeder syntax
+        run: node --check scripts/phase108-seed-test-fixtures.js
+
+      - name: Run Phase 108 environment contract tests
+        run: node scripts/phase108-environment-contract-tests.js
+
+      - name: Run Phase 104 membership regression
+        run: node scripts/phase104-membership-tenant-regression.js
+
+      - name: Run Phase 103 security regression
+        run: node scripts/phase103-security-regression.js
+
+      - name: Upload route inventory and audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tenant-security-audit
+          path: |
+            docs/PHASE102_API_ROUTE_INVENTORY.md
+            docs/PHASE102_API_ROUTE_INVENTORY.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  live-http-tests:
+    name: Optional live HTTP tenant tests
+    runs-on: ubuntu-latest
+    if: ${{ vars.FORESTOS_LIVE_TENANT_TESTS_ENABLED == 'true' }}
+    env:
+      FORESTOS_TEST_API_BASE_URL: ${{ vars.FORESTOS_TEST_API_BASE_URL }}
+      FORESTOS_TENANT_A_TOKEN: ${{ secrets.FORESTOS_TENANT_A_TOKEN }}
+      FORESTOS_TENANT_B_TOKEN: ${{ secrets.FORESTOS_TENANT_B_TOKEN }}
+      FORESTOS_SUSPENDED_TOKEN: ${{ secrets.FORESTOS_SUSPENDED_TOKEN }}
+      FORESTOS_TENANT_A_ORG_ID: ${{ vars.FORESTOS_TENANT_A_ORG_ID }}
+      FORESTOS_TENANT_B_ORG_ID: ${{ vars.FORESTOS_TENANT_B_ORG_ID }}
+      FORESTOS_TEST_SCENARIOS: apps/api/test/phase106-live-tenant-scenarios.example.json
+      FORESTOS_ALLOW_NONLOCAL_TEST_TARGET: "true"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate test target configuration
+        run: |
+          test -n "$FORESTOS_TEST_API_BASE_URL" || { echo "Missing FORESTOS_TEST_API_BASE_URL"; exit 1; }
+          echo "Live HTTP test job enabled. Ensure this URL points only to a dedicated non-production test deployment."
+
+      - name: Run live HTTP scenarios
+        run: node scripts/phase106-live-tenant-http-tests.js

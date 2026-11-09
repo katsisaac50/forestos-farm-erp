@@ -1,0 +1,44 @@
+{
+  "phase": 203,
+  "title": "Lockfile Provenance Attestation Check",
+  "generatedAt": "2026-10-30T19:29:59.057Z",
+  "productionCleared": false,
+  "installExecuted": false,
+  "buildExecuted": false,
+  "networkAccessAttempted": false,
+  "status": "REJECTED_CANDIDATE_OR_ATTESTATION",
+  "checks": {
+    "manifestValid": true,
+    "candidateExists": true,
+    "attestationExistsAndValidJson": true,
+    "attestationFieldsPresent": true,
+    "manifestFingerprintMatches": false,
+    "lockfileFingerprintMatches": true,
+    "packageIdentityMatches": true,
+    "lockfileVersionMatches": true,
+    "rootDependenciesMatch": true
+  },
+  "evidence": {
+    "manifest": {
+      "path": "apps/api/package.json",
+      "name": "forestos-api",
+      "version": "0.1.0",
+      "sha256": "a762ae27f19ca2ddb7598dfd73b36470d611431eb26f39ae22f7690b15a115a0"
+    },
+    "candidate": {
+      "path": "/tmp/forestos203-73B9Yl/package-lock.json",
+      "sha256": "ee40581df146d668a22ddba14f3169d44cd54a01e173f791ebe3226f6720a536",
+      "lockfileVersion": 3,
+      "packageName": "forestos-api",
+      "packageVersion": "0.1.0"
+    },
+    "attestation": {
+      "path": "/tmp/forestos203-73B9Yl/provenance.json",
+      "sha256": "fea722607897eb087db3de1c5d2858c2d7fc2f2ed96eb47d9398388a7a683e46"
+    }
+  },
+  "blockers": [
+    "Attestation check failed: manifestFingerprintMatches"
+  ],
+  "nextActions": []
+}

@@ -1,0 +1,92 @@
+{
+  "phase": 200,
+  "title": "Trusted Dependency Recovery & Release Evidence Bundle",
+  "generatedAt": "2026-11-09T06:30:15.069Z",
+  "mode": "read-only-evidence-aggregation",
+  "productionCleared": false,
+  "buildExecutedByThisTool": false,
+  "status": "READY_FOR_EXPLICIT_BUILD_NOT_PRODUCTION_CLEARED",
+  "checks": {
+    "apiManifestValid": true,
+    "apiLockfileExists": true,
+    "apiLockfileAligned": true,
+    "buildPrerequisitesPresent": true,
+    "legacyPhase125JsonValid": true,
+    "releaseEvidenceComplete": true
+  },
+  "evidence": {
+    "apiManifest": {
+      "path": "apps/api/package.json",
+      "name": "forestos-api",
+      "version": "0.1.0",
+      "sha256": "789ffdf001b8ccb7f62459f2c1676021699e6065d33017aaf4e0db30aca605f4"
+    },
+    "apiLockfile": {
+      "path": "apps/api/package-lock.json",
+      "sha256": "54486b6a5c658f2c570a2b27b57831edf17dd80bf4aa751b61b008d0bcdb87df",
+      "lockfileVersion": 3,
+      "aligned": true
+    },
+    "historicalReports": {
+      "phase193": {
+        "path": "PHASE193_LOCKFILE_RECOVERY_REPORT.json",
+        "present": true,
+        "parseable": true,
+        "sha256": "3bbd60045eff3696e6b743ecf28865e07a5129f8718a8e49bf0239bd577f5c50",
+        "phase": 193,
+        "status": null
+      },
+      "phase195": {
+        "path": "PHASE195_REGISTRY_LOCKFILE_RECOVERY_REPORT.json",
+        "present": true,
+        "parseable": true,
+        "sha256": "9bbb21fdd9c34b9df08f4c969f037162ece6389002c3f886338c7f389ac2788d",
+        "phase": 195,
+        "status": null
+      },
+      "phase196": {
+        "path": "PHASE196_LOCAL_LOCKFILE_RECOVERY_REPORT.json",
+        "present": true,
+        "parseable": true,
+        "sha256": "07a46a9174f609339a99ec9d5445b3f4604c8a74ee1ea17a03473fe06b19cb26",
+        "phase": 196,
+        "status": null
+      },
+      "phase197": {
+        "path": "PHASE197_TRUSTED_LOCKFILE_PROVENANCE_REPORT.json",
+        "present": true,
+        "parseable": true,
+        "sha256": "c3bdf04d52430abdf28d32024c29e060e9b6f5d7262eb8a605f39077a0dfd4c7",
+        "phase": 197,
+        "status": null
+      },
+      "phase198": {
+        "path": "PHASE198_TRUSTED_LOCKFILE_INTAKE_REPORT.json",
+        "present": true,
+        "parseable": true,
+        "sha256": "7ede7ad751247d9d0f7abc53dcdc7bb2738e5384f2967cbe215036255dcd0431",
+        "phase": 198,
+        "status": "BLOCKED_TARGET_OR_CANDIDATE_VALIDATION_FAILED"
+      },
+      "phase199": {
+        "path": "PHASE199_BUILD_EVIDENCE_REPORT.json",
+        "present": true,
+        "parseable": true,
+        "sha256": "c8f43037594cc71f6ad5f9e58ecc212dafcfca9307a7b751a3657ed1fcd96d07",
+        "phase": 199,
+        "status": "READY_FOR_EXPLICIT_BUILD"
+      }
+    },
+    "runtime": {
+      "node": "v26.13.0",
+      "npm": null,
+      "apiNodeModulesExists": true,
+      "nestCliExists": true
+    }
+  },
+  "blockers": [],
+  "nextActions": [
+    "Run npm run build in apps/api and preserve the compiler output; then perform runtime, database, authentication, and security tests.",
+    "Keep production clearance disabled until all release criteria are independently verified."
+  ]
+}

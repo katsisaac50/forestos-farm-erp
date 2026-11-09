@@ -1,0 +1,28 @@
+{
+  "phase": 198,
+  "title": "Trusted Lockfile Intake & Manifest Alignment",
+  "generatedAt": "2026-11-09T05:11:41.089Z",
+  "mode": "inspect-candidate",
+  "status": "BLOCKED_TARGET_OR_CANDIDATE_VALIDATION_FAILED",
+  "apiManifest": "apps/api/package.json",
+  "targetLockfile": "apps/api/package-lock.json",
+  "existingTarget": true,
+  "candidate": {
+    "suppliedPath": "C:\\Users\\katon\\AppData\\Local\\Temp\\forestos198-LMJpIo\\package-lock.json",
+    "exists": true
+  },
+  "checks": {},
+  "installExecuted": false,
+  "buildExecuted": false,
+  "productionCleared": false,
+  "limitations": [
+    "Structural validation cannot prove where a candidate came from; obtain it from trusted version control or CI and verify its provenance independently.",
+    "No package installation or API build is performed by this tool."
+  ],
+  "environment": {
+    "node": "v26.13.0",
+    "npmVersion": null,
+    "npmAvailable": false
+  },
+  "error": "Root package name/version does not match apps/api/package.json"
+}

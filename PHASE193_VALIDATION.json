@@ -1,0 +1,33 @@
+{
+  "phase": 193,
+  "title": "Lockfile Recovery Gate & Registry-Enabled Bootstrap",
+  "contractTests": {
+    "passed": 12,
+    "failed": 0
+  },
+  "javascriptSyntaxChecks": {
+    "filesChecked": 177,
+    "failed": 0
+  },
+  "jsonValidation": {
+    "total": 104,
+    "valid": 103,
+    "invalid": [
+      "PHASE125_SCHEMA_INDEX_READINESS.json"
+    ]
+  },
+  "zipIntegrity": "to be checked after packaging",
+  "lockfileGenerated": false,
+  "cleanInstallExecuted": false,
+  "nestBuildExecuted": false,
+  "productionCleared": false,
+  "limitations": [
+    "No API package lockfile was fabricated.",
+    "Registry-enabled lockfile generation was not executed during packaging.",
+    "Clean install, NestJS build, live HTTP auth, MongoDB integration, and cross-tenant isolation remain unverified."
+  ],
+  "allContractTestSuites": {
+    "passed": 87,
+    "failed": 0
+  }
+}

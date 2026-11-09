@@ -1,0 +1,67 @@
+{
+  "batchId": "masulita-field-batch-2026-10-29-001",
+  "now": "2026-10-29",
+  "master": {
+    "records": [
+      {
+        "domain": "forestry",
+        "recordId": "plot-west-01",
+        "recordedAt": "2026-10-01",
+        "payload": {
+          "acres": 6,
+          "species": "eucalyptus"
+        },
+        "version": 2,
+        "createdAt": "2026-01-01",
+        "updatedAt": "2026-10-01"
+      }
+    ]
+  },
+  "incoming": [
+    {
+      "domain": "forestry",
+      "recordId": "plot-west-01",
+      "recordedAt": "2026-10-29",
+      "masterVersion": 2,
+      "payload": {
+        "acres": 7,
+        "species": "eucalyptus"
+      }
+    },
+    {
+      "domain": "apiary",
+      "recordId": "hive-001",
+      "recordedAt": "2026-10-29",
+      "payload": {
+        "status": "active",
+        "colonyPresent": true
+      }
+    },
+    {
+      "domain": "workforce",
+      "recordId": "worker-task-001",
+      "recordedAt": "2026-10-29",
+      "payload": {
+        "status": "completed",
+        "hours": 3.5
+      }
+    },
+    {
+      "domain": "forestry",
+      "recordId": "plot-west-01",
+      "recordedAt": "2026-10-29",
+      "payload": {
+        "acres": 8,
+        "species": "eucalyptus"
+      }
+    },
+    {
+      "domain": "inspections",
+      "recordId": "inspection-001",
+      "recordedAt": "bad-date",
+      "payload": {
+        "result": "pass"
+      }
+    }
+  ]
+}

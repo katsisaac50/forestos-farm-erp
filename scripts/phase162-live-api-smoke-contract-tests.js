@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+'use strict';
+const fs = require('fs'), path = require('path'); const root = path.resolve(__dirname, '..');
+const runner = fs.readFileSync(path.join(__dirname, 'phase162-live-api-smoke.js'), 'utf8');
+const pkg = JSON.parse(fs.readFileSync(path.join(root, 'apps/api/package.json'), 'utf8'));
+const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8'); const checks = [];
+const check = (name, value) => checks.push({ name, passed: !!value });
+check('Uses GET-only fetch requests', runner.includes("method: 'GET'"));
+check('Opt-in and skips without base URL', runner.includes('if (!baseText)') && runner.includes("'SKIP'"));
+check('Restricts base URL to HTTPS or localhost HTTP', runner.includes("base.protocol === 'http:'") && runner.includes('localhost'));
+check('Restricts endpoint paths to same origin', runner.includes('u.origin !== base.origin'));
+check('Uses request timeout', runner.includes('AbortSignal.timeout(10000)'));
+check('Does not log tokens or response bodies', !runner.includes('console.log(token)') && !runner.includes('console.log(JSON.stringify(body'));
+check('Writes machine-readable report', runner.includes('PHASE162_LIVE_API_SMOKE_REPORT.json'));
+check('Documents security and correctness limitations', runner.includes('do not prove business correctness') && runner.includes('tenant isolation'));
+check('API package exposes phase contract test', pkg.scripts && pkg.scripts['test:phase162:contract'] === 'node ../../scripts/phase162-live-api-smoke-contract-tests.js');
+check('README documents Phase 162', readme.includes('Phase 162 — Live API Readiness Smoke Test'));
+for (const c of checks) console.log(`${c.passed ? 'PASS' : 'FAIL'} ${c.name}`);
+console.log(`Phase 162 contract tests: ${checks.filter(c=>c.passed).length}/${checks.length} passed.`);
+if (checks.some(c=>!c.passed)) process.exitCode = 1;

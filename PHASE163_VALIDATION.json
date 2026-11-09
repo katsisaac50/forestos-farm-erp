@@ -1,0 +1,23 @@
+{
+  "phase": 163,
+  "title": "Registry Batch Live Integration Probe",
+  "contractTests": {
+    "phase163": {
+      "passed": 11,
+      "total": 11
+    },
+    "allExistingPhaseContractScripts": {
+      "passed": 57,
+      "total": 57,
+      "failed": 0
+    }
+  },
+  "zipIntegrity": "pending",
+  "liveIntegration": "not run; opt-in safety gates were not configured",
+  "apiBuild": "not run; runtime dependencies not verified/installed",
+  "limitations": [
+    "Static contract checks do not demonstrate live API correctness.",
+    "Live probe writes a uniquely named record and must only target a disposable test database.",
+    "Probe was not run because no dedicated API URL, token, tenant, explicit write opt-in, or test database name was configured."
+  ]
+}

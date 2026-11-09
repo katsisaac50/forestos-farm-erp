@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+"use strict";
+const assert=require("assert"),{evaluate}=require("./phase137-improvement-action-plan.js");
+let passed=0;
+function test(name,fn){try{fn();passed++;console.log(`PASS ${name}`);}catch(e){console.error(`FAIL ${name}: ${e.stack||e}`);process.exitCode=1;}}
+const now="2026-10-27T12:00:00Z";
+const base={actionId:"CA-001",title:"Revise inspection checklist",sourceFinding:"Repeated missed inspection",owner:"Farm supervisor",priority:"HIGH",status:"IN_PROGRESS",createdAt:"2026-10-01T00:00:00Z",dueAt:"2026-11-01T00:00:00Z",successMeasure:"Reduce missed inspections",progressPercent:40};
+const report=rows=>evaluate({actions:rows},now),has=(r,c)=>r.findings.some(f=>f.code===c);
+test("accepts a well-formed in-progress action",()=>{const r=report([base]);assert.strictEqual(r.summary.totalActions,1);assert.strictEqual(r.summary.validActions,1);});
+test("rejects unsupported top-level input",()=>assert(evaluate({items:[]},now).error));
+test("detects missing required field",()=>{const x={...base};delete x.owner;assert(has(report([x]),"MISSING_FIELD"));});
+test("detects duplicate action IDs",()=>assert(has(report([base,{...base,title:"Second"}]),"DUPLICATE_ACTION_ID")));
+test("rejects invalid priority",()=>assert(has(report([{...base,priority:"URGENT"}]),"INVALID_PRIORITY")));
+test("rejects invalid status",()=>assert(has(report([{...base,status:"WAITING"}]),"INVALID_STATUS")));
+test("validates created date",()=>assert(has(report([{...base,createdAt:"not a date"}]),"INVALID_CREATED_DATE")));
+test("validates due date",()=>assert(has(report([{...base,dueAt:"not a date"}]),"INVALID_DUE_DATE")));
+test("due date cannot precede creation",()=>assert(has(report([{...base,dueAt:"2026-09-01T00:00:00Z"}]),"DUE_BEFORE_CREATED")));
+test("overdue in-progress action is flagged",()=>assert(has(report([{...base,dueAt:"2026-10-01T00:00:00Z"}]),"OVERDUE_IN_PROGRESS")));
+test("blocked action requires attention",()=>assert(has(report([{...base,status:"BLOCKED"}]),"BLOCKED_ACTION")));
+test("critical open action is escalated",()=>assert(has(report([{...base,priority:"CRITICAL"}]),"CRITICAL_ACTION_OPEN")));
+test("completed action needs evidence",()=>assert(has(report([{...base,status:"COMPLETED",completedAt:"2026-10-20T00:00:00Z"}]),"COMPLETION_EVIDENCE_MISSING")));
+test("completed action needs completion date",()=>assert(has(report([{...base,status:"COMPLETED",completionEvidence:"evidence://a"}]),"COMPLETION_DATE_MISSING")));
+test("completed late action is reported",()=>assert(has(report([{...base,status:"COMPLETED",completedAt:"2026-11-02T00:00:00Z",dueAt:"2026-11-01T00:00:00Z",completionEvidence:"evidence://a"}]),"COMPLETED_LATE")));
+test("cancelled action needs reason",()=>assert(has(report([{...base,status:"CANCELLED"}]),"CANCELLATION_REASON_MISSING")));
+test("completed action without effectiveness review is flagged",()=>assert(has(report([{...base,status:"COMPLETED",completedAt:"2026-10-20T00:00:00Z",completionEvidence:"evidence://a"}]),"EFFECTIVENESS_REVIEW_NOT_LINKED")));
+test("progress percent must be within range",()=>assert(has(report([{...base,progressPercent:120}]),"INVALID_PROGRESS")));
+test("in-progress action without progress gets warning",()=>assert(has(report([{...base,progressPercent:undefined}]),"PROGRESS_NOT_REPORTED")));
+test("completed progress should equal 100",()=>assert(has(report([{...base,status:"COMPLETED",completedAt:"2026-10-20T00:00:00Z",completionEvidence:"evidence://a",progressPercent:70}]),"COMPLETION_PROGRESS_MISMATCH")));
+test("summarizes action statuses",()=>{const r=report([base,{...base,actionId:"CA-002",status:"BLOCKED"},{...base,actionId:"CA-003",status:"COMPLETED",completedAt:"2026-10-20T00:00:00Z",completionEvidence:"evidence://x",effectivenessReviewId:"REV-1",progressPercent:100}]);assert.strictEqual(r.summary.inProgress,1);assert.strictEqual(r.summary.blocked,1);assert.strictEqual(r.summary.completed,1);});
+test("handles empty action list",()=>assert.strictEqual(report([]).summary.totalActions,0));
+test("flags malformed row",()=>assert(has(report([null]),"INVALID_ACTION")));
+test("validates cancellation reason text",()=>assert(has(report([{...base,status:"CANCELLED",cancellationReason:" "}]),"CANCELLATION_REASON_MISSING")));
+test("uses deterministic supplied clock",()=>assert.strictEqual(report([base]).generatedAt,new Date(now).toISOString()));
+console.log(`${passed}/25 Phase 137 contract tests passed`);
+if(passed!==25)process.exitCode=1;

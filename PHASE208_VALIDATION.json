@@ -1,0 +1,18 @@
+{
+  "phase": 208,
+  "name": "CI Lockfile Recovery Handoff",
+  "workflowAdded": true,
+  "manualDispatchOnly": true,
+  "requiresExplicitGenerationConfirmation": true,
+  "phaseContractAssertions": {"passed": 22, "failed": 0},
+  "contractTestFiles": {"passed": 102, "failed": 0},
+  "javascriptSyntaxFiles": {"passed": 201, "failed": 0},
+  "jsonFiles": {"valid": 134, "invalid": 1},
+  "knownInvalidJson": "PHASE125_SCHEMA_INDEX_READINESS.json: Extra data at line 96 column 2",
+  "generatesLockfileInCurrentEnvironment": false,
+  "ciWorkflowExecuted": false,
+  "apiBuildExecuted": false,
+  "productionCleared": false,
+  "knownBlocker": "No local API lockfile; prior local registry access failed DNS resolution.",
+  "validationNotes": "Contract suites and JavaScript syntax checks passed. The single invalid JSON file predates Phase 208 and is not modified."
+}

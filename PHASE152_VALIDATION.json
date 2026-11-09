@@ -1,0 +1,27 @@
+{
+  "phase": 152,
+  "name": "Master Data Registry & Idempotent Import Engine",
+  "date": "2026-10-29",
+  "contract_tests_passed": 16,
+  "contract_test_exit_code": 0,
+  "smoke_test_expected_exit_code": 1,
+  "smoke_test_observed_exit_code": 1,
+  "smoke_status": "review_required",
+  "smoke_summary": {
+    "input": 5,
+    "created": 2,
+    "updated": 1,
+    "unchanged": 0,
+    "conflicts": 0,
+    "quarantined": 2,
+    "masterRecords": 3
+  },
+  "master_snapshot_hash": "b208fc3eee7107bed5898030a58e883b236f6fa3c411a1a68336b50e13219481",
+  "limitations": [
+    "offline JSON only",
+    "no database persistence",
+    "no authentication or authorization",
+    "no transaction or cross-process concurrency lock",
+    "checksums are not digital signatures"
+  ]
+}

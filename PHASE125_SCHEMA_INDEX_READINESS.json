@@ -1,0 +1,96 @@
+{
+  "phase": 125,
+  "title": "MongoDB Schema and Index Migration Readiness",
+  "generatedAt": "2026-10-26T15:12:13.414Z",
+  "mode": "static-read-only",
+  "databaseConnection": false,
+  "dataMutation": false,
+  "targets": [
+    {
+      "domain": "sales",
+      "file": "apps/api/src/sales/sales.schema.ts",
+      "model": "SalesOrder"
+    },
+    {
+      "domain": "inventory",
+      "file": "apps/api/src/inventory/inventory.schema.ts",
+      "model": "InventoryItem"
+    },
+    {
+      "domain": "inventory-control",
+      "file": "apps/api/src/inventory-control/inventory.schema.ts",
+      "model": "StockItem"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "INFO",
+      "code": "STATIC_SCHEMA_REVIEW",
+      "domain": "sales",
+      "file": "apps/api/src/sales/sales.schema.ts",
+      "model": "SalesOrder",
+      "tenantField": "organizationId",
+      "keyField": "orderId",
+      "detail": "Source-pattern heuristic only; not a live MongoDB index inventory."
+    },
+    {
+      "severity": "INFO",
+      "code": "STATIC_SCHEMA_REVIEW",
+      "domain": "inventory",
+      "file": "apps/api/src/inventory/inventory.schema.ts",
+      "model": "InventoryItem",
+      "tenantField": "organizationId",
+      "keyField": "itemId",
+      "detail": "Source-pattern heuristic only; not a live MongoDB index inventory."
+    },
+    {
+      "severity": "P1",
+      "code": "TENANT_FIELD_NOT_VISIBLE",
+      "domain": "inventory-control",
+      "file": "apps/api/src/inventory-control/inventory.schema.ts",
+      "model": "StockItem",
+      "tenantField": "organizationId",
+      "keyField": "itemCode",
+      "detail": "No recognizable tenant ownership field found; verify whether this model is tenant-owned or intentionally global."
+    },
+    {
+      "severity": "P1",
+      "code": "TENANT_COMPOUND_UNIQUE_INDEX_NOT_VISIBLE",
+      "domain": "inventory-control",
+      "file": "apps/api/src/inventory-control/inventory.schema.ts",
+      "model": "StockItem",
+      "tenantField": "organizationId",
+      "keyField": "itemCode",
+      "detail": "No recognizable compound index for organizationId + itemCode; verify intended uniqueness and query patterns."
+    },
+    {
+      "severity": "P1",
+      "code": "GLOBAL_UNIQUE_FIELD",
+      "domain": "inventory-control",
+      "file": "apps/api/src/inventory-control/inventory.schema.ts",
+      "model": "StockItem",
+      "tenantField": "organizationId",
+      "keyField": "itemCode",
+      "detail": "A globally unique field declaration may conflict with tenant-local identifiers; inspect existing MongoDB indexes and data before changing it."
+    },
+    {
+      "severity": "INFO",
+      "code": "STATIC_SCHEMA_REVIEW",
+      "domain": "inventory-control",
+      "file": "apps/api/src/inventory-control/inventory.schema.ts",
+      "model": "StockItem",
+      "tenantField": "organizationId",
+      "keyField": "itemCode",
+      "detail": "Source-pattern heuristic only; not a live MongoDB index inventory."
+    }
+  ],
+  "mandatoryPreflight": [
+    "Take and verify a restorable database backup.",
+    "Capture actual collection indexes using listIndexes in a secured non-production environment.",
+    "Detect duplicate candidate keys before creating compound unique indexes.",
+    "Confirm every tenant-owned record has verified organization ownership.",
+    "Rehearse index creation and rollback on a restored non-production copy.",
+    "Never drop a global unique index until replacement semantics and duplicate checks are approved."
+  ],
+  "caveat": "Static source scan only. Findings are review flags, not confirmed production defects."
+}

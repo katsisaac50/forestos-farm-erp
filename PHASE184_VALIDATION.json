@@ -1,0 +1,15 @@
+{
+  "phase": 184,
+  "contractTestScript": "scripts/phase184-jwt-startup-safety-contract-tests.js",
+  "checksExpected": 12,
+  "productionBuildRun": false,
+  "liveMongoDbTestsRun": false,
+  "liveHttpAuthorizationTestsRun": false,
+  "releaseStatus": "NOT_CLEARED_FOR_PRODUCTION",
+  "contractTestSuitesRun": 78,
+  "contractTestSuitesPassed": 78,
+  "contractTestSuitesFailed": 0,
+  "javascriptSyntaxFilesChecked": 153,
+  "javascriptSyntaxFailures": 0,
+  "fullRepositoryJsonValidation": "NOT_COMPLETED_TIMEOUT"
+}
