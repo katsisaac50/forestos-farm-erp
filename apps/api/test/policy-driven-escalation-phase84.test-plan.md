@@ -1,0 +1,11 @@
+# Phase 84 — Policy Evaluation Test Plan
+- [ ] API and frontend compile.
+- [ ] Owner authorization required.
+- [ ] Empty policy list returns zero matches.
+- [ ] Disabled and severity-mismatched policies never match.
+- [ ] Due-soon, overdue, and approval-waiting boundaries are tested.
+- [ ] Multiple same-severity policies resolve deterministically.
+- [ ] Scan limit and `scanTruncated` are accurate.
+- [ ] Evaluation creates no notification events and sends no messages.
+- [ ] UI clearly identifies preview-only behavior and missing recipients.
+- [ ] Tenant-boundary tests are completed before multi-organization use.

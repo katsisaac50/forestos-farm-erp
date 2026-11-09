@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Tenant A can read its own seeded record",
+    "method": "GET",
+    "path": "/REPLACE_WITH_REAL_RECORD_ROUTE/REPLACE_WITH_TENANT_A_RECORD_ID",
+    "tenant": "A",
+    "expectedStatus": [
+      200
+    ],
+    "expectBodyNotToContain": [
+      "REPLACE_WITH_TENANT_B_SECRET_MARKER"
+    ]
+  },
+  {
+    "name": "Tenant A cannot read Tenant B seeded record",
+    "method": "GET",
+    "path": "/REPLACE_WITH_REAL_RECORD_ROUTE/REPLACE_WITH_TENANT_B_RECORD_ID",
+    "tenant": "A",
+    "expectedStatus": [
+      403,
+      404
+    ],
+    "expectBodyNotToContain": [
+      "REPLACE_WITH_TENANT_B_SECRET_MARKER"
+    ]
+  },
+  {
+    "name": "Tenant B cannot modify Tenant A seeded record",
+    "method": "PATCH",
+    "path": "/REPLACE_WITH_REAL_RECORD_ROUTE/REPLACE_WITH_TENANT_A_RECORD_ID",
+    "tenant": "B",
+    "body": {
+      "name": "PHASE106_SHOULD_NOT_APPLY"
+    },
+    "expectedStatus": [
+      403,
+      404
+    ]
+  },
+  {
+    "name": "Suspended membership is rejected",
+    "method": "GET",
+    "path": "/REPLACE_WITH_A_PROTECTED_ROUTE",
+    "tenant": "SUSPENDED",
+    "organizationHeader": "${ORG_A}",
+    "expectedStatus": [
+      401,
+      403
+    ]
+  }
+]

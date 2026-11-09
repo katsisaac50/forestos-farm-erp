@@ -1,0 +1,3 @@
+import {OrganizationsModule} from '../organizations/organizations.module';
+import {Module} from '@nestjs/common';import {MongooseModule} from '@nestjs/mongoose';import {GrowthSample,GrowthSampleSchema} from './growth.schema';import {Plantation,PlantationSchema} from '../plantations/plantation.schema';import {GrowthController} from './growth.controller';import {GrowthService} from './growth.service';
+@Module({imports:[MongooseModule.forFeature([{name:GrowthSample.name,schema:GrowthSampleSchema},{name:Plantation.name,schema:PlantationSchema}]),OrganizationsModule],controllers:[GrowthController],providers:[GrowthService]}) export class GrowthModule{}

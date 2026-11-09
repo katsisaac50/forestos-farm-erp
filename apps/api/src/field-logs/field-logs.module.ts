@@ -1,0 +1,2 @@
+import {Module} from '@nestjs/common';import {MongooseModule} from '@nestjs/mongoose';import {FieldLog,FieldLogSchema} from './field-log.schema';import {FieldLogsController} from './field-logs.controller';import {FieldLogsService} from './field-logs.service';
+@Module({imports:[MongooseModule.forFeature([{name:FieldLog.name,schema:FieldLogSchema}])],controllers:[FieldLogsController],providers:[FieldLogsService]}) export class FieldLogsModule{}

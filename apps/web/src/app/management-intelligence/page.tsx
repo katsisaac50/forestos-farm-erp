@@ -1,0 +1,20 @@
+'use client';
+import {useEffect,useState} from 'react';
+import {getData} from '../../lib/api';
+type Exception={priority:string;area:string;title:string;detail:string;action:string};
+type Report={generatedAt:string;note:string;finance:any;workforce:any;inventory:any;workflows:any;inspections:any;risks:any;exceptions:Exception[]};
+const fmt=(n:any)=>Number(n||0).toLocaleString(undefined,{maximumFractionDigits:2});
+export default function ManagementIntelligencePage(){
+ const [data,setData]=useState<Report|null>(null),[error,setError]=useState('');
+ async function load(){try{setError('');setData(await getData<any>('/management-intelligence/dashboard'));}catch(e:any){setError(e?.message||'Could not load management report. Sign in as owner and try again.');}}
+ useEffect(()=>{load();},[]);
+ const cards=data?[['Recorded income this month',`${fmt(data.finance.recordedIncomeUgx)} UGX`],['Recorded expenses this month',`${fmt(data.finance.recordedExpensesUgx)} UGX`],['Recorded net this month',`${fmt(data.finance.recordedNetUgx)} UGX`],['Tasks overdue',fmt(data.workforce.overdueTasks)],['Low-stock items',fmt(data.inventory.lowStockItems)],['Estimated stock value',`${fmt(data.inventory.estimatedRecordedStockValueUgx)} UGX`],['Failed workflows',fmt(data.workflows.failed)],['Overdue inspections',fmt(data.inspections.overdue)],['Open risks',fmt(data.risks.open)],['High residual risks',fmt(data.risks.highResidual)]]:[];
+ return <main className="page-shell"><header className="page-header"><div><p className="eyebrow">FORESTOS · PHASE 22</p><h1>Management intelligence</h1><p>A consolidated management view of recorded finance, workforce, stock, workflows, inspections, and risks.</p></div><div className="actions"><button onClick={load}>Refresh report</button><a className="button-secondary" href="/">Dashboard</a></div></header>
+ <section className="notice"><strong>Read this correctly:</strong> this is an operational management report, not audited accounting. Finance figures use recorded income and expense transactions, not live cash. Stock value is estimated from recorded quantities and average unit costs. Missing or stale records can make indicators incomplete.</section>
+ {error&&<div className="notice">{error}</div>}
+ {data&&<><p className="muted">Generated {new Date(data.generatedAt).toLocaleString()} · Finance period: {data.finance.month} · {data.note}</p>
+ <section className="metric-grid">{cards.map(([label,value])=><article className="metric-card" key={String(label)}><span>{label}</span><strong>{value}</strong></article>)}</section>
+ <section className="panel"><h2>Exception register</h2><p className="muted">Prioritised issues for management review. These are rules-based signals, not automatic findings of fault.</p><div className="table-wrap"><table><thead><tr><th>Priority</th><th>Area</th><th>Issue</th><th>Details</th><th>Suggested action</th></tr></thead><tbody>{data.exceptions.map((x,i)=><tr key={`${x.area}-${x.title}-${i}`}><td><span className={'status-pill status-'+(x.priority==='high'?'failed':x.priority==='medium'?'pending':'processed')}>{x.priority}</span></td><td>{x.area}</td><td><strong>{x.title}</strong></td><td>{x.detail}</td><td>{x.action}</td></tr>)}</tbody></table>{!data.exceptions.length&&<p className="muted">No exceptions were found by the current rules. This does not prove the farm has no operational problems.</p>}</div></section>
+ <section className="panel"><h2>Management checks</h2><div className="checklist-grid"><article><h3>Finance</h3><p>Review the transaction ledger and reconcile bank/mobile-money/cash records before treating recorded net as actual profit.</p></article><article><h3>Inventory</h3><p>Verify low-stock items physically and compare receipts, issues, write-offs, and supplier documents.</p></article><article><h3>Workforce</h3><p>Confirm overdue tasks with the responsible supervisor and record evidence of completion.</p></article><article><h3>Risk & inspections</h3><p>Assign owners and dates to overdue inspections and high residual risks; record mitigation evidence.</p></article></div></section></>}
+ </main>;
+}

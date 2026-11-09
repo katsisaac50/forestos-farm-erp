@@ -1,0 +1,11 @@
+# Phase 85 — Organization Registry Test Plan
+- [ ] API and web builds succeed.
+- [ ] Owner-only authorization enforced on every organization endpoint.
+- [ ] Duplicate slug returns 409.
+- [ ] Duplicate organization/user membership returns 409.
+- [ ] Required reason and field validation enforced.
+- [ ] Unknown organization IDs return 404.
+- [ ] Creation and membership operations generate audit events.
+- [ ] Unsupported roles rejected.
+- [ ] Verify membership records are not mistakenly treated as tenant enforcement.
+- [ ] Before customer onboarding, prove tenant A cannot access tenant B's plantations, finance, evidence, inventory, notifications, or exports.

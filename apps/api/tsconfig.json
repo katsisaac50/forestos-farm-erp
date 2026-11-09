@@ -1,0 +1,24 @@
+{
+    "compilerOptions":  {
+                            "module":  "commonjs",
+                            "declaration":  true,
+                            "esModuleInterop":  true,
+                            "types":  [
+                                          "node"
+                                      ],
+                            "removeComments":  true,
+                            "emitDecoratorMetadata":  true,
+                            "experimentalDecorators":  true,
+                            "target":  "ES2022",
+                            "sourceMap":  true,
+                            "outDir":  "./dist",
+                            "rootDir":  "./src",
+                            "strict":  true,
+                            "strictPropertyInitialization":  false,
+                            "skipLibCheck":  true
+                        },
+    "exclude":  [
+                    "phase192-auth-guard-backup-20261104",
+                    "dist"
+                ]
+}

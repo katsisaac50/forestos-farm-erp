@@ -1,0 +1,108 @@
+{
+  "phase": 104,
+  "purpose": "Runtime integration test scenarios for two-organization tenant isolation",
+  "fixtures": {
+    "organizations": [
+      {
+        "key": "orgA",
+        "name": "Masulita Forest Farm",
+        "status": "active"
+      },
+      {
+        "key": "orgB",
+        "name": "Independent Apiary Cooperative",
+        "status": "active"
+      }
+    ],
+    "users": [
+      {
+        "key": "userA",
+        "organization": "orgA",
+        "role": "owner",
+        "membershipStatus": "active"
+      },
+      {
+        "key": "userB",
+        "organization": "orgB",
+        "role": "field_worker",
+        "membershipStatus": "active"
+      },
+      {
+        "key": "userRevoked",
+        "organization": "orgA",
+        "role": "viewer",
+        "membershipStatus": "suspended"
+      }
+    ],
+    "records": [
+      {
+        "key": "plantationA",
+        "organization": "orgA",
+        "owner": "userA"
+      },
+      {
+        "key": "hiveB",
+        "organization": "orgB",
+        "owner": "userB"
+      },
+      {
+        "key": "financialRecordA",
+        "organization": "orgA",
+        "owner": "userA"
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "TEN-001",
+      "action": "userA reads plantationA",
+      "expected": "allow"
+    },
+    {
+      "id": "TEN-002",
+      "action": "userA reads hiveB by guessed ID",
+      "expected": "deny without data leakage"
+    },
+    {
+      "id": "TEN-003",
+      "action": "userB updates plantationA by guessed ID",
+      "expected": "deny without mutation"
+    },
+    {
+      "id": "TEN-004",
+      "action": "userB deletes financialRecordA by guessed ID",
+      "expected": "deny without mutation"
+    },
+    {
+      "id": "TEN-005",
+      "action": "userRevoked requests organization context",
+      "expected": "deny"
+    },
+    {
+      "id": "TEN-006",
+      "action": "userA sends orgB organizationId in request body while header selects orgA",
+      "expected": "trusted context remains orgA"
+    },
+    {
+      "id": "TEN-007",
+      "action": "userA requests orgB report/export",
+      "expected": "deny or return orgA-only data according to route contract"
+    },
+    {
+      "id": "TEN-008",
+      "action": "field_worker invokes manager-only action",
+      "expected": "403 Forbidden"
+    },
+    {
+      "id": "TEN-009",
+      "action": "organization membership has canonical singular role field",
+      "expected": "context.roles contains that role"
+    },
+    {
+      "id": "TEN-010",
+      "action": "membership is suspended",
+      "expected": "no active organization context"
+    }
+  ],
+  "status": "test specification only; scenarios have not been executed against MongoDB"
+}

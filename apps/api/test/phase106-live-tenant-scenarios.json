@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Tenant A lists its own plantations",
+    "method": "GET",
+    "path": "/plantations",
+    "tenant": "A",
+    "organizationHeader": "6af1658a0654b4b1b2182839",
+    "expectedStatus": [200]
+  },
+  {
+    "name": "Tenant B lists its own plantations",
+    "method": "GET",
+    "path": "/plantations",
+    "tenant": "B",
+    "organizationHeader": "6af1658a0654b4b1b218283a",
+    "expectedStatus": [200]
+  },
+  {
+    "name": "Tenant A lists its own hives",
+    "method": "GET",
+    "path": "/hives",
+    "tenant": "A",
+    "organizationHeader": "6af1658a0654b4b1b2182839",
+    "expectedStatus": [200]
+  },
+  {
+    "name": "Tenant B cannot modify Tenant A plantation",
+    "method": "PATCH",
+    "path": "/plantations/6af1658a0654b4b1b218283e",
+    "tenant": "B",
+    "organizationHeader": "6af1658a0654b4b1b218283a",
+    "body": { "notes": "unauthorized" },
+    "expectedStatus": [404]
+  },
+  {
+    "name": "Suspended user is rejected on list",
+    "method": "GET",
+    "path": "/plantations",
+    "tenant": "SUSPENDED",
+    "organizationHeader": "6af1658a0654b4b1b2182839",
+    "expectedStatus": [401, 403]
+  }
+]
