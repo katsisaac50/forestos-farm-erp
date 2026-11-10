@@ -1,0 +1,7 @@
+Add these imports to app.module.ts:
+import { FinanceModule } from './finance/finance.module';
+import { SalesModule } from './sales/sales.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { TasksModule } from './tasks/tasks.module';
+
+Then add FinanceModule, SalesModule, InventoryModule, TasksModule to the imports array.
