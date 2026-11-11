@@ -21,7 +21,12 @@ async function bootstrap() {
   app.use(json({ limit: '5mb' }));
   app.use(urlencoded({ extended: true, limit: '5mb' }));
   app.setGlobalPrefix('api');
-  app.enableCors({ origin: process.env.WEB_ORIGIN || 'http://localhost:3000' });
+  app.enableCors({
+  origin: process.env.WEB_ORIGIN || 'http://localhost:3000',
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With', 'X-Organization-Id'],
+  credentials: true,
+});
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true })
   );
