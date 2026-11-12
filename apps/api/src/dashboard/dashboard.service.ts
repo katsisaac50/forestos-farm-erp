@@ -44,7 +44,7 @@ export class DashboardService {
       //   this.evidence.countDocuments(filter),
       this.tasks.find().lean(),
       this.inspections.find().lean(),
-      this.evidence.countDocuments(),
+      this.evidence.countDocuments(filter),
     ]);
 
     const income = transactions.filter(x => x.direction === 'Income').reduce((s, x) => s + Number(x.amountUgx || 0), 0);
