@@ -1,11 +1,78 @@
-import {Prop,Schema,SchemaFactory} from '@nestjs/mongoose';
-@Schema({timestamps:true}) export class FieldTask {
- @Prop({required:true,unique:true,trim:true}) taskId!:string; @Prop({required:true,trim:true}) title!:string;
- @Prop({required:true,enum:['Forestry','Beekeeping','Finance','Sales','Admin','Compliance']}) workstream!:string;
- @Prop({required:true,trim:true}) responsiblePerson!:string; @Prop({required:true}) dueDate!:Date;
- @Prop({enum:['High','Medium','Low'],default:'Medium'}) priority!:string;
- @Prop({enum:['Not started','In progress','Blocked','Completed','Cancelled'],default:'Not started'}) status!:string;
- @Prop() completedDate?:Date; @Prop({min:0,default:0}) budgetUgx!:number; @Prop({min:0,default:0}) actualCostUgx!:number;
- @Prop() evidenceReference?:string; @Prop() notes?:string;
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+
+export type FieldTaskDocument = HydratedDocument<FieldTask>;
+
+@Schema({ timestamps: true })
+export class FieldTask {
+  @Prop({ required: true, index: true })
+  organizationId!: string;
+
+  @Prop({ required: true, trim: true })
+  taskId!: string;
+
+  @Prop({ required: true, trim: true })
+  title!: string;
+
+  @Prop({
+    required: true,
+    enum: ['Forestry', 'Beekeeping', 'Finance', 'Sales', 'Admin', 'Compliance'],
+  })
+  workstream!: string;
+
+  @Prop({ required: true, trim: true })
+  responsiblePerson!: string;
+
+  @Prop({ required: true })
+  dueDate!: Date;
+
+  @Prop({ enum: ['High', 'Medium', 'Low'], default: 'Medium' })
+  priority!: string;
+
+  @Prop({
+    enum: ['Not started', 'In progress', 'Blocked', 'Completed', 'Cancelled'],
+    default: 'Not started',
+  })
+  status!: string;
+
+  @Prop()
+  completedDate?: Date;
+
+  @Prop({ min: 0, default: 0 })
+  budgetUgx!: number;
+
+  @Prop({ min: 0, default: 0 })
+  actualCostUgx!: number;
+
+  @Prop()
+  evidenceReference?: string;
+
+  @Prop()
+  notes?: string;
 }
-export const FieldTaskSchema=SchemaFactory.createForClass(FieldTask);
+
+export const FieldTaskSchema = SchemaFactory.createForClass(FieldTask);
+
+// Scope uniqueness to the org — two farms can both have a task called TASK-001.
+FieldTaskSchema.index(
+  { organizationId: 1, taskId: 1 },
+  { unique: true, name: 'uniq_task_id_per_org' },
+);
+
+FieldTaskSchema.index({ organizationId: 1, status: 1 });
+FieldTaskSchema.index({ organizationId: 1, dueDate: 1 });
+
+
+
+
+// import {Prop,Schema,SchemaFactory} from '@nestjs/mongoose';
+// @Schema({timestamps:true}) export class FieldTask {
+//  @Prop({required:true,unique:true,trim:true}) taskId!:string; @Prop({required:true,trim:true}) title!:string;
+//  @Prop({required:true,enum:['Forestry','Beekeeping','Finance','Sales','Admin','Compliance']}) workstream!:string;
+//  @Prop({required:true,trim:true}) responsiblePerson!:string; @Prop({required:true}) dueDate!:Date;
+//  @Prop({enum:['High','Medium','Low'],default:'Medium'}) priority!:string;
+//  @Prop({enum:['Not started','In progress','Blocked','Completed','Cancelled'],default:'Not started'}) status!:string;
+//  @Prop() completedDate?:Date; @Prop({min:0,default:0}) budgetUgx!:number; @Prop({min:0,default:0}) actualCostUgx!:number;
+//  @Prop() evidenceReference?:string; @Prop() notes?:string;
+// }
+// export const FieldTaskSchema=SchemaFactory.createForClass(FieldTask);
