@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { getData, postData } from '../../lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 
 type MapFeature = {
   _id: string; featureType: 'block'|'hive'|'inspection_point'|'access_point'|'other';
@@ -87,35 +88,49 @@ export default function FieldInspectionsPage() {
     } catch(e:any) { setMessage(e?.message||'Could not review inspection. Owner access may be required.'); }
   }
 
-  const ownerView = records.some(r=>['submitted','verified','rejected'].includes(r.status)) || records.length===0;
-  return <main className="page-container" style={{maxWidth:1200,margin:'0 auto',padding:24}}>
-    <header style={{marginBottom:20}}><h1>Field Inspection & Location Integration</h1><p>Assign a field inspection to a mapped location, capture findings, and submit it for supervisor verification.</p><p><strong>Location note:</strong> a polygon's approximate average-vertex point may not be a safe entry point. Use a mapped gate/access point for navigation when available.</p></header>
-    {message?<div className="card" role="status" style={{marginBottom:16}}>{message}</div>:null}
-    <section className="card" style={{marginBottom:20}}><h2>Create and assign inspection</h2>
-      {features.length===0?<p>No map features found. Add locations at <a href="/farm-map">Farm Mapping</a> first.</p>:null}
-      <form onSubmit={createInspection} style={{display:'grid',gap:12,maxWidth:800}}>
-        <label>Mapped location<select value={selected} onChange={e=>setSelected(e.target.value)} required><option value="">Choose location…</option>{features.map(f=><option key={f._id} value={f._id}>{f.label} — {f.featureType.replaceAll('_',' ')}{f.blockCode?` (${f.blockCode})`:''}</option>)}</select></label>
-        <label>Inspection title (optional)<input value={title} onChange={e=>setTitle(e.target.value)} maxLength={100}/></label>
-        <label>Assigned worker identifier<input value={assignedTo} onChange={e=>setAssignedTo(e.target.value)} maxLength={120} required placeholder="Use the worker's login email/username"/></label>
-        <label>Activity<select value={activityType} onChange={e=>setActivityType(e.target.value as any)}><option value="eucalyptus">Eucalyptus</option><option value="beekeeping">Beekeeping</option><option value="infrastructure">Infrastructure</option><option value="general">General</option></select></label>
-        <label>Inspection type<select value={inspectionType} onChange={e=>setInspectionType(e.target.value as any)}><option value="routine">Routine</option><option value="follow_up">Follow-up</option><option value="incident">Incident</option></select></label>
-        <label>Checklist / scope summary (optional)<textarea value={checklistSummary} onChange={e=>setChecklistSummary(e.target.value)} maxLength={1000} rows={3}/></label>
-        <button type="submit" disabled={!features.length}>Create inspection</button>
-      </form>
-    </section>
-    <section className="card"><h2>Inspection register</h2>
-      {loading?<p>Loading…</p>:records.length===0?<p>No inspections visible for this account.</p>:<div style={{overflowX:'auto'}}><table><thead><tr><th>Inspection</th><th>Location</th><th>Assigned to</th><th>Status</th><th>Directions</th><th>Worker action / review</th></tr></thead><tbody>
-        {records.map(r=><tr key={r._id}><td>{r.title}<br/><small>{r.activityType} · {r.inspectionType}</small>{r.checklistSummary?<p>{r.checklistSummary}</p>:null}</td><td>{r.locationLabel}{r.blockCode?<><br/>Block: {r.blockCode}</>:null}<br/><small>{Number(r.latitude).toFixed(5)}, {Number(r.longitude).toFixed(5)}</small></td><td>{r.assignedTo}</td><td>{r.status}{r.reviewNote?<p>{r.reviewNote}</p>:null}</td><td><a href={directions(r.latitude,r.longitude)} target="_blank" rel="noreferrer">Directions</a></td><td>
-          {['open','rejected'].includes(r.status)?<div style={{minWidth:260,display:'grid',gap:6}}>
-            <textarea placeholder="Findings" value={drafts[r._id]?.findings??r.findings??''} onChange={e=>editDraft(r._id,'findings',e.target.value)} maxLength={1000}/>
-            <textarea placeholder="Corrective action" value={drafts[r._id]?.correctiveAction??r.correctiveAction??''} onChange={e=>editDraft(r._id,'correctiveAction',e.target.value)} maxLength={1000}/>
-            <input placeholder="Evidence reference (optional)" value={drafts[r._id]?.evidenceReference??r.evidenceReference??''} onChange={e=>editDraft(r._id,'evidenceReference',e.target.value)} maxLength={500}/>
-            <button type="button" onClick={()=>void submitInspection(r)}>Submit for review</button>
-          </div>:null}
-          {r.status==='submitted'?<div style={{display:'flex',gap:6,flexWrap:'wrap'}}><button type="button" onClick={()=>void review(r,'verified')}>Verify</button><button type="button" onClick={()=>void review(r,'rejected')}>Return for correction</button></div>:null}
-        </td></tr>)}
-      </tbody></table></div>}
-      <p style={{fontSize:13}}>Non-owner accounts should see only inspections assigned to their login identifier. Review controls are intended for owner accounts; verify authorization behaviour in your deployment.</p>
-    </section>
-  </main>;
+  return (
+    <div className="shell">
+      <NavSidebar />
+      <main id="main-content" className="main">
+        <div style={{maxWidth:1200,margin:'0 auto'}}>
+          <header style={{marginBottom:20}}>
+            <h1>Field Inspection &amp; Location Integration</h1>
+            <p>Assign a field inspection to a mapped location, capture findings, and submit it for supervisor verification.</p>
+            <p><strong>Location note:</strong> a polygon's approximate average-vertex point may not be a safe entry point. Use a mapped gate/access point for navigation when available.</p>
+          </header>
+          {message?<div className="card" role="status" style={{marginBottom:16}}>{message}</div>:null}
+
+          <section className="card" style={{marginBottom:20}}>
+            <h2>Create and assign inspection</h2>
+            {features.length===0?<p>No map features found. Add locations at <a href="/farm-map">Farm Mapping</a> first.</p>:null}
+            <form onSubmit={createInspection} style={{display:'grid',gap:12,maxWidth:800}}>
+              <label>Mapped location<select value={selected} onChange={e=>setSelected(e.target.value)} required><option value="">Choose location…</option>{features.map(f=><option key={f._id} value={f._id}>{f.label} — {f.featureType.replaceAll('_',' ')}{f.blockCode?` (${f.blockCode})`:''}</option>)}</select></label>
+              <label>Inspection title (optional)<input value={title} onChange={e=>setTitle(e.target.value)} maxLength={100}/></label>
+              <label>Assigned worker identifier<input value={assignedTo} onChange={e=>setAssignedTo(e.target.value)} maxLength={120} required placeholder="Use the worker's login email/username"/></label>
+              <label>Activity<select value={activityType} onChange={e=>setActivityType(e.target.value as any)}><option value="eucalyptus">Eucalyptus</option><option value="beekeeping">Beekeeping</option><option value="infrastructure">Infrastructure</option><option value="general">General</option></select></label>
+              <label>Inspection type<select value={inspectionType} onChange={e=>setInspectionType(e.target.value as any)}><option value="routine">Routine</option><option value="follow_up">Follow-up</option><option value="incident">Incident</option></select></label>
+              <label>Checklist / scope summary (optional)<textarea value={checklistSummary} onChange={e=>setChecklistSummary(e.target.value)} maxLength={1000} rows={3}/></label>
+              <button type="submit" disabled={!features.length}>Create inspection</button>
+            </form>
+          </section>
+
+          <section className="card">
+            <h2>Inspection register</h2>
+            {loading?<p>Loading…</p>:records.length===0?<p>No inspections visible for this account.</p>:<div style={{overflowX:'auto'}}><table><thead><tr><th>Inspection</th><th>Location</th><th>Assigned to</th><th>Status</th><th>Directions</th><th>Worker action / review</th></tr></thead><tbody>
+              {records.map(r=><tr key={r._id}><td>{r.title}<br/><small>{r.activityType} · {r.inspectionType}</small>{r.checklistSummary?<p>{r.checklistSummary}</p>:null}</td><td>{r.locationLabel}{r.blockCode?<><br/>Block: {r.blockCode}</>:null}<br/><small>{Number(r.latitude).toFixed(5)}, {Number(r.longitude).toFixed(5)}</small></td><td>{r.assignedTo}</td><td>{r.status}{r.reviewNote?<p>{r.reviewNote}</p>:null}</td><td><a href={directions(r.latitude,r.longitude)} target="_blank" rel="noreferrer">Directions</a></td><td>
+                {['open','rejected'].includes(r.status)?<div style={{minWidth:260,display:'grid',gap:6}}>
+                  <textarea placeholder="Findings" value={drafts[r._id]?.findings??r.findings??''} onChange={e=>editDraft(r._id,'findings',e.target.value)} maxLength={1000}/>
+                  <textarea placeholder="Corrective action" value={drafts[r._id]?.correctiveAction??r.correctiveAction??''} onChange={e=>editDraft(r._id,'correctiveAction',e.target.value)} maxLength={1000}/>
+                  <input placeholder="Evidence reference (optional)" value={drafts[r._id]?.evidenceReference??r.evidenceReference??''} onChange={e=>editDraft(r._id,'evidenceReference',e.target.value)} maxLength={500}/>
+                  <button type="button" onClick={()=>void submitInspection(r)}>Submit for review</button>
+                </div>:null}
+                {r.status==='submitted'?<div style={{display:'flex',gap:6,flexWrap:'wrap'}}><button type="button" onClick={()=>void review(r,'verified')}>Verify</button><button type="button" onClick={()=>void review(r,'rejected')}>Return for correction</button></div>:null}
+              </td></tr>)}
+            </tbody></table></div>}
+            <p style={{fontSize:13}}>Non-owner accounts should see only inspections assigned to their login identifier. Review controls are intended for owner accounts; verify authorization behaviour in your deployment.</p>
+          </section>
+        </div>
+      </main>
+    </div>
+  );
 }

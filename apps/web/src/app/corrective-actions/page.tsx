@@ -1,9 +1,12 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {getData,postData} from '../../lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
+
 type Action={_id:string;title:string;description:string;priority:'low'|'medium'|'high'|'critical';status:'open'|'in_progress'|'submitted'|'closed';assignedTo:string;farmBlock?:string;locationLabel?:string;sourceInspectionId?:string;completionNote?:string;reviewNote?:string;dueAt:string;overdue?:boolean};
 type FieldInspection={_id:string;title:string;status:string;assignedTo:string;locationLabel:string;blockCode?:string;findings?:string;correctiveAction?:string};
 type Analytics={total:number;byStatus:Record<string,number>;byPriority:Record<string,number>;byBlock:Record<string,number>;overdue:number;closedOnTime:number;closedLate:number;completionRate:number;onTimeClosureRate:number|null};
+
 export default function CorrectiveActionsPage(){
  const [items,setItems]=useState<Action[]>([]),[analytics,setAnalytics]=useState<Analytics|null>(null),[inspections,setInspections]=useState<FieldInspection[]>([]),[selectedInspection,setSelectedInspection]=useState(''),[fromPriority,setFromPriority]=useState<Action['priority']>('high'),[fromAssignedTo,setFromAssignedTo]=useState(''),[fromDueAt,setFromDueAt]=useState(''),[loading,setLoading]=useState(true),[message,setMessage]=useState('');
  const [title,setTitle]=useState(''),[description,setDescription]=useState(''),[priority,setPriority]=useState<Action['priority']>('medium'),[assignedTo,setAssignedTo]=useState(''),[dueAt,setDueAt]=useState(''),[farmBlock,setFarmBlock]=useState(''),[locationLabel,setLocationLabel]=useState(''),[sourceInspectionId,setSourceInspectionId]=useState('');
@@ -14,29 +17,86 @@ export default function CorrectiveActionsPage(){
  function draft(id:string,key:'status'|'completionNote',value:string){setDrafts(old=>({...old,[id]:{status:old[id]?.status||'in_progress',completionNote:old[id]?.completionNote||'',[key]:value} as any}))}
  async function update(r:Action){try{await postData('/corrective-actions/'+r._id+'/update',drafts[r._id]||{status:'in_progress',completionNote:''});setMessage('Action updated/submitted.');await load()}catch(e:any){setMessage(e?.message||'Could not update action.')}}
  async function review(r:Action,status:'closed'|'in_progress'){const reviewNote=window.prompt(status==='closed'?'Enter closure review note:':'Explain why action is returned:');if(!reviewNote?.trim()){setMessage('Review note is required.');return}try{await postData('/corrective-actions/'+r._id+'/review',{status,reviewNote});setMessage(status==='closed'?'Action closed.':'Action returned to work.');await load()}catch(e:any){setMessage(e?.message||'Could not review action. Owner access may be required.')}}
- return <main className="page-container" style={{maxWidth:1200,margin:'0 auto',padding:24}}>
- <header style={{marginBottom:20}}><h1>Inspection Analytics &amp; Corrective Action Tracking</h1><p>Track findings through assignment, work, submission and supervisor closure.</p></header>
- {message?<div className="card" role="status" style={{marginBottom:16}}>{message}</div>:null}
- <section className="card" style={{marginBottom:20}}><h2>Corrective-action dashboard</h2>{analytics?<><div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12}}>{Object.entries({Total:analytics.total,Open:analytics.byStatus.open||0,'In progress':analytics.byStatus.in_progress||0,Submitted:analytics.byStatus.submitted||0,Closed:analytics.byStatus.closed||0,Overdue:analytics.overdue,'Completion %':analytics.completionRate,'On-time closure %':analytics.onTimeClosureRate??'—'}).map(([k,v])=><div className="card" key={k}><small>{k}</small><h2>{v}</h2></div>)}</div><div style={{marginTop:16,display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:16}}><div><h3>Priority breakdown</h3>{Object.entries(analytics.byPriority||{}).map(([k,v])=><p key={k}>{k}: <strong>{v}</strong></p>)}</div><div><h3>By block / location</h3>{Object.entries(analytics.byBlock||{}).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=><p key={k}>{k}: <strong>{v}</strong></p>)}</div><div><h3>Closure timing</h3><p>Closed on time: <strong>{analytics.closedOnTime}</strong></p><p>Closed late: <strong>{analytics.closedLate}</strong></p></div></div></>:<p>Analytics unavailable.</p>}</section>
- <section className="card" style={{marginBottom:20}}><h2>Create action from inspection</h2><p>Select a saved inspection that has been submitted, verified or rejected. Findings and recommended work will be copied into the new action.</p><form onSubmit={async e=>{e.preventDefault();try{if(!selectedInspection)throw new Error('Select an inspection.');if(!fromDueAt)throw new Error('Choose a due date and time.');await postData('/corrective-actions/from-inspection/'+selectedInspection,{priority:fromPriority,assignedTo:fromAssignedTo,dueAt:new Date(fromDueAt).toISOString()});setSelectedInspection('');setFromAssignedTo('');setFromDueAt('');setMessage('Corrective action created from inspection.');await load()}catch(e:any){setMessage(e?.message||'Could not create action from inspection.')}}} style={{display:'grid',gap:12,maxWidth:800}}>
- <label>Eligible inspection<select required value={selectedInspection} onChange={e=>setSelectedInspection(e.target.value)}><option value="">Choose an inspection</option>{inspections.filter(i=>['submitted','verified','rejected'].includes(i.status)).map(i=><option key={i._id} value={i._id}>{i.title} — {i.blockCode||i.locationLabel} — {i.status} — {i._id.slice(-6)}</option>)}</select></label>
- {selectedInspection?(()=>{const i=inspections.find(x=>x._id===selectedInspection);return i?<div className="card"><strong>{i.title}</strong><p>Location: {i.blockCode||i.locationLabel}</p><p>Findings: {i.findings||'No findings recorded'}</p><p>Recommended action: {i.correctiveAction||'No recommendation recorded'}</p></div>:null})():null}
- <label>Priority<select value={fromPriority} onChange={e=>setFromPriority(e.target.value as Action['priority'])}><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select></label>
- <label>Assigned worker login identifier<input required value={fromAssignedTo} onChange={e=>setFromAssignedTo(e.target.value)} maxLength={120} placeholder="Email/username used to sign in"/></label>
- <label>Due date and time<input required type="datetime-local" value={fromDueAt} onChange={e=>setFromDueAt(e.target.value)}/></label>
- <button type="submit" disabled={!inspections.some(i=>i._id===selectedInspection&&['submitted','verified','rejected'].includes(i.status))}>Create linked corrective action</button></form></section>
- <section className="card" style={{marginBottom:20}}><h2>Create corrective action</h2><form onSubmit={create} style={{display:'grid',gap:12,maxWidth:800}}>
- <label>Title<input required value={title} onChange={e=>setTitle(e.target.value)} maxLength={120}/></label>
- <label>Description<textarea required value={description} onChange={e=>setDescription(e.target.value)} maxLength={1000} rows={3}/></label>
- <label>Priority<select value={priority} onChange={e=>setPriority(e.target.value as Action['priority'])}><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select></label>
- <label>Assigned worker login identifier<input required value={assignedTo} onChange={e=>setAssignedTo(e.target.value)} maxLength={120} placeholder="Email/username used to sign in"/></label>
- <label>Due date and time<input required type="datetime-local" value={dueAt} onChange={e=>setDueAt(e.target.value)}/></label>
- <label>Farm block<input value={farmBlock} onChange={e=>setFarmBlock(e.target.value)} maxLength={100}/></label>
- <label>Location label<input value={locationLabel} onChange={e=>setLocationLabel(e.target.value)} maxLength={120}/></label>
- <label>Source inspection ID<input value={sourceInspectionId} onChange={e=>setSourceInspectionId(e.target.value)} maxLength={80}/></label>
- <button type="submit">Create action</button></form></section>
- <section className="card"><h2>Action register</h2>{loading?<p>Loading…</p>:items.length===0?<p>No corrective actions visible for this account.</p>:<div style={{overflowX:'auto'}}><table><thead><tr><th>Action</th><th>Priority</th><th>Worker</th><th>Due</th><th>Status</th><th>Work / review</th></tr></thead><tbody>{items.map(r=><tr key={r._id}><td><strong>{r.title}</strong><p>{r.description}</p>{r.farmBlock||r.locationLabel?<small>{r.farmBlock||r.locationLabel}</small>:null}{r.sourceInspectionId?<p><small>Inspection: {r.sourceInspectionId}</small></p>:null}</td><td>{r.priority.toUpperCase()}</td><td>{r.assignedTo}</td><td>{new Date(r.dueAt).toLocaleString()}{r.overdue?<p><strong>OVERDUE</strong></p>:null}</td><td>{r.status}{r.reviewNote?<p>{r.reviewNote}</p>:null}</td><td style={{minWidth:260}}>
- {['open','in_progress'].includes(r.status)?<div style={{display:'grid',gap:6}}><select value={drafts[r._id]?.status||'in_progress'} onChange={e=>draft(r._id,'status',e.target.value)}><option value="in_progress">In progress</option><option value="submitted">Submit for review</option></select><textarea maxLength={1000} placeholder="Completion note (required for submission)" value={drafts[r._id]?.completionNote??r.completionNote??''} onChange={e=>draft(r._id,'completionNote',e.target.value)}/><button type="button" onClick={()=>void update(r)}>Save / submit</button></div>:null}
- {r.status==='submitted'?<div style={{display:'flex',gap:6,flexWrap:'wrap'}}><button type="button" onClick={()=>void review(r,'closed')}>Close action</button><button type="button" onClick={()=>void review(r,'in_progress')}>Return to work</button></div>:null}</td></tr>)}</tbody></table></div>}</section>
- <p style={{fontSize:13,marginTop:16}}>Analytics use recorded corrective-action entries only. Source inspection IDs are text references in this phase.</p></main>
+
+ return (
+  <div className="shell">
+   <NavSidebar />
+   <main id="main-content" className="main">
+    <div style={{maxWidth:1200,margin:'0 auto'}}>
+     <header style={{marginBottom:20}}>
+      <h1>Inspection Analytics &amp; Corrective Action Tracking</h1>
+      <p>Track findings through assignment, work, submission and supervisor closure.</p>
+     </header>
+     {message?<div className="card" role="status" style={{marginBottom:16}}>{message}</div>:null}
+
+     <section className="card" style={{marginBottom:20}}>
+      <h2>Corrective-action dashboard</h2>
+      {analytics?<>
+       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12}}>
+        {Object.entries({Total:analytics.total,Open:analytics.byStatus.open||0,'In progress':analytics.byStatus.in_progress||0,Submitted:analytics.byStatus.submitted||0,Closed:analytics.byStatus.closed||0,Overdue:analytics.overdue,'Completion %':analytics.completionRate,'On-time closure %':analytics.onTimeClosureRate??'—'}).map(([k,v])=>
+         <div className="card" key={k}><small>{k}</small><h2>{v}</h2></div>
+        )}
+       </div>
+       <div style={{marginTop:16,display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:16}}>
+        <div><h3>Priority breakdown</h3>{Object.entries(analytics.byPriority||{}).map(([k,v])=><p key={k}>{k}: <strong>{v}</strong></p>)}</div>
+        <div><h3>By block / location</h3>{Object.entries(analytics.byBlock||{}).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=><p key={k}>{k}: <strong>{v}</strong></p>)}</div>
+        <div><h3>Closure timing</h3><p>Closed on time: <strong>{analytics.closedOnTime}</strong></p><p>Closed late: <strong>{analytics.closedLate}</strong></p></div>
+       </div>
+      </>:<p>Analytics unavailable.</p>}
+     </section>
+
+     <section className="card" style={{marginBottom:20}}>
+      <h2>Create action from inspection</h2>
+      <p>Select a saved inspection that has been submitted, verified or rejected. Findings and recommended work will be copied into the new action.</p>
+      <form onSubmit={async e=>{e.preventDefault();try{if(!selectedInspection)throw new Error('Select an inspection.');if(!fromDueAt)throw new Error('Choose a due date and time.');await postData('/corrective-actions/from-inspection/'+selectedInspection,{priority:fromPriority,assignedTo:fromAssignedTo,dueAt:new Date(fromDueAt).toISOString()});setSelectedInspection('');setFromAssignedTo('');setFromDueAt('');setMessage('Corrective action created from inspection.');await load()}catch(e:any){setMessage(e?.message||'Could not create action from inspection.')}}} style={{display:'grid',gap:12,maxWidth:800}}>
+       <label>Eligible inspection<select required value={selectedInspection} onChange={e=>setSelectedInspection(e.target.value)}><option value="">Choose an inspection</option>{inspections.filter(i=>['submitted','verified','rejected'].includes(i.status)).map(i=><option key={i._id} value={i._id}>{i.title} — {i.blockCode||i.locationLabel} — {i.status} — {i._id.slice(-6)}</option>)}</select></label>
+       {selectedInspection?(()=>{const i=inspections.find(x=>x._id===selectedInspection);return i?<div className="card"><strong>{i.title}</strong><p>Location: {i.blockCode||i.locationLabel}</p><p>Findings: {i.findings||'No findings recorded'}</p><p>Recommended action: {i.correctiveAction||'No recommendation recorded'}</p></div>:null})():null}
+       <label>Priority<select value={fromPriority} onChange={e=>setFromPriority(e.target.value as Action['priority'])}><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select></label>
+       <label>Assigned worker login identifier<input required value={fromAssignedTo} onChange={e=>setFromAssignedTo(e.target.value)} maxLength={120} placeholder="Email/username used to sign in"/></label>
+       <label>Due date and time<input required type="datetime-local" value={fromDueAt} onChange={e=>setFromDueAt(e.target.value)}/></label>
+       <button type="submit" disabled={!inspections.some(i=>i._id===selectedInspection&&['submitted','verified','rejected'].includes(i.status))}>Create linked corrective action</button>
+      </form>
+     </section>
+
+     <section className="card" style={{marginBottom:20}}>
+      <h2>Create corrective action</h2>
+      <form onSubmit={create} style={{display:'grid',gap:12,maxWidth:800}}>
+       <label>Title<input required value={title} onChange={e=>setTitle(e.target.value)} maxLength={120}/></label>
+       <label>Description<textarea required value={description} onChange={e=>setDescription(e.target.value)} maxLength={1000} rows={3}/></label>
+       <label>Priority<select value={priority} onChange={e=>setPriority(e.target.value as Action['priority'])}><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select></label>
+       <label>Assigned worker login identifier<input required value={assignedTo} onChange={e=>setAssignedTo(e.target.value)} maxLength={120} placeholder="Email/username used to sign in"/></label>
+       <label>Due date and time<input required type="datetime-local" value={dueAt} onChange={e=>setDueAt(e.target.value)}/></label>
+       <label>Farm block<input value={farmBlock} onChange={e=>setFarmBlock(e.target.value)} maxLength={100}/></label>
+       <label>Location label<input value={locationLabel} onChange={e=>setLocationLabel(e.target.value)} maxLength={120}/></label>
+       <label>Source inspection ID<input value={sourceInspectionId} onChange={e=>setSourceInspectionId(e.target.value)} maxLength={80}/></label>
+       <button type="submit">Create action</button>
+      </form>
+     </section>
+
+     <section className="card">
+      <h2>Action register</h2>
+      {loading?<p>Loading…</p>:items.length===0?<p>No corrective actions visible for this account.</p>:<div style={{overflowX:'auto'}}><table><thead><tr><th>Action</th><th>Priority</th><th>Worker</th><th>Due</th><th>Status</th><th>Work / review</th></tr></thead><tbody>
+       {items.map(r=><tr key={r._id}>
+        <td><strong>{r.title}</strong><p>{r.description}</p>{r.farmBlock||r.locationLabel?<small>{r.farmBlock||r.locationLabel}</small>:null}{r.sourceInspectionId?<p><small>Inspection: {r.sourceInspectionId}</small></p>:null}</td>
+        <td>{r.priority.toUpperCase()}</td>
+        <td>{r.assignedTo}</td>
+        <td>{new Date(r.dueAt).toLocaleString()}{r.overdue?<p><strong>OVERDUE</strong></p>:null}</td>
+        <td>{r.status}{r.reviewNote?<p>{r.reviewNote}</p>:null}</td>
+        <td style={{minWidth:260}}>
+         {['open','in_progress'].includes(r.status)?<div style={{display:'grid',gap:6}}>
+          <select value={drafts[r._id]?.status||'in_progress'} onChange={e=>draft(r._id,'status',e.target.value)}><option value="in_progress">In progress</option><option value="submitted">Submit for review</option></select>
+          <textarea maxLength={1000} placeholder="Completion note (required for submission)" value={drafts[r._id]?.completionNote??r.completionNote??''} onChange={e=>draft(r._id,'completionNote',e.target.value)}/>
+          <button type="button" onClick={()=>void update(r)}>Save / submit</button>
+         </div>:null}
+         {r.status==='submitted'?<div style={{display:'flex',gap:6,flexWrap:'wrap'}}><button type="button" onClick={()=>void review(r,'closed')}>Close action</button><button type="button" onClick={()=>void review(r,'in_progress')}>Return to work</button></div>:null}
+        </td>
+       </tr>)}
+      </tbody></table></div>}
+     </section>
+
+     <p style={{fontSize:13,marginTop:16}}>Analytics use recorded corrective-action entries only. Source inspection IDs are text references in this phase.</p>
+    </div>
+   </main>
+  </div>
+ );
 }

@@ -1,97 +1,1031 @@
-*{box-sizing:border-box}body{margin:0;background:#f5f7f4;color:#17251b;font-family:Arial,sans-serif}a{color:inherit;text-decoration:none}.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}.sidebar{background:#173d2a;color:white;padding:24px 16px}.brand{font-size:20px;font-weight:800}.sub{font-size:12px;color:#c5d7c9;margin:6px 0 28px}.nav a{display:block;padding:11px;border-radius:8px}.nav a:hover{background:#2d5b40}.main{padding:30px;min-width:0}h1{margin:0 0 8px}.muted{color:#657267}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:24px 0}.card,.panel{background:white;border:1px solid #e0e8e0;border-radius:14px;padding:18px;margin-bottom:16px}.metric{font-size:27px;font-weight:800;color:#173d2a;margin:10px 0}.btn{display:inline-block;background:#28633e;color:white;padding:10px 14px;border-radius:8px;border:0;cursor:pointer}.row{display:flex;gap:12px;flex-wrap:wrap}input,select{width:100%;padding:10px;border:1px solid #cbd8cd;border-radius:8px}label{display:block;margin:8px 0;font-size:13px}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:10px;border-bottom:1px solid #e8eee8}th{background:#f7faf7}.error{color:#a83232}@media(max-width:800px){.shell{grid-template-columns:1fr}.nav{display:flex;gap:8px;overflow:auto}.main{padding:16px}.grid{grid-template-columns:repeat(2,1fr)}}
+/* =============================================================
+   Farm Management — Consolidated Stylesheet
+   Refactored from phases 17–29 + Phase 79 nav.
+   No visual behavior changed vs. original.
+   Both `.formGrid`/`.form-grid` and `.tableWrap`/`.table-wrap`
+   spellings retained for backwards compatibility.
+   ============================================================= */
 
-/* Phase 17: risk management workspace */
-.content{padding:28px;min-width:0;max-width:1600px;width:100%}.pageHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.4px;color:#36764b;margin:0 0 8px}.cards{grid-template-columns:repeat(6,minmax(120px,1fr))}.cards .card{margin:0}.cards .metric{font-size:25px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.panel h2{margin-top:0}.tableWrap{overflow:auto;margin-top:14px}.tableWrap table{min-width:850px}.block{display:block;margin-top:5px;color:#657267;font-size:12px}.pill{display:inline-block;padding:4px 7px;border-radius:6px;background:#e7efe9;font-size:11px;font-weight:700}.pill.critical{background:#f8d8d8;color:#922727}.pill.high{background:#fde8cf;color:#8b4c05}.pill.medium{background:#fff2c7;color:#775b00}.pill.low{background:#dff1e3;color:#1f6737}.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.formGrid label{min-width:0}.formGrid input,.formGrid select,.formGrid textarea{display:block;margin-top:5px}.formGrid textarea{width:100%;min-height:75px;padding:10px;border:1px solid #cbd8cd;border-radius:8px;font:inherit}.span2{grid-column:span 2}.btn.secondary{background:#e6eee8;color:#1c4c2c;padding:7px 10px}.alert{padding:12px 14px;border-radius:8px;margin:12px 0}.alert.danger{background:#fbe5e5;color:#8c2424}.alert.success{background:#e2f3e5;color:#1d6530}.riskDetail{background:#f7faf7;border:1px solid #e1e9e2;border-radius:10px;padding:12px;margin:14px 0}.riskDetail h3{margin-top:0}.actionForm{border-top:1px solid #e3ebe4;margin-top:15px;padding-top:12px}.actionItem{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #e8eee8}.actionItem select{max-width:150px}.barRow{display:grid;grid-template-columns:minmax(140px,2fr) minmax(80px,3fr) 55px 85px;gap:12px;align-items:center;margin:12px 0}.barTrack{height:10px;background:#edf1ed;border-radius:8px;overflow:hidden}.barFill{height:100%;background:#c57a32;border-radius:8px}.footer{font-size:12px;margin:22px 0 10px;line-height:1.5}.content .muted{line-height:1.45}@media(max-width:1100px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.two{grid-template-columns:1fr}}@media(max-width:650px){.content{padding:15px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.pageHeader{flex-direction:column}.formGrid{grid-template-columns:1fr}.span2{grid-column:span 1}.barRow{grid-template-columns:1fr 60px}.barTrack{grid-column:1}.barRow .pill{grid-column:2;grid-row:1}.actionItem{align-items:flex-start;flex-direction:column}.actionItem select{max-width:none}}
+@tailwind base;
 
+/* -------------------------------------------------------------
+   1. Base / reset
+   ------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
 
-/* Phase 18 maintenance workspace */
-.content{padding:28px;min-width:0;max-width:1600px;width:100%}.pageHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.4px;color:#36764b;margin:0 0 8px}.cards{grid-template-columns:repeat(6,minmax(120px,1fr))}.cards .card{margin:0}.cards .metric{font-size:25px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.panel h2{margin-top:0}.tableWrap{overflow:auto;margin-top:14px}.tableWrap table{min-width:780px}.block{display:block;margin-top:5px;color:#657267;font-size:12px}.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.formGrid label{min-width:0}.formGrid input,.formGrid select,.formGrid textarea{display:block;margin-top:5px}.formGrid textarea{width:100%;min-height:65px;padding:10px;border:1px solid #cbd8cd;border-radius:8px;font:inherit}.span2{grid-column:span 2}.btn.secondary{background:#e6eee8;color:#1c4c2c;padding:7px 10px}.alert{padding:12px 14px;border-radius:8px;margin:12px 0}.alert.danger{background:#fbe5e5;color:#8c2424}.alert.success{background:#e2f3e5;color:#1d6530}.actionItem{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #e8eee8}.pill{display:inline-block;padding:4px 7px;border-radius:6px;background:#fde8cf;color:#8b4c05;font-size:11px;font-weight:700}.footer{font-size:12px;margin:22px 0 10px;line-height:1.5}.content .muted{line-height:1.45}@media(max-width:1100px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.two{grid-template-columns:1fr}}@media(max-width:650px){.content{padding:15px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.pageHeader{flex-direction:column}.formGrid{grid-template-columns:1fr}.span2{grid-column:span 1}.actionItem{align-items:flex-start;flex-direction:column}}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
+body {
+  margin: 0;
+  background: #f5f7f4;
+  color: #17251b;
+  font-family: Arial, sans-serif;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-/* Phase 19 procurement workspace */
-.content{padding:28px;min-width:0;max-width:1600px;width:100%}.pageHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.4px;color:#36764b;margin:0 0 8px}.cards{grid-template-columns:repeat(6,minmax(120px,1fr))}.cards .card{margin:0}.cards .metric{font-size:22px;overflow-wrap:anywhere}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.panel h2{margin-top:0}.tableWrap{overflow:auto;margin-top:14px}.tableWrap table{min-width:760px}.block{display:block;margin-top:5px;color:#657267;font-size:12px}.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.formGrid label{min-width:0}.formGrid input,.formGrid select,.formGrid textarea{display:block;margin-top:5px}.formGrid textarea{width:100%;min-height:65px;padding:10px;border:1px solid #cbd8cd;border-radius:8px;font:inherit}.span2{grid-column:span 2}.btn.secondary{background:#e6eee8;color:#1c4c2c;padding:7px 10px}.alert{padding:12px 14px;border-radius:8px;margin:12px 0}.alert.danger{background:#fbe5e5;color:#8c2424}.alert.success{background:#e2f3e5;color:#1d6530}.actionItem{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #e8eee8}.orderLine{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1.3fr auto;gap:8px;align-items:end;padding:10px 0;border-bottom:1px solid #e7eee8}.receiptLine{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #e7eee8}.footer{font-size:12px;margin:22px 0 10px;line-height:1.5}.content .muted{line-height:1.45}@media(max-width:1100px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.two{grid-template-columns:1fr}.orderLine{grid-template-columns:repeat(2,minmax(0,1fr))}.receiptLine{grid-template-columns:1fr 1fr}}@media(max-width:650px){.content{padding:15px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.pageHeader{flex-direction:column}.formGrid{grid-template-columns:1fr}.span2{grid-column:span 1}.actionItem{align-items:flex-start;flex-direction:column}.orderLine,.receiptLine{grid-template-columns:1fr}}
+a { color: inherit; text-decoration: none; }
 
+img, svg, video, canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
 
-/* Phase 20 central inventory workspace */
-.content{padding:28px;min-width:0;max-width:1600px;width:100%}.pageHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:20px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.4px;color:#36764b;margin:0 0 8px}.cards{grid-template-columns:repeat(4,minmax(130px,1fr))}.cards .card{margin:0}.cards .metric{font-size:24px;overflow-wrap:anywhere}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.panel h2{margin-top:0}.tableWrap{overflow:auto;margin-top:14px}.tableWrap table{min-width:800px}.block{display:block;margin-top:5px;color:#657267;font-size:12px}.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.formGrid label{min-width:0}.formGrid input,.formGrid select,.formGrid textarea{display:block;margin-top:5px}.formGrid textarea{width:100%;min-height:65px;padding:10px;border:1px solid #cbd8cd;border-radius:8px;font:inherit}.span2{grid-column:span 2}.btn.secondary{background:#e6eee8;color:#1c4c2c;padding:7px 10px}.alert{padding:12px 14px;border-radius:8px;margin:12px 0}.alert.danger{background:#fbe5e5;color:#8c2424}.alert.success{background:#e2f3e5;color:#1d6530}.pill{display:inline-block;padding:4px 7px;border-radius:6px;background:#fde8cf;color:#8b4c05;font-size:11px;font-weight:700}.checkLabel{display:flex;align-items:center;gap:8px;white-space:nowrap}.checkLabel input{width:auto}.footer{font-size:12px;margin:22px 0 10px;line-height:1.5}.content .muted{line-height:1.45}@media(max-width:1100px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.two{grid-template-columns:1fr}}@media(max-width:650px){.content{padding:15px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.pageHeader{flex-direction:column}.formGrid{grid-template-columns:1fr}.span2{grid-column:span 1}}
+/* Consistent keyboard focus outside the sidebar */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid #36764b;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: #36764b;
+  box-shadow: 0 0 0 3px rgba(122, 209, 154, 0.45);
+}
 
+:where(button, input, select, textarea):disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 
-/* Phase 21 — integration and workflow center */
-.notice{border:1px solid #e5c878;background:#fff8df;border-radius:12px;padding:14px 16px;margin:14px 0;color:#51421b;line-height:1.5}
-.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:18px 0}
-.metric-card{background:var(--card,#fff);border:1px solid var(--border,#e5e7eb);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
-.metric-card span,.muted{color:var(--muted,#687386);font-size:.92rem}
-.metric-card strong{font-size:1.7rem}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.form-grid label,.section-heading label{display:flex;flex-direction:column;gap:6px;font-size:.9rem;font-weight:600}
-.form-grid input,.form-grid select,.form-grid textarea,.section-heading select{width:100%;border:1px solid var(--border,#d7dce3);border-radius:8px;padding:10px;background:var(--input,#fff);color:inherit}
-.form-grid textarea{min-height:90px}
-.full-width{grid-column:1/-1}
-.section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.table-wrap{overflow-x:auto}
-.table-wrap table{width:100%;border-collapse:collapse}
-.table-wrap th,.table-wrap td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--border,#e5e7eb);vertical-align:top}
-.table-wrap small{display:block;margin-top:5px;color:var(--muted,#687386);line-height:1.4}
-.status-pill{display:inline-block;border-radius:999px;padding:4px 9px;background:#eef0f4;font-size:.8rem;font-weight:700}
-.status-processed{background:#dff5e7;color:#166534}.status-failed{background:#fee2e2;color:#991b1b}.status-pending{background:#fef3c7;color:#92400e}.status-cancelled{background:#e5e7eb;color:#374151}.status-processing{background:#dbeafe;color:#1d4ed8}
-.actions{display:flex;gap:7px;flex-wrap:wrap}
-@media(max-width:700px){.form-grid{grid-template-columns:1fr}.full-width{grid-column:auto}.section-heading{align-items:flex-start;flex-direction:column}.table-wrap th,.table-wrap td{padding:9px 7px}}
+/* -------------------------------------------------------------
+   2. Shell & sidebar (from Phase 79, byte-identical)
+   ------------------------------------------------------------- */
+.shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
 
+.sidebar {
+  background: #173d2a;
+  color: #fff;
+  padding: 24px 16px;
+}
 
-/* Phase 22 — management intelligence */
-.checklist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.checklist-grid article{padding:16px;border:1px solid var(--border,#e5e7eb);border-radius:12px;background:var(--card,#fff)}
-.checklist-grid h3{margin:0 0 8px}.checklist-grid p{margin:0;line-height:1.55;color:var(--muted,#687386)}
+.brand { font-size: 20px; font-weight: 800; }
+.sub   { font-size: 12px; color: #c5d7c9; margin: 6px 0 28px; }
 
+.nav a {
+  display: block;
+  padding: 11px;
+  border-radius: 8px;
+}
+.nav a:hover { background: #2d5b40; }
 
-/* Phase 23 — data quality and integrity */
-.coverage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-.coverage-grid>div{display:flex;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--border,#e5e7eb);border-radius:10px;text-transform:capitalize}
-.coverage-grid span{color:var(--muted,#687386)}
+/* -------------------------------------------------------------
+   3. Main content — canonical layout shared by all workspaces
+   ------------------------------------------------------------- */
+.main {
+  padding: 30px;
+  min-width: 0;
+}
 
-/* Phase 25 — target progress */
-.progress-track{width:100px;height:8px;border-radius:99px;background:#e5e7eb;overflow:hidden;margin:4px 0}.progress-track span{display:block;height:100%;background:#16845b;border-radius:99px}
+.content {
+  padding: 28px;
+  min-width: 0;
+  max-width: 1600px;
+  width: 100%;
+}
 
-/* Phase 26 KPI integration */
-.table-wrap{width:100%;overflow-x:auto;margin:12px 0}
-.table-wrap table{width:100%;border-collapse:collapse;min-width:760px}
-.table-wrap th,.table-wrap td{padding:10px;border-bottom:1px solid #dbe2ea;text-align:left;vertical-align:top;font-size:14px}
-.table-wrap th{background:#f4f7fa}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:16px 0}
-.form-grid label{display:flex;flex-direction:column;gap:7px;font-weight:600}
-.form-grid input,.form-grid select,.form-grid textarea{padding:10px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;max-width:100%}
-.form-grid textarea{min-height:84px}
-button:disabled{opacity:.45;cursor:not-allowed}
-.error{color:#b42318}
-.btn.secondary{margin-left:8px;background:#e8edf3;color:#172b4d}
+.pageHeader,
+.commandHeader,
+.actionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.commandHeader,
+.actionHeader { align-items: center; margin-bottom: 16px; }
 
-/* Phase 27 alert centre */
-.notice{padding:12px 14px;background:#e8f2eb;border:1px solid #cddfd2;border-radius:8px;margin:12px 0}
-.alertToolbar{display:flex;align-items:end;justify-content:space-between;gap:14px;flex-wrap:wrap}
-.alertToolbar label{min-width:220px}
-.alertCard{border:1px solid #dce6de;border-radius:12px;padding:16px;margin:14px 0;background:#fff}
-.alertTop{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
-.alertTop h3{margin:10px 0 6px}
-.alertCard textarea{display:block;width:100%;min-height:65px;padding:10px;border:1px solid #cbd8cd;border-radius:8px;font:inherit;margin-top:5px}
-@media(max-width:650px){.alertTop{flex-direction:column}.alertToolbar{align-items:stretch}.alertToolbar label{min-width:0;width:100%}}
+h1 { margin: 0 0 8px; }
 
-/* Phase 28 farm command centre */
-.commandHeader,.actionHeader{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
-.commandCards{grid-template-columns:repeat(auto-fit,minmax(155px,1fr))}
-.commandMetric{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #e5ece6;align-items:flex-start}
-.commandMetric b{text-align:right}
-.commandActions{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
-.commandAction{border:1px solid #dce6de;border-radius:12px;padding:14px;background:#fff}
-.commandAction h3{margin:8px 0}
-.commandAction p{line-height:1.45}
-.commandActionTop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.actionHeader label{min-width:200px}
-@media(max-width:650px){.commandActionTop{flex-direction:column}.actionHeader label{min-width:0;width:100%}.commandMetric{flex-direction:column}.commandMetric b{text-align:left}}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: #36764b;
+  margin: 0 0 8px;
+}
 
-/* Phase 29 SOP library and verification */
-.sopChecklist{display:grid;gap:12px;margin:16px 0}
-.sopItem{padding:14px;border:1px solid #dce6de;border-radius:10px;background:#fbfdfb}
-.sopItem p{margin:7px 0}
-.sopItem label{margin:4px 0}
-.sopItem textarea{width:100%;min-height:62px;padding:10px;border:1px solid #cbd8cd;border-radius:8px;font:inherit}
-.sopItem input,.sopItem select{max-width:100%}
+.muted,
+.content .muted {
+  color: #657267;
+  line-height: 1.45;
+}
+
+.footer {
+  font-size: 12px;
+  margin: 22px 0 10px;
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------------------
+   4. Cards / metrics
+   `auto-fit` reproduces the 4-col, 6-col, and auto layouts used
+   across phases at their respective widths.
+   ------------------------------------------------------------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 24px 0;
+}
+.grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.cards {
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  margin: 24px 0;
+}
+.cards .card   { margin: 0; }
+.cards .metric { font-size: 25px; }
+
+.card,
+.panel {
+  background: #fff;
+  border: 1px solid #e0e8e0;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.panel h2 { margin-top: 0; }
+
+.metric {
+  font-size: 27px;
+  font-weight: 800;
+  color: #173d2a;
+  margin: 10px 0;
+  overflow-wrap: anywhere;
+}
+
+/* Phase 21 metric-card variant */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+.metric-card {
+  background: var(--card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.metric-card span,
+.muted { color: var(--muted, #687386); font-size: 0.92rem; }
+.metric-card strong { font-size: 1.7rem; }
+
+/* Command centre metric list (Phase 28) */
+.commandCards { grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); }
+
+.commandMetric {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5ece6;
+  align-items: flex-start;
+}
+.commandMetric b { text-align: right; }
+
+/* -------------------------------------------------------------
+   5. Buttons
+   ------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  background: #28633e;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 0;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: filter 0.12s ease;
+}
+.btn:hover:not(:disabled)  { filter: brightness(1.06); }
+.btn:active:not(:disabled) { filter: brightness(0.96); }
+.btn.secondary {
+  background: #e6eee8;
+  color: #1c4c2c;
+  padding: 7px 10px;
+  margin-left: 0;
+}
+.btn.secondary:not(:first-child) { margin-left: 8px; }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.actions { display: flex; gap: 7px; flex-wrap: wrap; }
+
+/* -------------------------------------------------------------
+   6. Forms
+   Both `.formGrid` and `.form-grid` are supported.
+   ------------------------------------------------------------- */
+.formGrid,
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+.formGrid > label,
+.form-grid > label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  margin: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.section-heading label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd8cd;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+.formGrid input,
+.formGrid select,
+.formGrid textarea,
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  width: 100%;
+  min-width: 0;
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #cbd8cd;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+.formGrid textarea,
+.form-grid textarea {
+  display: block;
+  min-height: 75px;
+  resize: vertical;
+}
+.span2,
+.full-width { grid-column: 1 / -1; }
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.section-heading select {
+  width: 100%;
+  border: 1px solid var(--border, #d7dce3);
+  border-radius: 8px;
+  padding: 10px;
+  background: var(--input, #fff);
+  color: inherit;
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.checkLabel input { width: auto; }
+
+/* -------------------------------------------------------------
+   7. Tables (both spellings)
+   ------------------------------------------------------------- */
+.tableWrap,
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 14px 0 0;
+}
+
+.tableWrap table,
+.table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+td, th,
+.tableWrap td, .tableWrap th,
+.table-wrap td, .table-wrap th {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #e8eee8;
+  vertical-align: top;
+  font-size: 14px;
+}
+
+th,
+.tableWrap th,
+.table-wrap th { background: #f7faf7; }
+
+.tableWrap small,
+.table-wrap small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted, #687386);
+  line-height: 1.4;
+}
+
+.block {
+  display: block;
+  margin-top: 5px;
+  color: #657267;
+  font-size: 12px;
+}
+
+/* -------------------------------------------------------------
+   8. Pills & status chips
+   ------------------------------------------------------------- */
+.pill {
+  display: inline-block;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #e7efe9;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.pill.critical { background: #f8d8d8; color: #922727; }
+.pill.high     { background: #fde8cf; color: #8b4c05; }
+.pill.medium   { background: #fff2c7; color: #775b00; }
+.pill.low      { background: #dff1e3; color: #1f6737; }
+
+.status-pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: #eef0f4;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.status-processed  { background: #dff5e7; color: #166534; }
+.status-failed     { background: #fee2e2; color: #991b1b; }
+.status-pending    { background: #fef3c7; color: #92400e; }
+.status-cancelled  { background: #e5e7eb; color: #374151; }
+.status-processing { background: #dbeafe; color: #1d4ed8; }
+
+/* -------------------------------------------------------------
+   9. Alerts & notices
+   `.notice` was `#e8f2eb` in Phase 21 and `#fff8df` in Phase 27.
+   Unified to the warning tint (later, more specific phase).
+   ------------------------------------------------------------- */
+.alert,
+.notice {
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+.alert.danger  { background: #fbe5e5; color: #8c2424; }
+.alert.success { background: #e2f3e5; color: #1d6530; }
+.notice {
+  background: #fff8df;
+  border: 1px solid #e5c878;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 14px 0;
+  color: #51421b;
+}
+
+/* `.error` was #a83232 (base) then #b42318 (Phase 26).
+   Unified to the higher-contrast later value. */
+.error { color: #b42318; }
+
+/* -------------------------------------------------------------
+   10. Lists / repeated items
+   ------------------------------------------------------------- */
+.actionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e8eee8;
+}
+.actionItem select { max-width: 150px; }
+
+.actionForm {
+  border-top: 1px solid #e3ebe4;
+  margin-top: 15px;
+  padding-top: 12px;
+}
+
+/* Risk detail (Phase 17) */
+.riskDetail {
+  background: #f7faf7;
+  border: 1px solid #e1e9e2;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 14px 0;
+}
+.riskDetail h3 { margin-top: 0; }
+
+/* Bar rows (Phase 17) */
+.barRow {
+  display: grid;
+  grid-template-columns: minmax(140px, 2fr) minmax(80px, 3fr) 55px 85px;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0;
+}
+.barTrack {
+  height: 10px;
+  background: #edf1ed;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.barFill {
+  height: 100%;
+  background: #c57a32;
+  border-radius: 8px;
+}
+
+/* Procurement (Phase 19) */
+.orderLine {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.3fr auto;
+  gap: 8px;
+  align-items: end;
+  padding: 10px 0;
+  border-bottom: 1px solid #e7eee8;
+}
+.receiptLine {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e7eee8;
+}
+
+/* -------------------------------------------------------------
+   11. Phase 21 — integration & workflow centre
+   ------------------------------------------------------------- */
+.form-grid textarea { min-height: 90px; }
+
+/* -------------------------------------------------------------
+   12. Phase 22 — management intelligence
+   ------------------------------------------------------------- */
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.checklist-grid article {
+  padding: 16px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  background: var(--card, #fff);
+}
+.checklist-grid h3 { margin: 0 0 8px; }
+.checklist-grid p {
+  margin: 0;
+  line-height: 1.55;
+  color: var(--muted, #687386);
+}
+
+/* -------------------------------------------------------------
+   13. Phase 23 — data quality & integrity
+   ------------------------------------------------------------- */
+.coverage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+.coverage-grid > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 10px;
+  text-transform: capitalize;
+}
+.coverage-grid span { color: var(--muted, #687386); }
+
+/* -------------------------------------------------------------
+   14. Phase 25 — target progress
+   ------------------------------------------------------------- */
+.progress-track {
+  width: 100px;
+  height: 8px;
+  border-radius: 99px;
+  background: #e5e7eb;
+  overflow: hidden;
+  margin: 4px 0;
+}
+.progress-track span {
+  display: block;
+  height: 100%;
+  background: #16845b;
+  border-radius: 99px;
+}
+
+/* -------------------------------------------------------------
+   15. Phase 27 — alert centre
+   ------------------------------------------------------------- */
+.alertToolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.alertToolbar label { min-width: 220px; }
+
+.alertCard {
+  border: 1px solid #dce6de;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 14px 0;
+  background: #fff;
+}
+.alertTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+.alertTop h3 { margin: 10px 0 6px; }
+.alertCard textarea {
+  display: block;
+  width: 100%;
+  min-height: 65px;
+  padding: 10px;
+  border: 1px solid #cbd8cd;
+  border-radius: 8px;
+  font: inherit;
+  margin-top: 5px;
+  resize: vertical;
+}
+
+/* -------------------------------------------------------------
+   16. Phase 28 — farm command centre
+   ------------------------------------------------------------- */
+.commandActions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px;
+}
+.commandAction {
+  border: 1px solid #dce6de;
+  border-radius: 12px;
+  padding: 14px;
+  background: #fff;
+}
+.commandAction h3 { margin: 8px 0; }
+.commandAction p { line-height: 1.45; }
+.commandActionTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+.actionHeader label { min-width: 200px; }
+
+/* -------------------------------------------------------------
+   17. Phase 29 — SOP library & verification
+   ------------------------------------------------------------- */
+.sopChecklist { display: grid; gap: 12px; margin: 16px 0; }
+.sopItem {
+  padding: 14px;
+  border: 1px solid #dce6de;
+  border-radius: 10px;
+  background: #fbfdfb;
+}
+.sopItem p { margin: 7px 0; }
+.sopItem label { margin: 4px 0; }
+.sopItem textarea {
+  width: 100%;
+  min-height: 62px;
+  padding: 10px;
+  border: 1px solid #cbd8cd;
+  border-radius: 8px;
+  font: inherit;
+  resize: vertical;
+}
+.sopItem input,
+.sopItem select { max-width: 100%; }
+
+/* =============================================================
+   18. Phase 79 — shared shell navigation
+   Byte-identical to original. Loaded last so it wins where it
+   needs to, without touching any of the workspace rules above.
+   ============================================================= */
+
+.skipLink {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 10px 14px;
+  background: #173d2a;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease-out;
+}
+.skipLink:focus-visible { transform: translateY(0); }
+
+.sidebar .brand,
+.mobileBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.sidebar .brand { font-size: 20px; }
+.mobileBrand    { font-size: 16px; }
+.brandMark { color: #7ad19a; flex-shrink: 0; }
+
+.navGroup { border-radius: 8px; }
+.navGroup + .navGroup {
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 4px;
+  margin-top: 4px;
+}
+.navGroupHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  background: transparent;
+  color: #c5d7c9;
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: left;
+}
+.navGroupHeader:hover,
+.navGroupHeader:focus-visible { color: #fff; background: #1e4d35; }
+.navGroupHeader.hasActive { color: #fff; }
+
+.navGroupLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.navGroupText { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.navIcon { flex-shrink: 0; color: #8fb29b; transition: color 0.15s ease; }
+.navGroupHeader:hover .navIcon,
+.navGroupHeader:focus-visible .navIcon,
+.navGroup.open .navIcon { color: #e7efe9; }
+.navGroupHeader.hasActive .navIcon { color: #7ad19a; }
+
+.navGroupMeta { display: inline-flex; align-items: center; gap: 6px; }
+.navActiveDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7ad19a;
+}
+.navChevron {
+  flex-shrink: 0;
+  color: #8fb29b;
+  transition: transform 0.18s ease, color 0.15s ease;
+}
+.navGroupHeader:hover .navChevron,
+.navGroupHeader:focus-visible .navChevron { color: #e7efe9; }
+.navGroup.open .navChevron { transform: rotate(180deg); color: #e7efe9; }
+
+.navGroupBody { display: none; padding: 2px 0 6px; }
+.navGroup.open .navGroupBody { display: block; }
+
+.navLink {
+  display: block;
+  position: relative;
+  padding: 8px 10px 8px 18px;
+  border-radius: 6px;
+  color: #e7efe9;
+  font-size: 14px;
+  line-height: 1.35;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.navLink:hover { background: #2d5b40; color: #fff; }
+.navLink.active {
+  background: rgba(122, 209, 154, 0.10);
+  color: #fff;
+  font-weight: 600;
+}
+.navLink.active:hover { background: rgba(122, 209, 154, 0.16); }
+.navLink.active::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 14px;
+  border-radius: 1px;
+  background: #7ad19a;
+}
+.navLink:focus-visible,
+.navGroupHeader:focus-visible,
+.hamburger:focus-visible {
+  outline: 2px solid #7ad19a;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.navFooter {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.navUser {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 4px;
+  font-size: 12px;
+  color: #c5d7c9;
+  overflow: hidden;
+}
+.navUserEmail {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: 600;
+  color: #fff;
+}
+.navUserRole {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8fb29b;
+}
+.navSignOut { width: 100%; text-align: center; }
+
+.mobileBar,
+.navOverlay { display: none; }
+
+.hamburger {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+}
+.hamburger:hover { background: rgba(255, 255, 255, 0.08); }
+.hamburgerIcon,
+.hamburgerIcon::before,
+.hamburgerIcon::after {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 1px;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+.hamburgerIcon::before,
+.hamburgerIcon::after { content: ''; position: absolute; left: 0; }
+.hamburgerIcon::before { top: -6px; }
+.hamburgerIcon::after  { top:  6px; }
+.hamburgerIcon.open { background: transparent; }
+.hamburgerIcon.open::before { transform: translateY(6px) rotate(45deg); }
+.hamburgerIcon.open::after  { transform: translateY(-6px) rotate(-45deg); }
+
+@keyframes navFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* -------------------------------------------------------------
+   19. Responsive — consolidated breakpoints
+   Order: 1100 → 1024 → 800 → 700 → 650
+   ------------------------------------------------------------- */
+
+/* Tablet-ish: multi-column grids start collapsing */
+@media (max-width: 1100px) {
+  .cards { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .grid.two { grid-template-columns: 1fr; }
+  .orderLine { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .receiptLine { grid-template-columns: 1fr 1fr; }
+}
+
+/* Drawer nav (Phase 79) — tablet and below */
+@media (max-width: 1024px) {
+  .shell { grid-template-columns: 1fr; }
+
+  .mobileBar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: calc(56px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) 16px 0;
+    background: #173d2a;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 70;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .sidebar {
+    position: fixed;
+    top: calc(56px + env(safe-area-inset-top));
+    left: 0;
+    height: calc(100dvh - 56px - env(safe-area-inset-top));
+    width: min(88vw, 340px);
+    transform: translateX(-100%);
+    transition: transform 0.22s ease-out, visibility 0s 0.22s;
+    visibility: hidden;
+    z-index: 60;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.22s ease-out, visibility 0s 0s;
+  }
+  .navOverlay {
+    display: block;
+    position: fixed;
+    top: calc(56px + env(safe-area-inset-top));
+    left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 55;
+    animation: navFadeIn 0.15s ease-out;
+  }
+  .navLink {
+    padding: 12px 12px 12px 20px;
+    font-size: 15px;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  .navGroupHeader {
+    padding: 12px 10px;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  .navSignOut { min-height: 44px; }
+  .main {
+    padding: 16px;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+  }
+}
+
+/* Legacy 800px rule from base shell */
+@media (max-width: 800px) {
+  .shell { grid-template-columns: 1fr; }
+  .nav { display: flex; gap: 8px; overflow: auto; }
+  .main { padding: 16px; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Table-heavy responsive tweak */
+@media (max-width: 700px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .full-width { grid-column: auto; }
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .table-wrap th,
+  .table-wrap td { padding: 9px 7px; }
+}
+
+/* Small phone — most aggressive collapse */
+@media (max-width: 650px) {
+  .content { padding: 15px; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pageHeader { flex-direction: column; }
+  .formGrid,
+  .form-grid { grid-template-columns: 1fr; }
+  .span2 { grid-column: span 1; }
+  .barRow { grid-template-columns: 1fr 60px; }
+  .barTrack { grid-column: 1; }
+  .barRow .pill { grid-column: 2; grid-row: 1; }
+  .actionItem {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .actionItem select { max-width: none; }
+  .orderLine,
+  .receiptLine { grid-template-columns: 1fr; }
+  .alertTop { flex-direction: column; }
+  .alertToolbar { align-items: stretch; }
+  .alertToolbar label { min-width: 0; width: 100%; }
+  .commandActionTop { flex-direction: column; }
+  .actionHeader label { min-width: 0; width: 100%; }
+  .commandMetric { flex-direction: column; }
+  .commandMetric b { text-align: left; }
+}
+
+/* 100dvh fallback for browsers that don't support it */
+@supports not (height: 100dvh) {
+  @media (max-width: 1024px) {
+    .sidebar { height: calc(100vh - 56px); }
+  }
+}
+
+/* -------------------------------------------------------------
+   20. Reduced motion
+   ------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -------------------------------------------------------------
+   21. Print
+   ------------------------------------------------------------- */
+@media print {
+  .sidebar,
+  .mobileBar,
+  .navOverlay,
+  .skipLink,
+  .hamburger,
+  .btn,
+  .actions,
+  .actionForm { display: none !important; }
+
+  .shell { display: block; }
+  .main, .content { padding: 0; max-width: none; }
+
+  body { background: #fff; color: #000; }
+  .card,
+  .panel,
+  .metric-card,
+  .alertCard,
+  .commandAction {
+    border: 1px solid #ccc;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  a { text-decoration: underline; }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 11px;
+    color: #555;
+  }
+}

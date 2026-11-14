@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 
 type Block = {
   _id: string;
@@ -62,7 +63,6 @@ export default function Growth() {
       ]);
       setBlocks(b);
       setRows(g);
-      // If the form doesn't have a blockId yet, default to the first block.
       setForm(prev => (prev.blockId ? prev : blank(b[0]?.blockId ?? '')));
       setError('');
     } catch (e) {
@@ -85,7 +85,6 @@ export default function Growth() {
       setForm(blank(blocks[0]?.blockId ?? ''));
       setFormOpen(false);
       await load();
-      // Auto-dismiss the notice after 4 seconds
       setTimeout(() => setNotice(''), 4000);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not save sample');
@@ -100,27 +99,9 @@ export default function Growth() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          {[
-            ['/', 'Dashboard'],
-            ['/plantations', 'Plantations'],
-            ['/plantation-intelligence', 'Plantation intelligence'],
-            ['/growth', 'Growth samples'],
-            ['/inspections', 'Inspections'],
-            ['/field-logs', 'Field logs'],
-            ['/executive', 'Executive intelligence'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <NavSidebar />
 
-      <main className="main">
+      <main id="main-content" className="main">
         <h1>Growth monitoring</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Record repeatable sample-tree measurements. Use the same sampling method and

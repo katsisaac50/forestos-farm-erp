@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 
 type Block = {
   _id: string;
@@ -53,26 +54,9 @@ export default function PlantationIntelligence() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          {[
-            ['/', 'Dashboard'],
-            ['/plantations', 'Plantation register'],
-            ['/plantation-intelligence', 'Plantation intelligence'],
-            ['/growth', 'Growth samples'],
-            ['/inspections', 'Inspections'],
-            ['/executive', 'Executive intelligence'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <NavSidebar />
 
-      <main className="main">
+      <main id="main-content" className="main">
         <div
           style={{
             display: 'flex',
@@ -311,7 +295,7 @@ export default function PlantationIntelligence() {
   );
 }
 
-// --- Small presentational helpers ---
+// --- Small presentational helpers (unchanged) ---
 
 function MetricCard({
   label,

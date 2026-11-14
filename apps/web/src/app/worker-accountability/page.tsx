@@ -2,11 +2,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { getData } from '../../lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 
 type Action = { _id:string; title?:string; assignedTo?:string; status?:string; priority?:string; dueAt?:string; overdue?:boolean; farmBlock?:string; completionNote?:string; createdBy?:string };
 type Inspection = { _id:string; title?:string; assignedTo?:string; status?:string; blockCode?:string; findings?:string; createdAt?:string };
 type Workforce = { totals?:Record<string,number>; tasks?:Array<any>; notes?:string[] };
 const n=(v:any)=>Number(v||0).toLocaleString();
+
 export default function WorkerAccountabilityPage(){
  const [actions,setActions]=useState<Action[]>([]); const [inspections,setInspections]=useState<Inspection[]>([]); const [workforce,setWorkforce]=useState<Workforce>({}); const [message,setMessage]=useState('Loading recorded performance data…'); const [busy,setBusy]=useState(false);
  async function load(){setBusy(true);try{const results=await Promise.allSettled([getData<any>('/corrective-actions'),getData<any>('/field-inspections'),getData<any>('/workforce/dashboard')]);
@@ -19,9 +21,73 @@ export default function WorkerAccountabilityPage(){
  const metrics=useMemo(()=>{const open=actions.filter(a=>a.status!=='closed');const overdue=actions.filter(a=>a.status!=='closed'&&(a.overdue===true||(a.dueAt&&new Date(a.dueAt).getTime()<Date.now())));const submitted=actions.filter(a=>a.status==='submitted');const closed=actions.filter(a=>a.status==='closed');const rejected=inspections.filter(i=>i.status==='rejected');const submittedIns=inspections.filter(i=>i.status==='submitted');return {open:open.length,overdue:overdue.length,submitted:submitted.length,closed:closed.length,rejected:rejected.length,submittedIns:submittedIns.length}},[actions,inspections]);
  const byWorker=useMemo(()=>{const map=new Map<string,{name:string;open:number;overdue:number;submitted:number;closed:number;inspectionCount:number;rejected:number}>();const row=(name:string)=>{const key=name.trim()||'Unassigned';if(!map.has(key))map.set(key,{name:key,open:0,overdue:0,submitted:0,closed:0,inspectionCount:0,rejected:0});return map.get(key)!};actions.forEach(a=>{const r=row(a.assignedTo||'Unassigned');if(a.status==='closed')r.closed++;else r.open++;if(a.status==='submitted')r.submitted++;if(a.status!=='closed'&&(a.overdue===true||(a.dueAt&&new Date(a.dueAt).getTime()<Date.now())))r.overdue++});inspections.forEach(i=>{const r=row(i.assignedTo||'Unassigned');r.inspectionCount++;if(i.status==='rejected')r.rejected++});return [...map.values()].sort((a,b)=>b.overdue-a.overdue||b.open-a.open||a.name.localeCompare(b.name))},[actions,inspections]);
  const issueRows=actions.filter(a=>a.status!=='closed').sort((a,b)=>Number(b.overdue)-Number(a.overdue)||new Date(a.dueAt||'9999-12-31').getTime()-new Date(b.dueAt||'9999-12-31').getTime()).slice(0,25);
- return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Worker accountability</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/workforce">Workforce</Link><Link href="/field-inspections">Field inspections</Link><Link href="/corrective-actions">Corrective actions</Link><Link href="/management-intelligence">Management intelligence</Link></nav></aside><main className="main"><h1>Worker performance &amp; accountability</h1><p className="muted">Phase 38 · Evidence-led view of assigned corrective actions, inspections and recorded labour activity.</p>{message&&<div className="notice">{message}</div>}<div className="grid">{[[metrics.open,'Open corrective actions'],[metrics.overdue,'Overdue actions'],[metrics.submitted,'Actions awaiting review'],[metrics.closed,'Closed actions'],[metrics.submittedIns,'Submitted inspections'],[metrics.rejected,'Rejected inspections']].map(([v,l]:any)=><div className="card" key={l}><div className="muted">{l}</div><div className="metric">{n(v)}</div></div>)}</div>
- <section className="panel"><div className="row" style={{justifyContent:'space-between',alignItems:'center'}}><h2>Worker accountability summary</h2><button className="btn secondary" onClick={load} disabled={busy}>{busy?'Refreshing…':'Refresh data'}</button></div><p className="muted">This groups records by the assigned-worker text in the source records. It is not a verified employee identity or a disciplinary score.</p><div className="table-wrap"><table><thead><tr><th>Assigned worker</th><th>Open actions</th><th>Overdue</th><th>Submitted</th><th>Closed</th><th>Inspections</th><th>Rejected inspections</th></tr></thead><tbody>{byWorker.map(r=><tr key={r.name}><td><b>{r.name}</b></td><td>{r.open}</td><td>{r.overdue}</td><td>{r.submitted}</td><td>{r.closed}</td><td>{r.inspectionCount}</td><td>{r.rejected}</td></tr>)}{!byWorker.length&&<tr><td colSpan={7}>No assigned worker records found.</td></tr>}</tbody></table></div></section>
- <section className="panel"><h2>Open corrective actions requiring attention</h2><div className="table-wrap"><table><thead><tr><th>Action</th><th>Worker</th><th>Block / location</th><th>Priority</th><th>Status</th><th>Due date</th><th>Flag</th></tr></thead><tbody>{issueRows.map(a=>{const overdue=a.overdue===true||(!!a.dueAt&&new Date(a.dueAt).getTime()<Date.now());return <tr key={a._id}><td>{a.title||'Corrective action'}<div className="muted">{a._id}</div></td><td>{a.assignedTo||'—'}</td><td>{a.farmBlock||'—'}</td><td>{a.priority||'—'}</td><td>{a.status||'—'}</td><td>{a.dueAt?new Date(a.dueAt).toLocaleDateString():'—'}</td><td>{overdue?'OVERDUE':a.status==='submitted'?'REVIEW':'Open'}</td></tr>})}{!issueRows.length&&<tr><td colSpan={7}>No open corrective actions in the records returned.</td></tr>}</tbody></table></div><div className="row"><Link className="btn" href="/corrective-actions">Manage corrective actions</Link><Link className="btn secondary" href="/field-inspections">Review field inspections</Link></div></section>
- <section className="panel"><h2>Recorded labour activity</h2><div className="grid">{[[workforce.totals?.workers??0,'Registered workers'],[workforce.totals?.openTasks??0,'Open labour tasks'],[workforce.totals?.recordedHours??0,'Recorded labour hours'],[workforce.totals?.recordedLabourCostUgx??0,'Recorded labour cost (UGX)']].map(([v,l]:any)=><div className="card" key={l}><div className="muted">{l}</div><div className="metric">{n(v)}</div></div>)}</div><p className="muted">Labour figures are shown only when the workforce endpoint is accessible. Labour costs are not automatically posted to the finance ledger.</p></section>
- <section className="panel"><h2>Fair-use rules for supervisors</h2><ul><li>Use recorded facts and comparable work standards; different tasks, terrain, weather, tools and experience can affect output.</li><li>An overdue count is a follow-up signal, not proof of negligence.</li><li>Give workers an opportunity to explain circumstances and correct inaccurate records.</li><li>Use the existing supervisor review process before closing submitted corrective actions.</li><li>Do not treat this dashboard as an automated disciplinary decision or a payroll calculation.</li></ul></section></main></div>
+
+ return (
+  <div className="shell">
+   <NavSidebar />
+   <main id="main-content" className="main">
+    <h1>Worker performance &amp; accountability</h1>
+    <p className="muted">Phase 38 · Evidence-led view of assigned corrective actions, inspections and recorded labour activity.</p>
+    {message&&<div className="notice">{message}</div>}
+    <div className="grid">
+     {[[metrics.open,'Open corrective actions'],[metrics.overdue,'Overdue actions'],[metrics.submitted,'Actions awaiting review'],[metrics.closed,'Closed actions'],[metrics.submittedIns,'Submitted inspections'],[metrics.rejected,'Rejected inspections']].map(([v,l]:any)=><div className="card" key={l}><div className="muted">{l}</div><div className="metric">{n(v)}</div></div>)}
+    </div>
+    <section className="panel">
+     <div className="row" style={{justifyContent:'space-between',alignItems:'center'}}>
+      <h2>Worker accountability summary</h2>
+      <button className="btn secondary" onClick={load} disabled={busy}>{busy?'Refreshing…':'Refresh data'}</button>
+     </div>
+     <p className="muted">This groups records by the assigned-worker text in the source records. It is not a verified employee identity or a disciplinary score.</p>
+     <div className="table-wrap"><table>
+      <thead><tr><th>Assigned worker</th><th>Open actions</th><th>Overdue</th><th>Submitted</th><th>Closed</th><th>Inspections</th><th>Rejected inspections</th></tr></thead>
+      <tbody>{byWorker.map(r=><tr key={r.name}>
+       <td><b>{r.name}</b></td>
+       <td>{r.open}</td>
+       <td>{r.overdue}</td>
+       <td>{r.submitted}</td>
+       <td>{r.closed}</td>
+       <td>{r.inspectionCount}</td>
+       <td>{r.rejected}</td>
+      </tr>)}{!byWorker.length&&<tr><td colSpan={7}>No assigned worker records found.</td></tr>}</tbody>
+     </table></div>
+    </section>
+    <section className="panel">
+     <h2>Open corrective actions requiring attention</h2>
+     <div className="table-wrap"><table>
+      <thead><tr><th>Action</th><th>Worker</th><th>Block / location</th><th>Priority</th><th>Status</th><th>Due date</th><th>Flag</th></tr></thead>
+      <tbody>{issueRows.map(a=>{const overdue=a.overdue===true||(!!a.dueAt&&new Date(a.dueAt).getTime()<Date.now());return <tr key={a._id}>
+       <td>{a.title||'Corrective action'}<div className="muted">{a._id}</div></td>
+       <td>{a.assignedTo||'—'}</td>
+       <td>{a.farmBlock||'—'}</td>
+       <td>{a.priority||'—'}</td>
+       <td>{a.status||'—'}</td>
+       <td>{a.dueAt?new Date(a.dueAt).toLocaleDateString():'—'}</td>
+       <td>{overdue?'OVERDUE':a.status==='submitted'?'REVIEW':'Open'}</td>
+      </tr>})}{!issueRows.length&&<tr><td colSpan={7}>No open corrective actions in the records returned.</td></tr>}</tbody>
+     </table></div>
+     <div className="row">
+      <Link className="btn" href="/corrective-actions">Manage corrective actions</Link>
+      <Link className="btn secondary" href="/field-inspections">Review field inspections</Link>
+     </div>
+    </section>
+    <section className="panel">
+     <h2>Recorded labour activity</h2>
+     <div className="grid">
+      {[[workforce.totals?.workers??0,'Registered workers'],[workforce.totals?.openTasks??0,'Open labour tasks'],[workforce.totals?.recordedHours??0,'Recorded labour hours'],[workforce.totals?.recordedLabourCostUgx??0,'Recorded labour cost (UGX)']].map(([v,l]:any)=><div className="card" key={l}><div className="muted">{l}</div><div className="metric">{n(v)}</div></div>)}
+     </div>
+     <p className="muted">Labour figures are shown only when the workforce endpoint is accessible. Labour costs are not automatically posted to the finance ledger.</p>
+    </section>
+    <section className="panel">
+     <h2>Fair-use rules for supervisors</h2>
+     <ul>
+      <li>Use recorded facts and comparable work standards; different tasks, terrain, weather, tools and experience can affect output.</li>
+      <li>An overdue count is a follow-up signal, not proof of negligence.</li>
+      <li>Give workers an opportunity to explain circumstances and correct inaccurate records.</li>
+      <li>Use the existing supervisor review process before closing submitted corrective actions.</li>
+      <li>Do not treat this dashboard as an automated disciplinary decision or a payroll calculation.</li>
+     </ul>
+    </section>
+   </main>
+  </div>
+ );
 }

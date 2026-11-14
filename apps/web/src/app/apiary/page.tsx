@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -217,27 +218,9 @@ export default function Apiary() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          {[
-            ['/', 'Dashboard'],
-            ['/plantations', 'Plantations'],
-            ['/apiary', 'Apiary'],
-            ['/finance', 'Finance'],
-            ['/sales', 'Sales'],
-            ['/inventory', 'Inventory'],
-            ['/tasks', 'Tasks'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <NavSidebar />
 
-      <main className="main">
+      <main id="main-content" className="main">
         <h1>Apiary register</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           One record per hive · colony status and harvest tracking

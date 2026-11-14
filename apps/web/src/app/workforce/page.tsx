@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
+
 type Worker={_id:string;workerCode:string;displayName:string;workerType:string;status:string;defaultDailyRateUgx?:number;contactDetails?:string};
 type Task={_id:string;taskCode:string;title:string;activity:string;plantationBlockId?:string;assignedWorkerCode?:string;plannedDate:string;priority:string;status:string;targetQuantity?:number;unit?:string;instructions?:string;recordedHours?:number;recordedOutput?:number;recordedLabourCostUgx?:number;costPerOutputUnit?:number;outputUnits?:string[]};
 type Entry={_id:string;taskId:string;workerCode:string;workDate:string;hoursWorked:number;outputQuantity:number;outputUnit?:string;labourCostUgx:number;notes?:string};
@@ -11,6 +13,7 @@ const emptyWorker=()=>({workerCode:'',displayName:'',contactDetails:'',workerTyp
 const emptyTask=()=>({taskCode:'',title:'',activity:'Planting',plantationBlockId:'',assignedWorkerCode:'',plannedDate:today,priority:'normal',status:'assigned',targetQuantity:'',unit:'seedlings',instructions:''});
 const emptyEntry=()=>({taskId:'',workerCode:'',workDate:today,hoursWorked:'',outputQuantity:'',outputUnit:'seedlings',labourCostUgx:'',notes:''});
 const money=(n:number|undefined|null)=>n==null?'—':new Intl.NumberFormat('en-UG',{style:'currency',currency:'UGX',maximumFractionDigits:0}).format(n);
+
 export default function Workforce(){
  const [workers,setWorkers]=useState<Worker[]>([]),[tasks,setTasks]=useState<Task[]>([]),[entries,setEntries]=useState<Entry[]>([]),[blocks,setBlocks]=useState<Block[]>([]);
  const [wf,setWf]=useState(emptyWorker()),[tf,setTf]=useState(emptyTask()),[ef,setEf]=useState(emptyEntry()),[error,setError]=useState(''),[notice,setNotice]=useState('');
@@ -21,13 +24,110 @@ export default function Workforce(){
  async function saveEntry(e:React.FormEvent){e.preventDefault();try{await postData('/workforce/entries',{...ef,hoursWorked:Number(ef.hoursWorked),outputQuantity:Number(ef.outputQuantity),labourCostUgx:Number(ef.labourCostUgx)});setNotice('Labour entry recorded.');await load()}catch(e){setError(e instanceof Error?e.message:'Could not save labour entry')}}
  async function updateStatus(id:string,status:string){try{await patchData(`/workforce/tasks/${id}`,{status,...(status==='verified'?{verifiedAt:new Date().toISOString(),verifiedBy:'owner'}:{})});setNotice(`Task status updated to ${status}.`);await load()}catch(e){setError(e instanceof Error?e.message:'Could not update task')}}
  const totalHours=entries.reduce((s,e)=>s+Number(e.hoursWorked||0),0),totalCost=entries.reduce((s,e)=>s+Number(e.labourCostUgx||0),0);
- return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Masulita Green Farms</div><nav className="nav">{[['/','Dashboard'],['/plantations','Plantations'],['/plantation-intelligence','Plantation intelligence'],['/growth','Growth samples'],['/harvest-planning','Harvest planning'],['/regeneration','Replanting & regeneration'],['/nursery','Nursery & seedlings'],['/workforce','Workforce & labour'],['/inspections','Inspections'],['/field-logs','Field logs'],['/executive','Executive intelligence'],['/audit','Audit log']].map(([u,l])=><Link key={u} href={u}>{l}</Link>)}</nav></aside><main className="main"><h1>Workforce & labour productivity</h1><p className="muted">Assign measurable work, record labour hours and costs, and verify completion. Use objective standards rather than assumptions.</p>{error&&<p className="error">{error}</p>}{notice&&<p className="panel">{notice}</p>}
- <section className="grid"><div className="panel"><h3>Workers</h3><strong>{workers.length}</strong></div><div className="panel"><h3>Tasks</h3><strong>{tasks.length}</strong></div><div className="panel"><h3>Recorded hours</h3><strong>{totalHours.toFixed(1)}</strong></div><div className="panel"><h3>Recorded labour cost</h3><strong>{money(totalCost)}</strong></div></section>
- <section className="panel"><h2>Register worker</h2><form onSubmit={saveWorker}><label>Worker code<input value={wf.workerCode} onChange={e=>setWf({...wf,workerCode:e.target.value})} required/></label><label>Display name<input value={wf.displayName} onChange={e=>setWf({...wf,displayName:e.target.value})} required/></label><label>Contact details (optional)<input value={wf.contactDetails} onChange={e=>setWf({...wf,contactDetails:e.target.value})}/></label><label>Worker type<select value={wf.workerType} onChange={e=>setWf({...wf,workerType:e.target.value})}>{['field_worker','supervisor','contractor','seasonal','other'].map(x=><option key={x}>{x}</option>)}</select></label><label>Status<select value={wf.status} onChange={e=>setWf({...wf,status:e.target.value})}>{['active','inactive','seasonal','on_leave'].map(x=><option key={x}>{x}</option>)}</select></label><label>Default daily rate (UGX, optional)<input type="number" min="0" value={wf.defaultDailyRateUgx} onChange={e=>setWf({...wf,defaultDailyRateUgx:e.target.value})}/></label><label>Skills / notes<textarea value={wf.skillsOrNotes} onChange={e=>setWf({...wf,skillsOrNotes:e.target.value})}/></label><button className="btn">Save worker</button></form></section>
- <section className="panel"><h2>Create work assignment</h2><form onSubmit={saveTask}><label>Task code<input value={tf.taskCode} onChange={e=>setTf({...tf,taskCode:e.target.value})} required/></label><label>Title<input value={tf.title} onChange={e=>setTf({...tf,title:e.target.value})} required/></label><label>Activity<select value={tf.activity} onChange={e=>setTf({...tf,activity:e.target.value})}>{['Planting','Weeding','Firebreak maintenance','Pruning','Tree counting','Growth measurement','Harvest preparation','Nursery work','Hive inspection','Site maintenance','Other'].map(x=><option key={x}>{x}</option>)}</select></label><label>Plantation block (optional)<select value={tf.plantationBlockId} onChange={e=>setTf({...tf,plantationBlockId:e.target.value})}><option value="">Not assigned to a block</option>{blocks.map(b=><option key={b.blockId}>{b.blockId}</option>)}</select></label><label>Assigned worker (optional)<select value={tf.assignedWorkerCode} onChange={e=>setTf({...tf,assignedWorkerCode:e.target.value})}><option value="">Unassigned</option>{workers.map(w=><option key={w.workerCode} value={w.workerCode}>{w.workerCode} · {w.displayName}</option>)}</select></label><label>Planned date<input type="date" value={tf.plannedDate} onChange={e=>setTf({...tf,plannedDate:e.target.value})} required/></label><label>Priority<select value={tf.priority} onChange={e=>setTf({...tf,priority:e.target.value})}>{['low','normal','high','urgent'].map(x=><option key={x}>{x}</option>)}</select></label><label>Target quantity (optional)<input type="number" min="0" value={tf.targetQuantity} onChange={e=>setTf({...tf,targetQuantity:e.target.value})}/></label><label>Target unit<input value={tf.unit} onChange={e=>setTf({...tf,unit:e.target.value})}/></label><label>Instructions<textarea value={tf.instructions} onChange={e=>setTf({...tf,instructions:e.target.value})}/></label><button className="btn">Create task</button></form></section>
- <section className="panel"><h2>Record labour and output</h2>{tasks.length===0||workers.length===0?<p>Create at least one task and one worker first.</p>:<form onSubmit={saveEntry}><label>Task<select value={ef.taskId} onChange={e=>setEf({...ef,taskId:e.target.value})} required>{tasks.map(t=><option key={t._id} value={t._id}>{t.taskCode} · {t.title}</option>)}</select></label><label>Worker<select value={ef.workerCode} onChange={e=>setEf({...ef,workerCode:e.target.value})} required>{workers.map(w=><option key={w.workerCode} value={w.workerCode}>{w.workerCode} · {w.displayName}</option>)}</select></label><label>Work date<input type="date" value={ef.workDate} onChange={e=>setEf({...ef,workDate:e.target.value})} required/></label><label>Hours worked<input type="number" min="0" step="0.25" value={ef.hoursWorked} onChange={e=>setEf({...ef,hoursWorked:e.target.value})} required/></label><label>Output quantity<input type="number" min="0" step="any" value={ef.outputQuantity} onChange={e=>setEf({...ef,outputQuantity:e.target.value})} required/></label><label>Output unit<input value={ef.outputUnit} onChange={e=>setEf({...ef,outputUnit:e.target.value})}/></label><label>Labour cost (UGX)<input type="number" min="0" step="any" value={ef.labourCostUgx} onChange={e=>setEf({...ef,labourCostUgx:e.target.value})} required/></label><label>Notes<textarea value={ef.notes} onChange={e=>setEf({...ef,notes:e.target.value})}/></label><button className="btn">Save labour entry</button></form>}</section>
- <section className="panel"><h2>Task register & verification</h2><div style={{overflowX:'auto'}}><table><thead><tr><th>Task</th><th>Activity</th><th>Block</th><th>Worker</th><th>Date</th><th>Target</th><th>Output</th><th>Hours</th><th>Labour cost</th><th>Status</th><th>Action</th></tr></thead><tbody>{tasks.map(t=><tr key={t._id}><td>{t.taskCode} · {t.title}</td><td>{t.activity}</td><td>{t.plantationBlockId||'—'}</td><td>{workers.find(w=>w.workerCode===t.assignedWorkerCode)?.displayName||t.assignedWorkerCode||'—'}</td><td>{t.plannedDate}</td><td>{t.targetQuantity??'—'} {t.unit||''}</td><td>{t.recordedOutput??0} {t.outputUnits?.join('/')||''}</td><td>{Number(t.recordedHours||0).toFixed(1)}</td><td>{money(t.recordedLabourCostUgx)}</td><td>{t.status}</td><td>{!['verified','cancelled'].includes(t.status)&&<select value="" onChange={e=>{if(e.target.value)void updateStatus(t._id,e.target.value)}}><option value="">Change status</option>{['assigned','in_progress','submitted','verified','rejected','cancelled'].filter(s=>s!==t.status).map(s=><option key={s}>{s}</option>)}</select>}</td></tr>)}</tbody></table></div><p className="muted">Verify work against agreed quality and safety standards, not output quantity alone.</p></section>
- <section className="panel"><h2>Labour entry history</h2><div style={{overflowX:'auto'}}><table><thead><tr><th>Date</th><th>Task</th><th>Worker</th><th>Hours</th><th>Output</th><th>Unit</th><th>Labour cost</th></tr></thead><tbody>{entries.map(e=><tr key={e._id}><td>{e.workDate}</td><td>{tasks.find(t=>t._id===e.taskId)?.taskCode||e.taskId}</td><td>{workers.find(w=>w.workerCode===e.workerCode)?.displayName||e.workerCode}</td><td>{e.hoursWorked}</td><td>{e.outputQuantity}</td><td>{e.outputUnit||'—'}</td><td>{money(e.labourCostUgx)}</td></tr>)}</tbody></table></div></section>
- <section className="panel"><h2>Productivity interpretation</h2><ul><li>Compare similar activities, units, quality standards, terrain, weather and work conditions.</li><li>Use verified outputs when evaluating productivity; submitted work is not automatically accepted.</li><li>Cost per output unit uses recorded labour costs only, not materials, transport, tools or overheads.</li><li>Record time and cost honestly. Do not use productivity measures as the sole basis for disciplinary decisions.</li><li>Labour records are separate from finance transactions and need reconciliation.</li></ul></section>
- </main></div>;
+
+ return (
+  <div className="shell">
+   <NavSidebar />
+   <main id="main-content" className="main">
+    <h1>Workforce &amp; labour productivity</h1>
+    <p className="muted">Assign measurable work, record labour hours and costs, and verify completion. Use objective standards rather than assumptions.</p>
+    {error&&<p className="error">{error}</p>}
+    {notice&&<p className="panel">{notice}</p>}
+    <section className="grid">
+     <div className="panel"><h3>Workers</h3><strong>{workers.length}</strong></div>
+     <div className="panel"><h3>Tasks</h3><strong>{tasks.length}</strong></div>
+     <div className="panel"><h3>Recorded hours</h3><strong>{totalHours.toFixed(1)}</strong></div>
+     <div className="panel"><h3>Recorded labour cost</h3><strong>{money(totalCost)}</strong></div>
+    </section>
+    <section className="panel">
+     <h2>Register worker</h2>
+     <form onSubmit={saveWorker}>
+      <label>Worker code<input value={wf.workerCode} onChange={e=>setWf({...wf,workerCode:e.target.value})} required/></label>
+      <label>Display name<input value={wf.displayName} onChange={e=>setWf({...wf,displayName:e.target.value})} required/></label>
+      <label>Contact details (optional)<input value={wf.contactDetails} onChange={e=>setWf({...wf,contactDetails:e.target.value})}/></label>
+      <label>Worker type<select value={wf.workerType} onChange={e=>setWf({...wf,workerType:e.target.value})}>{['field_worker','supervisor','contractor','seasonal','other'].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label>Status<select value={wf.status} onChange={e=>setWf({...wf,status:e.target.value})}>{['active','inactive','seasonal','on_leave'].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label>Default daily rate (UGX, optional)<input type="number" min="0" value={wf.defaultDailyRateUgx} onChange={e=>setWf({...wf,defaultDailyRateUgx:e.target.value})}/></label>
+      <label>Skills / notes<textarea value={wf.skillsOrNotes} onChange={e=>setWf({...wf,skillsOrNotes:e.target.value})}/></label>
+      <button className="btn">Save worker</button>
+     </form>
+    </section>
+    <section className="panel">
+     <h2>Create work assignment</h2>
+     <form onSubmit={saveTask}>
+      <label>Task code<input value={tf.taskCode} onChange={e=>setTf({...tf,taskCode:e.target.value})} required/></label>
+      <label>Title<input value={tf.title} onChange={e=>setTf({...tf,title:e.target.value})} required/></label>
+      <label>Activity<select value={tf.activity} onChange={e=>setTf({...tf,activity:e.target.value})}>{['Planting','Weeding','Firebreak maintenance','Pruning','Tree counting','Growth measurement','Harvest preparation','Nursery work','Hive inspection','Site maintenance','Other'].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label>Plantation block (optional)<select value={tf.plantationBlockId} onChange={e=>setTf({...tf,plantationBlockId:e.target.value})}><option value="">Not assigned to a block</option>{blocks.map(b=><option key={b.blockId}>{b.blockId}</option>)}</select></label>
+      <label>Assigned worker (optional)<select value={tf.assignedWorkerCode} onChange={e=>setTf({...tf,assignedWorkerCode:e.target.value})}><option value="">Unassigned</option>{workers.map(w=><option key={w.workerCode} value={w.workerCode}>{w.workerCode} · {w.displayName}</option>)}</select></label>
+      <label>Planned date<input type="date" value={tf.plannedDate} onChange={e=>setTf({...tf,plannedDate:e.target.value})} required/></label>
+      <label>Priority<select value={tf.priority} onChange={e=>setTf({...tf,priority:e.target.value})}>{['low','normal','high','urgent'].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label>Target quantity (optional)<input type="number" min="0" value={tf.targetQuantity} onChange={e=>setTf({...tf,targetQuantity:e.target.value})}/></label>
+      <label>Target unit<input value={tf.unit} onChange={e=>setTf({...tf,unit:e.target.value})}/></label>
+      <label>Instructions<textarea value={tf.instructions} onChange={e=>setTf({...tf,instructions:e.target.value})}/></label>
+      <button className="btn">Create task</button>
+     </form>
+    </section>
+    <section className="panel">
+     <h2>Record labour and output</h2>
+     {tasks.length===0||workers.length===0?<p>Create at least one task and one worker first.</p>:<form onSubmit={saveEntry}>
+      <label>Task<select value={ef.taskId} onChange={e=>setEf({...ef,taskId:e.target.value})} required>{tasks.map(t=><option key={t._id} value={t._id}>{t.taskCode} · {t.title}</option>)}</select></label>
+      <label>Worker<select value={ef.workerCode} onChange={e=>setEf({...ef,workerCode:e.target.value})} required>{workers.map(w=><option key={w.workerCode} value={w.workerCode}>{w.workerCode} · {w.displayName}</option>)}</select></label>
+      <label>Work date<input type="date" value={ef.workDate} onChange={e=>setEf({...ef,workDate:e.target.value})} required/></label>
+      <label>Hours worked<input type="number" min="0" step="0.25" value={ef.hoursWorked} onChange={e=>setEf({...ef,hoursWorked:e.target.value})} required/></label>
+      <label>Output quantity<input type="number" min="0" step="any" value={ef.outputQuantity} onChange={e=>setEf({...ef,outputQuantity:e.target.value})} required/></label>
+      <label>Output unit<input value={ef.outputUnit} onChange={e=>setEf({...ef,outputUnit:e.target.value})}/></label>
+      <label>Labour cost (UGX)<input type="number" min="0" step="any" value={ef.labourCostUgx} onChange={e=>setEf({...ef,labourCostUgx:e.target.value})} required/></label>
+      <label>Notes<textarea value={ef.notes} onChange={e=>setEf({...ef,notes:e.target.value})}/></label>
+      <button className="btn">Save labour entry</button>
+     </form>}
+    </section>
+    <section className="panel">
+     <h2>Task register &amp; verification</h2>
+     <div style={{overflowX:'auto'}}><table>
+      <thead><tr><th>Task</th><th>Activity</th><th>Block</th><th>Worker</th><th>Date</th><th>Target</th><th>Output</th><th>Hours</th><th>Labour cost</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>{tasks.map(t=><tr key={t._id}>
+       <td>{t.taskCode} · {t.title}</td>
+       <td>{t.activity}</td>
+       <td>{t.plantationBlockId||'—'}</td>
+       <td>{workers.find(w=>w.workerCode===t.assignedWorkerCode)?.displayName||t.assignedWorkerCode||'—'}</td>
+       <td>{t.plannedDate}</td>
+       <td>{t.targetQuantity??'—'} {t.unit||''}</td>
+       <td>{t.recordedOutput??0} {t.outputUnits?.join('/')||''}</td>
+       <td>{Number(t.recordedHours||0).toFixed(1)}</td>
+       <td>{money(t.recordedLabourCostUgx)}</td>
+       <td>{t.status}</td>
+       <td>{!['verified','cancelled'].includes(t.status)&&<select value="" onChange={e=>{if(e.target.value)void updateStatus(t._id,e.target.value)}}><option value="">Change status</option>{['assigned','in_progress','submitted','verified','rejected','cancelled'].filter(s=>s!==t.status).map(s=><option key={s}>{s}</option>)}</select>}</td>
+      </tr>)}</tbody>
+     </table></div>
+     <p className="muted">Verify work against agreed quality and safety standards, not output quantity alone.</p>
+    </section>
+    <section className="panel">
+     <h2>Labour entry history</h2>
+     <div style={{overflowX:'auto'}}><table>
+      <thead><tr><th>Date</th><th>Task</th><th>Worker</th><th>Hours</th><th>Output</th><th>Unit</th><th>Labour cost</th></tr></thead>
+      <tbody>{entries.map(e=><tr key={e._id}>
+       <td>{e.workDate}</td>
+       <td>{tasks.find(t=>t._id===e.taskId)?.taskCode||e.taskId}</td>
+       <td>{workers.find(w=>w.workerCode===e.workerCode)?.displayName||e.workerCode}</td>
+       <td>{e.hoursWorked}</td>
+       <td>{e.outputQuantity}</td>
+       <td>{e.outputUnit||'—'}</td>
+       <td>{money(e.labourCostUgx)}</td>
+      </tr>)}</tbody>
+     </table></div>
+    </section>
+    <section className="panel">
+     <h2>Productivity interpretation</h2>
+     <ul>
+      <li>Compare similar activities, units, quality standards, terrain, weather and work conditions.</li>
+      <li>Use verified outputs when evaluating productivity; submitted work is not automatically accepted.</li>
+      <li>Cost per output unit uses recorded labour costs only, not materials, transport, tools or overheads.</li>
+      <li>Record time and cost honestly. Do not use productivity measures as the sole basis for disciplinary decisions.</li>
+      <li>Labour records are separate from finance transactions and need reconciliation.</li>
+     </ul>
+    </section>
+   </main>
+  </div>
+ );
 }

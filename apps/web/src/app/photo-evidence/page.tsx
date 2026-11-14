@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { getData, patchData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -306,25 +307,9 @@ export default function EvidencePage() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          {[
-            ['/', 'Dashboard'],
-            ['/field-verification', 'Field verification'],
-            ['/photo-evidence', 'Photo & video evidence'],
-            ['/case-evidence', 'Case evidence'],
-            ['/recovery-delivery', 'Delivery & audit'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <NavSidebar />
 
-      <main className="main">
+      <main id="main-content" className="main">
         <h1>Photo &amp; video evidence</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Capture or upload field photos and videos. Photos are compressed in-browser before

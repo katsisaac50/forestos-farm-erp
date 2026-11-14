@@ -1,7 +1,7 @@
 'use client';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 
 type Block = {
   _id: string;
@@ -81,7 +81,6 @@ export default function Plantations() {
 
   async function load() {
     try {
-      // Fetch both in parallel: the raw list (source of truth for editing) and the intelligence (for growth counts and totals).
       const [list, intel] = await Promise.all([
         getData<Block[]>('/plantations'),
         getData<IntelligenceResponse>('/plantations/intelligence'),
@@ -128,7 +127,6 @@ export default function Plantations() {
         nextAction: nextAction.trim() || undefined,
         notes: notes.trim() || undefined,
       });
-      // Reset form
       setBlockId('');
       setLocation('');
       setArea('');
@@ -191,117 +189,106 @@ export default function Plantations() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          <Link href="/">Dashboard</Link>
-          <Link href="/plantations">Plantations</Link>
-          <Link href="/plantation-intelligence">Plantation intelligence</Link>
-          <Link href="/growth">Growth samples</Link>
-          <Link href="/apiary">Apiary</Link>
-        </nav>
-      </aside>
+      <NavSidebar />
 
-      <main className="main">
+      <main id="main-content" className="main">
         <h1>Plantation register</h1>
         <p className="muted">One record per eucalyptus block. Click a row&apos;s Edit button to update measurements.</p>
 
         <section className="panel">
-  <div
-    style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      cursor: 'pointer',
-    }}
-    onClick={() => setFormOpen(o => !o)}
-  >
-    <h2 style={{ margin: 0 }}>
-      {formOpen ? '▾ Add block' : '▸ Add block'}
-    </h2>
-    {!formOpen && (
-      <button
-        className="btn"
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          setFormOpen(true);
-        }}
-      >
-        + New block
-      </button>
-    )}
-  </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              cursor: 'pointer',
+            }}
+            onClick={() => setFormOpen(o => !o)}
+          >
+            <h2 style={{ margin: 0 }}>
+              {formOpen ? '▾ Add block' : '▸ Add block'}
+            </h2>
+            {!formOpen && (
+              <button
+                className="btn"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFormOpen(true);
+                }}
+              >
+                + New block
+              </button>
+            )}
+          </div>
 
-  {formOpen && (
-    <form onSubmit={save} style={{ marginTop: 16 }}>
-      <label>
-        Block ID *
-        <input value={blockId} onChange={e => setBlockId(e.target.value)} required placeholder="BLK-003" />
-      </label>
-      <label>
-        Location *
-        <input value={location} onChange={e => setLocation(e.target.value)} required placeholder="East Valley" />
-      </label>
-      <label>
-        Area (acres) *
-        <input type="number" min="0" step=".1" value={area} onChange={e => setArea(e.target.value)} required />
-      </label>
-      <label>
-        Clone / provenance
-        <input value={cloneOrProvenance} onChange={e => setClone(e.target.value)} placeholder="Eucalyptus grandis" />
-      </label>
-      <label>
-        Planting date
-        <input type="date" value={plantingDate} onChange={e => setPlantingDate(e.target.value)} />
-      </label>
-      <label>
-        Initial trees
-        <input type="number" min="0" value={initial} onChange={e => setInitial(e.target.value)} />
-      </label>
-      <label>
-        Latest live trees
-        <input type="number" min="0" value={live} onChange={e => setLive(e.target.value)} />
-      </label>
-      <label>
-        Average height (m)
-        <input type="number" min="0" step=".1" value={avgHeight} onChange={e => setAvgHeight(e.target.value)} />
-      </label>
-      <label>
-        Average DBH (cm)
-        <input type="number" min="0" step=".1" value={avgDbh} onChange={e => setAvgDbh(e.target.value)} />
-      </label>
-      <label>
-        Next action
-        <input value={nextAction} onChange={e => setNextAction(e.target.value)} placeholder="Weeding round 3" />
-      </label>
-      <label>
-        Notes
-        <input value={notes} onChange={e => setNotes(e.target.value)} placeholder="Free-text notes" />
-      </label>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button className="btn" disabled={busy}>
-          {busy ? 'Saving…' : 'Save block'}
-        </button>
-        <button
-          className="btn"
-          type="button"
-          onClick={() => {
-            setFormOpen(false);
-            setFormError('');
-          }}
-          disabled={busy}
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
-  )}
+          {formOpen && (
+            <form onSubmit={save} style={{ marginTop: 16 }}>
+              <label>
+                Block ID *
+                <input value={blockId} onChange={e => setBlockId(e.target.value)} required placeholder="BLK-003" />
+              </label>
+              <label>
+                Location *
+                <input value={location} onChange={e => setLocation(e.target.value)} required placeholder="East Valley" />
+              </label>
+              <label>
+                Area (acres) *
+                <input type="number" min="0" step=".1" value={area} onChange={e => setArea(e.target.value)} required />
+              </label>
+              <label>
+                Clone / provenance
+                <input value={cloneOrProvenance} onChange={e => setClone(e.target.value)} placeholder="Eucalyptus grandis" />
+              </label>
+              <label>
+                Planting date
+                <input type="date" value={plantingDate} onChange={e => setPlantingDate(e.target.value)} />
+              </label>
+              <label>
+                Initial trees
+                <input type="number" min="0" value={initial} onChange={e => setInitial(e.target.value)} />
+              </label>
+              <label>
+                Latest live trees
+                <input type="number" min="0" value={live} onChange={e => setLive(e.target.value)} />
+              </label>
+              <label>
+                Average height (m)
+                <input type="number" min="0" step=".1" value={avgHeight} onChange={e => setAvgHeight(e.target.value)} />
+              </label>
+              <label>
+                Average DBH (cm)
+                <input type="number" min="0" step=".1" value={avgDbh} onChange={e => setAvgDbh(e.target.value)} />
+              </label>
+              <label>
+                Next action
+                <input value={nextAction} onChange={e => setNextAction(e.target.value)} placeholder="Weeding round 3" />
+              </label>
+              <label>
+                Notes
+                <input value={notes} onChange={e => setNotes(e.target.value)} placeholder="Free-text notes" />
+              </label>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button className="btn" disabled={busy}>
+                  {busy ? 'Saving…' : 'Save block'}
+                </button>
+                <button
+                  className="btn"
+                  type="button"
+                  onClick={() => {
+                    setFormOpen(false);
+                    setFormError('');
+                  }}
+                  disabled={busy}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
 
-  {formError && <p className="error">{formError}</p>}
-</section>
-
+          {formError && <p className="error">{formError}</p>}
+        </section>
 
         {error && <p className="error">{error}</p>}
 

@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -134,16 +135,6 @@ export default function Home() {
     }
   }
 
-  function signOut() {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('forestos_token');
-      localStorage.removeItem('forestos_user');
-      localStorage.removeItem('forestos_organization_id');
-      localStorage.removeItem('forestos_active_organization');
-      window.location.href = '/login';
-    }
-  }
-
   // ---- Derived values ----
   const totalAcres = plantations?.totals.areaAcres ?? 0;
   const totalInitialTrees = plantations?.totals.initialTreesRecorded ?? 0;
@@ -156,7 +147,6 @@ export default function Home() {
   const attentionHives = hives.filter(h =>
     ['Weak', 'Queenless', 'Absconded'].includes(h.colonyStatus)
   ).length;
-  const totalHoney = hives.reduce((s, h) => s + (h.honeyHarvestedKg ?? 0), 0);
 
   const criticalBlocks =
     plantations?.blocks.filter(
@@ -204,61 +194,9 @@ export default function Home() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          <Link href="/executive">Executive intelligence</Link>
-          {authed ? (
-            <button className="btn" onClick={signOut}>
-              Sign out
-            </button>
-          ) : (
-            <Link href="/login">Sign in</Link>
-          )}
-          {[
-            ['/', 'Dashboard'],
-            ['/plantations', 'Plantations'],
-            ['/plantation-intelligence', 'Plantation intelligence'],
-            ['/growth', 'Growth samples'],
-            ['/apiary', 'Apiary'],
-            ['/finance', 'Finance'],
-            ['/financial-discrepancies', 'Financial discrepancies'],
-            ['/financial-investigation-cases', 'Investigation cases'],
-            ['/case-evidence', 'Case evidence'],
-            ['/evidence-recovery-governance', 'Evidence recovery governance'],
-            ['/recovery-alerts', 'Recovery alerts'],
-            ['/recovery-escalations', 'Reminders & escalation'],
-            ['/notification-policies', 'Notification policies'],
-            ['/organizations', 'Organizations'],
-            ['/sales', 'Sales'],
-            ['/inventory', 'Inventory'],
-            ['/tasks', 'Tasks'],
-            ['/field-logs', 'Field logs'],
-            ['/inspections', 'Inspections'],
-            ['/audit', 'Audit trail'],
-            ['/insights', 'Insights'],
-            ['/cost-intelligence', 'Cost intelligence'],
-            ['/performance-strategy', 'Performance strategy'],
-            ['/performance-intelligence', 'Automated KPI integration'],
-            ['/alert-center', 'Alerts & escalation'],
-            ['/command-centre', 'Farm command centre'],
-            ['/sops', 'SOPs & work verification'],
-            ['/cashflow', 'Cash flow & capital'],
-            ['/investment', 'Investment analysis'],
-            ['/risk-management', 'Risk management'],
-            ['/maintenance', 'Maintenance & assets'],
-            ['/procurement', 'Procurement'],
-            ['/inventory-control', 'Central inventory'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <NavSidebar />
 
-      <main className="main">
+      <main id="main-content" className="main">
         <h1>Executive dashboard</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Eucalyptus forestry + beekeeping · Masulita, Wakiso, Uganda
@@ -639,21 +577,4 @@ function QuickCard({
     </Link>
   );
 }
-// Phase 21: navigate to /integration-workflows for the owner workflow queue.
-
-// Phase 22: management intelligence at /management-intelligence.
-
-// Phase 23: data integrity scan at /data-integrity.
-
-// Phase 24: backup continuity at /backup-continuity.
-
-// Phase 25: performance strategy at /performance-strategy.
-
-// Phase 26: owner-confirmed KPI integration at /performance-intelligence.
-
-// Phase 27: owner-only alert and escalation workspace at /alert-center.
-
-// Phase 28: owner-only daily farm command centre at /command-centre.
-
-// Phase 29: standard operating procedures and verified work at /sops.<a href="/worker-accountability" className="card" style={{display:"block",textDecoration:"none",marginTop:12}}><h2>Worker Performance &amp; Accountability</h2><p>Review assigned work, overdue corrective actions and inspection outcomes using recorded evidence.</p></a>
 

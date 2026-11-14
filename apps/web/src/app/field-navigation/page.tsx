@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { getData, postData } from '../../lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 
 type MapFeature = {
   _id: string;
@@ -116,61 +117,66 @@ export default function FieldNavigationPage() {
   }
 
   return (
-    <main className="page-container" style={{ maxWidth: 1150, margin: '0 auto', padding: 24 }}>
-      <header style={{ marginBottom: 20 }}>
-        <h1>Field Navigation & Map Integration</h1>
-        <p>Turn recorded map features into saved navigation targets for supervisors and field workers.</p>
-        <p><strong>Safety note:</strong> map directions are approximate. Confirm the route, access permissions, terrain, weather and local hazards before travel.</p>
-      </header>
-      {message ? <div className="card" role="status" style={{ marginBottom: 16 }}>{message}</div> : null}
-      <section className="card" style={{ marginBottom: 20 }}>
-        <h2>Map features</h2>
-        <p>Features are loaded from the Phase 33 farm map register. Polygon blocks use an approximate average-vertex point as the navigation destination.</p>
-        {loading ? <p>Loading…</p> : features.length === 0 ? <p>No map features found. Add locations in <a href="/farm-map">Farm Mapping</a> first.</p> : (
-          <div style={{ overflowX: 'auto' }}>
-            <table>
-              <thead><tr><th>Label</th><th>Type</th><th>Block</th><th>Geometry</th><th>Destination</th></tr></thead>
-              <tbody>{features.map((f) => {
-                const point = f.geometryType === 'Point'
-                  ? { latitude: f.geometry.coordinates[1], longitude: f.geometry.coordinates[0] }
-                  : polygonCentroidApprox(f.geometry.coordinates);
-                return <tr key={f._id}>
-                  <td>{f.label}</td><td>{f.featureType.replaceAll('_', ' ')}</td><td>{f.blockCode || '—'}</td><td>{f.geometryType}</td>
-                  <td>{point ? <a href={mapsUrl(point.latitude, point.longitude)} target="_blank" rel="noreferrer">Open directions</a> : 'No destination'}</td>
-                </tr>;
-              })}</tbody>
-            </table>
-          </div>
-        )}
-      </section>
-      <section className="card" style={{ marginBottom: 20 }}>
-        <h2>Save a navigation target</h2>
-        <form onSubmit={saveTarget} style={{ display: 'grid', gap: 12, maxWidth: 760 }}>
-          <label>Map feature
-            <select required value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
-              <option value="">Choose a recorded feature…</option>
-              {features.map((f) => <option key={f._id} value={f._id}>{f.label} — {f.featureType.replaceAll('_', ' ')}</option>)}
-            </select>
-          </label>
-          <label>Target title (optional)<input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={100} placeholder="Defaults to feature label" /></label>
-          <label>Block code override (optional)<input value={blockCode} onChange={(e) => setBlockCode(e.target.value)} maxLength={40} /></label>
-          <label>Field instructions (optional)<textarea value={instructions} onChange={(e) => setInstructions(e.target.value)} maxLength={500} rows={3} placeholder="e.g. Use the east track; ask supervisor before entering" /></label>
-          <button type="submit" disabled={!selected}>Save navigation target</button>
-        </form>
-      </section>
-      <section className="card">
-        <h2>Saved navigation targets</h2>
-        {targets.length === 0 ? <p>No saved targets yet.</p> : <div style={{ overflowX: 'auto' }}>
-          <table><thead><tr><th>Target</th><th>Coordinates</th><th>Block</th><th>Instructions</th><th>Map / Directions</th><th>Action</th></tr></thead>
-            <tbody>{targets.map((t) => <tr key={t._id}>
-              <td>{t.title}<br /><small>{t.targetLabel}</small></td>
-              <td>{t.latitude.toFixed(6)}, {t.longitude.toFixed(6)}</td><td>{t.blockCode || '—'}</td><td>{t.instructions || '—'}</td>
-              <td><a href={mapsUrl(t.latitude, t.longitude)} target="_blank" rel="noreferrer">Directions</a> · <a href={osmUrl(t.latitude, t.longitude)} target="_blank" rel="noreferrer">OpenStreetMap</a></td>
-              <td><button type="button" onClick={() => void archiveTarget(t._id)}>Archive</button></td>
-            </tr>)}</tbody>
-          </table>
-        </div>}
-      </section>
-    </main>
+    <div className="shell">
+      <NavSidebar />
+      <main id="main-content" className="main">
+        <div style={{ maxWidth: 1150, margin: '0 auto' }}>
+          <header style={{ marginBottom: 20 }}>
+            <h1>Field Navigation &amp; Map Integration</h1>
+            <p>Turn recorded map features into saved navigation targets for supervisors and field workers.</p>
+            <p><strong>Safety note:</strong> map directions are approximate. Confirm the route, access permissions, terrain, weather and local hazards before travel.</p>
+          </header>
+          {message ? <div className="card" role="status" style={{ marginBottom: 16 }}>{message}</div> : null}
+          <section className="card" style={{ marginBottom: 20 }}>
+            <h2>Map features</h2>
+            <p>Features are loaded from the Phase 33 farm map register. Polygon blocks use an approximate average-vertex point as the navigation destination.</p>
+            {loading ? <p>Loading…</p> : features.length === 0 ? <p>No map features found. Add locations in <a href="/farm-map">Farm Mapping</a> first.</p> : (
+              <div style={{ overflowX: 'auto' }}>
+                <table>
+                  <thead><tr><th>Label</th><th>Type</th><th>Block</th><th>Geometry</th><th>Destination</th></tr></thead>
+                  <tbody>{features.map((f) => {
+                    const point = f.geometryType === 'Point'
+                      ? { latitude: f.geometry.coordinates[1], longitude: f.geometry.coordinates[0] }
+                      : polygonCentroidApprox(f.geometry.coordinates);
+                    return <tr key={f._id}>
+                      <td>{f.label}</td><td>{f.featureType.replaceAll('_', ' ')}</td><td>{f.blockCode || '—'}</td><td>{f.geometryType}</td>
+                      <td>{point ? <a href={mapsUrl(point.latitude, point.longitude)} target="_blank" rel="noreferrer">Open directions</a> : 'No destination'}</td>
+                    </tr>;
+                  })}</tbody>
+                </table>
+              </div>
+            )}
+          </section>
+          <section className="card" style={{ marginBottom: 20 }}>
+            <h2>Save a navigation target</h2>
+            <form onSubmit={saveTarget} style={{ display: 'grid', gap: 12, maxWidth: 760 }}>
+              <label>Map feature
+                <select required value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
+                  <option value="">Choose a recorded feature…</option>
+                  {features.map((f) => <option key={f._id} value={f._id}>{f.label} — {f.featureType.replaceAll('_', ' ')}</option>)}
+                </select>
+              </label>
+              <label>Target title (optional)<input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={100} placeholder="Defaults to feature label" /></label>
+              <label>Block code override (optional)<input value={blockCode} onChange={(e) => setBlockCode(e.target.value)} maxLength={40} /></label>
+              <label>Field instructions (optional)<textarea value={instructions} onChange={(e) => setInstructions(e.target.value)} maxLength={500} rows={3} placeholder="e.g. Use the east track; ask supervisor before entering" /></label>
+              <button type="submit" disabled={!selected}>Save navigation target</button>
+            </form>
+          </section>
+          <section className="card">
+            <h2>Saved navigation targets</h2>
+            {targets.length === 0 ? <p>No saved targets yet.</p> : <div style={{ overflowX: 'auto' }}>
+              <table><thead><tr><th>Target</th><th>Coordinates</th><th>Block</th><th>Instructions</th><th>Map / Directions</th><th>Action</th></tr></thead>
+                <tbody>{targets.map((t) => <tr key={t._id}>
+                  <td>{t.title}<br /><small>{t.targetLabel}</small></td>
+                  <td>{t.latitude.toFixed(6)}, {t.longitude.toFixed(6)}</td><td>{t.blockCode || '—'}</td><td>{t.instructions || '—'}</td>
+                  <td><a href={mapsUrl(t.latitude, t.longitude)} target="_blank" rel="noreferrer">Directions</a> · <a href={osmUrl(t.latitude, t.longitude)} target="_blank" rel="noreferrer">OpenStreetMap</a></td>
+                  <td><button type="button" onClick={() => void archiveTarget(t._id)}>Archive</button></td>
+                </tr>)}</tbody>
+              </table>
+            </div>}
+          </section>
+        </div>
+      </main>
+    </div>
   );
 }
