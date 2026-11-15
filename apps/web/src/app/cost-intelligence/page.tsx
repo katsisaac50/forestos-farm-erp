@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 
 type Plan = {_id:string;budgetCode:string;name:string;periodStart:string;periodEnd:string;plantationBlockId?:string;activity:string;budgetUgx:number;plannedOutputQuantity?:number;plannedOutputUnit?:string;assumptions?:string;status:string;actualUgx:number;varianceUgx:number;variancePercent:number|null;allocationCount:number};
 type Allocation = {_id:string;planId?:string;plantationBlockId?:string;activity:string;category:string;amountUgx:number;date:string;sourceModule:string;sourceReference?:string;note?:string};
@@ -17,7 +18,7 @@ export default function CostIntelligence(){
  async function savePlan(e:React.FormEvent){e.preventDefault();setError('');setNotice('');try{await postData('/cost-intelligence/plans',{...plan,budgetUgx:Number(plan.budgetUgx),plannedOutputQuantity:plan.plannedOutputQuantity===''?undefined:Number(plan.plannedOutputQuantity)});setPlan(blankPlan());setNotice('Budget plan saved.');await load()}catch(e){setError(e instanceof Error?e.message:'Could not save budget plan.')}}
  async function saveAllocation(e:React.FormEvent){e.preventDefault();setError('');setNotice('');try{await postData('/cost-intelligence/allocations',{...allocation,planId:allocation.planId||undefined,plantationBlockId:allocation.plantationBlockId||undefined,amountUgx:Number(allocation.amountUgx)});setAllocation(blankAllocation());setNotice('Cost allocation saved.');await load()}catch(e){setError(e instanceof Error?e.message:'Could not save cost allocation.')}}
  const field='field';
- return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Masulita Green Farms</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/executive">Executive intelligence</Link><Link href="/plantations">Plantations</Link><Link href="/plantation-intelligence">Plantation intelligence</Link><Link href="/harvest-planning">Harvest planning</Link><Link href="/regeneration">Regeneration</Link><Link href="/nursery">Nursery</Link><Link href="/workforce">Workforce</Link><Link href="/finance">Finance</Link><Link href="/cost-intelligence">Cost intelligence</Link></nav></aside><main className="main">
+ return <div className="shell"><NavSidebar /><main id="main-content" className="main">
  <h1>Farm operations & cost intelligence</h1><p className="muted">Budget plans, explicitly recorded cost allocations and variance tracking · UGX</p>
  {error&&<div className="notice error">{error}</div>}{notice&&<div className="notice">{notice}</div>}
  <div className="grid"><div className="card"><div className="muted">Budgeted across plans</div><div className="metric">{money(data.totalBudgetUgx)}</div></div><div className="card"><div className="muted">Allocations linked to plans</div><div className="metric">{money(data.totalPlannedActualUgx)}</div></div><div className="card"><div className="muted">All recorded allocations</div><div className="metric">{money(data.totalAllocationsUgx)}</div></div><div className="card"><div className="muted">Unassigned allocations</div><div className="metric">{money(data.unassignedAllocationsUgx)}</div></div></div>

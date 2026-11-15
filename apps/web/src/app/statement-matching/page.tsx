@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { NavSidebar } from "@/components/NavSidebar";
 import { getData, postData } from "../../lib/api";
 
 type Row = { _id: string; rowNumber: number; date: string; amountUgx: number; direction: string; description: string; reference?: string; matchStatus: string; suggestedTransactionId?: string; matchReason?: string; matchedTransactionId?: string };
@@ -54,8 +54,7 @@ export default function StatementMatchingPage() {
     finally { setLoading(false); }
   }
   const inputStyle: React.CSSProperties = { display: "block", width: "100%", padding: "10px", marginTop: "5px", border: "1px solid #cbd5e1", borderRadius: "8px" };
-  return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Financial controls</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/financial-reconciliation">Financial reconciliation</Link><Link href="/monthly-financial-report">Monthly financial report</Link><Link href="/finance">Finance ledger</Link></nav></aside>
-  <main className="main"><p className="eyebrow">PHASE 47 · STATEMENT MATCHING</p><h1>Statement import &amp; transaction matching</h1>
+  return <div className="shell"><NavSidebar /><main id="main-content" className="main"><p className="eyebrow">PHASE 47 · STATEMENT MATCHING</p><h1>Statement import &amp; transaction matching</h1>
   <p className="muted">Import a CSV statement, inspect exact-match suggestions and confirm matches manually. Imported rows never create finance ledger transactions.</p>
   <section className="panel"><h2>Import CSV statement</h2><p>Required headers: Date, Amount, Description. Optional: Direction, Reference. Amounts are interpreted as UGX. Without Direction, positive values are income and negative values are expenses.</p>
   <form onSubmit={importFile}><div className="grid">

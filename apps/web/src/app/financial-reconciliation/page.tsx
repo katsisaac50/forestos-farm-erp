@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { NavSidebar } from "@/components/NavSidebar";
 import { getData, postData, patchData } from "../../lib/api";
 
 type Reconciliation = {
@@ -53,8 +53,7 @@ export default function FinancialReconciliationPage() {
     catch (e) { setError(e instanceof Error ? e.message : "Could not update review."); }
   }
   const inputStyle: React.CSSProperties = { display: "block", width: "100%", padding: "10px", marginTop: "5px", border: "1px solid #cbd5e1", borderRadius: "8px" };
-  return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Financial controls</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/monthly-financial-report">Monthly financial report</Link><Link href="/finance">Finance ledger</Link><Link href="/cashflow">Cash flow &amp; capital</Link><Link href="/management-intelligence">Management intelligence</Link></nav></aside>
-  <main className="main"><p className="eyebrow">PHASE 46 · CASH CONTROL</p><h1>Financial reconciliation</h1>
+  return <div className="shell"><NavSidebar /><main id="main-content" className="main"><p className="eyebrow">PHASE 46 · CASH CONTROL</p><h1>Financial reconciliation</h1>
   <p className="muted">Record a statement or counted balance, calculate its expected closing balance, compare the difference and log an owner review.</p>
   <section className="panel"><label>Month<input style={inputStyle} type="month" value={month} onChange={e => setMonth(e.target.value)} /></label></section>
   <section className="panel"><h2>New reconciliation snapshot</h2><p className="muted">Use one record per account and month. The saved ledger totals are shown for context; they are not automatically matched to this individual account.</p>

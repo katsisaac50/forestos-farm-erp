@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getData } from "../../lib/api";
+import { NavSidebar } from "@/components/NavSidebar";
 type Scorecard = {
  month:string; generatedAt:string; summary:Record<string,number>;
  investigationQueue:Array<{investigationId:string;title:string;priority:string;status:string;assignedTo:string;dueDate:string;overdue:boolean}>;
@@ -21,8 +22,7 @@ export default function FinancialGovernancePage(){
  ["Possible duplicate groups","possibleDuplicateGroups"],["Statement matching rate","matchingRatePercent"],
  ["Average resolution time (days)","averageResolutionDays"],["Ledger transactions","ledgerTransactions"]
  ];
- return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Financial governance</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/financial-exceptions">Financial exceptions</Link><Link href="/financial-investigations">Investigations</Link><Link href="/financial-reconciliation">Reconciliation</Link><Link href="/statement-matching">Statement matching</Link><Link href="/monthly-financial-report">Monthly report</Link></nav></aside>
- <main className="main"><p className="eyebrow">PHASE 50 · FINANCIAL GOVERNANCE</p><h1>Financial governance scorecard</h1><p className="muted">An owner-level view of open control issues, statement matching and investigation performance. Indicators help prioritise review; they do not establish fraud.</p>
+ return <div className="shell"><NavSidebar /><main id="main-content" className="main"><p className="eyebrow">PHASE 50 · FINANCIAL GOVERNANCE</p><h1>Financial governance scorecard</h1><p className="muted">An owner-level view of open control issues, statement matching and investigation performance. Indicators help prioritise review; they do not establish fraud.</p>
  <section className="panel"><label>Report month<input className="input" type="month" value={month} onChange={e=>setMonth(e.target.value)}/></label> <button className="btn" onClick={()=>void load()} disabled={loading}>{loading?"Loading…":"Refresh"}</button>{error&&<p role="alert">{error}</p>}{report&&<p className="muted">Generated {new Date(report.generatedAt).toLocaleString()}</p>}</section>
  {report&&<><div className="grid">{metrics.map(([label,key])=><div className="card" key={key}><div className="muted">{label}</div><div className="metric">{key==="matchingRatePercent"?`${report.summary[key]??0}%`:report.summary[key]??0}</div></div>)}</div>
  {report.dataLimitsReached&&<section className="panel"><h2>Data coverage warning</h2><ul>{report.warnings.map((w,i)=><li key={i}>{w}</li>)}</ul></section>}

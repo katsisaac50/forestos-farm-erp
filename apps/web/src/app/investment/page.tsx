@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 type Scenario={_id:string;scenarioCode:string;name:string;businessLine:string;startDate:string;horizonYears:number;initialInvestmentUgx:number;annualOperatingCostUgx:number;annualRevenueUgx:number;annualRevenueGrowthPct:number;annualCostGrowthPct:number;discountRatePct:number;contingencyPct:number;residualValueUgx?:number;assumptions?:string;status:string;analysis:any};
 type Decision={_id:string;decisionCode:string;scenarioId:string;decisionDate:string;decision:string;rationale:string;conditions?:string};
 const today=new Date().toISOString().slice(0,10);
@@ -16,7 +17,8 @@ export default function Investment(){
  async function changeStatus(id:string,status:string){try{await patchData(`/investment/scenarios/${id}/status`,{status});setNotice(`Scenario status updated to ${status}.`);await load()}catch(e){setError(e instanceof Error?e.message:'Could not update scenario.')}}
  async function saveDecision(e:React.FormEvent){e.preventDefault();try{await postData('/investment/decisions',decision);setDecision({...blankDecision(),scenarioId:data.scenarios[0]?._id||''});setNotice('Investment decision recorded.');await load()}catch(e){setError(e instanceof Error?e.message:'Could not save decision.')}}
  const selectedScenario=(data.scenarios||[]).find((s:Scenario)=>s._id===selected)||(data.scenarios||[])[0];
- return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Masulita Green Farms</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/executive">Executive intelligence</Link><Link href="/cashflow">Cash flow & capital</Link><Link href="/cost-intelligence">Cost intelligence</Link><Link href="/plantations">Plantations</Link><Link href="/plantation-intelligence">Plantation intelligence</Link><Link href="/harvest-planning">Harvest planning</Link><Link href="/regeneration">Regeneration</Link><Link href="/nursery">Nursery</Link><Link href="/workforce">Workforce</Link><Link href="/investment">Investment analysis</Link></nav></aside><main className="main">
+ return <div className="shell"><NavSidebar />
+ <main id="main-content" className="main">
  <h1>Strategic Investment Analysis</h1><p className="muted">Phase 16 · Compare eucalyptus, beekeeping and farm investment scenarios using transparent assumptions.</p>
  {error&&<div className="notice error">{error}</div>}{notice&&<div className="notice">{notice}</div>}
  <div className="notice"><strong>Decision warning:</strong> model outputs are not forecasts or guaranteed returns. Use supplier quotes, buyer evidence, local yield data, taxes, inflation, working capital, timing of harvest, and independent review before approving an investment. The model currently uses annual, pre-tax nominal cash flows and does not model financing or working-capital changes.</div>

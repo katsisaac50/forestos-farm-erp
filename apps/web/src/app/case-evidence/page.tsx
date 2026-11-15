@@ -1,7 +1,7 @@
 "use client";
 import {useCallback,useEffect,useState} from "react";
-import Link from "next/link";
 import {getData,postData} from "../../lib/api";
+import {NavSidebar} from "@/components/NavSidebar";
 type Ev={_id:string;caseId:string;caseCode:string;evidenceCode:string;originalFileName:string;mimeType:string;sizeBytes:number;sha256:string;uploadedBy:string;status:string;description?:string};
 type Event={eventType:string;actor:string;reason:string;createdAt?:string};
 export default function Page(){
@@ -17,7 +17,7 @@ export default function Page(){
   }
   async function download(r:Ev){try{const token=localStorage.getItem("forestos_token");const response=await fetch((process.env.NEXT_PUBLIC_API_URL||"http://localhost:4000/api")+`/case-evidence/${r._id}/download`,{headers:token?{Authorization:`Bearer ${token}`}:{},cache:"no-store"});if(!response.ok)throw new Error(await response.text());const blob=await response.blob();const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=r.originalFileName;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);setNotice("Download passed server-side SHA-256 and size verification.")}catch(e){setError(e instanceof Error?e.message:"Download failed");await load()}}
   async function action(kind:"review"|"quarantine"){if(!selected)return;const reason=window.prompt(kind==="review"?"Reason for review?":"Reason for quarantine?");if(!reason?.trim())return;try{await postData(`/case-evidence/${selected._id}/${kind}`,{reason});setNotice(kind==="review"?"Review recorded":"Evidence quarantined");await load();await inspect(selected)}catch(e){setError(e instanceof Error?e.message:"Action failed")}}
-  return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Masulita Green Farms</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/financial-investigation-cases">Investigation cases</Link><Link href="/financial-discrepancies">Financial discrepancies</Link><Link href="/evidence-storage-operations">Evidence storage recovery</Link><Link href="/evidence-recovery-governance">Recovery governance</Link></nav></aside><main className="main">
+  return <div className="shell"><NavSidebar /><main id="main-content" className="main">
   <div className="pageHeader"><div><p className="eyebrow">AUDIT CONTROL · PHASE 72</p><h1>Case evidence register</h1><p className="muted">Inspect evidence metadata, review records, and view audit history.</p></div></div>
   {error&&<div className="card error">{error}</div>}{notice&&<div className="card">{notice}</div>}
   <div className="panel"><h2>Find evidence by case</h2><label>Investigation case ID<input value={caseId} onChange={e=>setCaseId(e.target.value)} placeholder="Paste case ID"/></label><button className="btn" onClick={()=>void load()}>Load evidence</button></div>

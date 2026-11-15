@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getData, postData, patchData } from "../../lib/api";
+import { NavSidebar } from "@/components/NavSidebar";
 
 type CloseRecord = {
   _id: string; month: string; status: string; cashCountUgx: number;
@@ -62,8 +63,8 @@ export default function MonthlyFinancialClosePage() {
   catch(e){setError(e instanceof Error?e.message:"Could not reopen period.");}
  }
  const closed = data?.close?.status==="closed";
- return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Monthly financial close</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/finance">Finance ledger</Link><Link href="/financial-reconciliation">Reconciliation</Link><Link href="/capital-spend-verification">Capital spending</Link><Link href="/financial-audit-trail">Audit trail</Link></nav></aside>
- <main className="main"><p className="eyebrow">PHASE 60 · FINANCIAL CLOSE & SYSTEM FINE-TUNING</p><h1>Monthly Financial Close</h1><p className="muted">A controlled month-end checklist connecting reconciliation, unresolved issues, capital spend evidence, backup confirmation and management sign-off.</p>
+ return <div className="shell"><NavSidebar />
+ <main id="main-content" className="main"><p className="eyebrow">PHASE 60 · FINANCIAL CLOSE & SYSTEM FINE-TUNING</p><h1>Monthly Financial Close</h1><p className="muted">A controlled month-end checklist connecting reconciliation, unresolved issues, capital spend evidence, backup confirmation and management sign-off.</p>
  <section className="panel"><div className="grid" style={{gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",marginTop:0}}><label>Reporting month<input className="input" type="month" value={month} onChange={e=>{setMonth(e.target.value);void load(e.target.value)}}/></label><div><div className="muted">Period status</div><div className="metric" style={{fontSize:20}}>{data?.close?.status||"Not started"}</div></div><div><div className="muted">Open escalations</div><div className="metric">{data?.controlSummary.openEscalationCount??"—"}</div></div><div><div className="muted">Pending capital spend</div><div className="metric" style={{fontSize:20}}>{money(data?.pendingCapitalSpendUgx||0)}</div></div></div><button className="btn" disabled={loading} onClick={()=>void load(month)}>{loading?"Loading…":"Refresh source records"}</button>{error&&<p className="alert danger" role="alert">{error}</p>}{notice&&<p className="alert success" role="status">{notice}</p>}</section>
  {data&&<><section className="panel"><h2>Source control snapshot</h2><div className="tableWrap"><table className="table"><thead><tr><th>Control</th><th>Result</th></tr></thead><tbody>
  <tr><td>Account reconciliations</td><td>{data.controlSummary.reviewedReconciliations??0} reviewed / {data.controlSummary.reconciliationCount??0} recorded</td></tr>

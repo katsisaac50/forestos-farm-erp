@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -327,27 +328,9 @@ export default function CashflowPage() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          {[
-            ['/', 'Dashboard'],
-            ['/finance', 'Finance'],
-            ['/cashflow', 'Cash flow & capital'],
-            ['/investment', 'Investment analysis'],
-            ['/cost-intelligence', 'Cost intelligence'],
-            ['/financial-investigation-cases', 'Investigation cases'],
-            ['/capital-allocation', 'Capital allocation'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+      <NavSidebar />
 
-      <main className="main">
+      <main id="main-content" className="main">
         <h1>Cash flow &amp; capital allocation</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Liquidity planning, reserves, and disciplined reinvestment · UGX

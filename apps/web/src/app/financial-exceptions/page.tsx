@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useState} from "react";
-import Link from "next/link";
 import {getData} from "../../lib/api";
+import { NavSidebar } from "@/components/NavSidebar";
 type R={month:string;generatedAt:string;dataLimits:{transactionsCapped:boolean;importsCapped:boolean;statementRowsCapped:boolean};summary:Record<string,number>;missingReceipts:any[];duplicateCandidates:any[];statementImports:any[];unmatchedStatementRows:any[];reconciliationExceptions:any[];notes:string[]};
 const fmt=(n:number)=>new Intl.NumberFormat("en-UG",{style:"currency",currency:"UGX",maximumFractionDigits:0}).format(Number(n)||0);
 export default function FinancialExceptionsPage(){
@@ -15,8 +15,7 @@ export default function FinancialExceptionsPage(){
  ...report.reconciliationExceptions.map(r=>["Reconciliation exception",r.month,r.accountName,String(r.closingDifferenceUgx),r.notes||"",r.status])];
  const data=rows.map(row=>row.map((v: any)=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\r\n");const u=URL.createObjectURL(new Blob([data],{type:"text/csv;charset=utf-8;"}));const a=document.createElement("a");a.href=u;a.download=`forestos-exceptions-${month}.csv`;a.click();URL.revokeObjectURL(u)}
  const cards=[["Ledger transactions","ledgerTransactions"],["Missing receipt references","missingReceiptCount"],["Possible duplicate groups","duplicateCandidateGroups"],["Unmatched statement rows","statementUnmatchedCount"],["Suggested matches","statementSuggestedCount"],["Reconciliations needing attention","reconciliationNeedsAttention"]];
- return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Financial intelligence</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/statement-matching">Statement matching</Link><Link href="/financial-reconciliation">Financial reconciliation</Link><Link href="/monthly-financial-report">Monthly report</Link><Link href="/finance">Finance ledger</Link></nav></aside>
- <main className="main"><p className="eyebrow">PHASE 48 · EXCEPTION REPORTING</p><h1>Financial intelligence &amp; exception report</h1><p className="muted">Read-only owner dashboard for records that may need attention. Indicators are not fraud findings.</p>
+ return <div className="shell"><NavSidebar /><main id="main-content" className="main"><p className="eyebrow">PHASE 48 · EXCEPTION REPORTING</p><h1>Financial intelligence &amp; exception report</h1><p className="muted">Read-only owner dashboard for records that may need attention. Indicators are not fraud findings.</p>
  <section className="panel"><label>Report month<input className="input" type="month" value={month} onChange={e=>setMonth(e.target.value)}/></label> <button className="btn" onClick={()=>void load()} disabled={loading}>{loading?"Loading…":"Refresh"}</button> <button className="btn" onClick={csv} disabled={!report}>Export CSV</button>{error&&<p role="alert">{error}</p>}{report&&<p className="muted">Generated {new Date(report.generatedAt).toLocaleString()}</p>}</section>
  {report&&<><div className="grid">{cards.map(([label,key])=><div className="card" key={key}><div className="muted">{label}</div><div className="metric">{report.summary[key]??0}</div></div>)}</div>
  {(report.dataLimits.transactionsCapped||report.dataLimits.importsCapped||report.dataLimits.statementRowsCapped)&&<section className="panel"><p role="alert">A data limit was reached. Some results may be incomplete; do not treat this report as exhaustive.</p></section>}

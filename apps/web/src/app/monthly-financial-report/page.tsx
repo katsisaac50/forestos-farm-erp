@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getData } from "../../lib/api";
+import { NavSidebar } from "@/components/NavSidebar";
 
 type LedgerRow = {
   id: string; transactionId: string; date: string; direction: "Income" | "Expense" | "Transfer";
@@ -45,8 +46,8 @@ export default function MonthlyFinancialReportPage() {
   };
 
   const records = useMemo(() => report?.records ?? [], [report]);
-  return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Monthly financial reporting</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/reinvestment-intelligence">Reinvestment intelligence</Link><Link href="/budget-execution">Budget execution</Link><Link href="/resource-planning">Resource planning</Link><Link href="/finance">Finance ledger</Link><Link href="/cost-intelligence">Cost intelligence</Link><Link href="/cashflow">Cash flow &amp; capital</Link><Link href="/management-intelligence">Management intelligence</Link></nav></aside>
-  <main className="main"><p className="eyebrow">PHASE 44 · PERSISTENT FINANCIAL REPORTING</p><h1>Monthly financial report</h1>
+  return <div className="shell"><NavSidebar />
+  <main id="main-content" className="main"><p className="eyebrow">PHASE 44 · PERSISTENT FINANCIAL REPORTING</p><h1>Monthly financial report</h1>
   <p className="muted">Owner-only report generated from existing saved finance ledger transactions. It is read-only and does not create duplicate ledger entries.</p>
   <section className="panel"><div className="grid"><label>Report month<input className="input" type="month" value={month} onChange={e => setMonth(e.target.value)} /></label><div><div className="muted">Report source</div><strong>Saved finance ledger</strong></div><div><div className="muted">Last generated</div><strong>{report?.generatedAt ? new Date(report.generatedAt).toLocaleString() : "—"}</strong></div></div>
   <div className="row" style={{ marginTop: 12 }}><button className="btn" onClick={() => setRefresh(v => v + 1)} disabled={loading}>Refresh report</button><button className="btn" onClick={csv} disabled={!report}>Export CSV</button></div>

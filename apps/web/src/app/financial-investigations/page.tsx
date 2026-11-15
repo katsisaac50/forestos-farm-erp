@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useState} from "react";
-import Link from "next/link";
 import {getData,postData,patchData} from "../../lib/api";
+import { NavSidebar } from "@/components/NavSidebar";
 type Item={investigationId:string;month:string;exceptionType:string;sourceReference:string;title:string;description:string;priority:string;status:string;assignedTo:string;dueDate:string;evidenceReference?:string;resolutionNote?:string;history:any[]};
 const monthNow=new Date().toISOString().slice(0,7);
 const style:React.CSSProperties={display:"block",width:"100%",padding:"10px",marginTop:"5px",border:"1px solid #cbd5e1",borderRadius:"8px"};
@@ -11,8 +11,7 @@ export default function FinancialInvestigationsPage(){
  useEffect(()=>{void load()},[month]);
  async function create(e:React.FormEvent){e.preventDefault();setError("");setMessage("");setLoading(true);try{await postData("/financial-investigations",{month,exceptionType:type,sourceReference:ref,title,description,priority,assignedTo:assigned,dueDate:new Date(due+"T12:00:00").toISOString()});setMessage("Investigation created.");setTitle("");setRef("");setDescription("");await load()}catch(e){setError(e instanceof Error?e.message:"Could not create investigation")}finally{setLoading(false)}}
  async function update(id:string,body:any){setError("");setMessage("");setLoading(true);try{await patchData(`/financial-investigations/${id}`,body);setMessage("Investigation updated.");await load()}catch(e){setError(e instanceof Error?e.message:"Could not update investigation")}finally{setLoading(false)}}
- return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Financial governance</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/financial-exceptions">Financial exceptions</Link><Link href="/statement-matching">Statement matching</Link><Link href="/financial-reconciliation">Reconciliation</Link></nav></aside>
- <main className="main"><p className="eyebrow">PHASE 49 · INVESTIGATION WORKFLOW</p><h1>Financial investigations &amp; corrective actions</h1><p className="muted">Create an investigation from an exception, assign responsibility, capture evidence references and document resolution. Creating an investigation does not change ledger transactions.</p>
+ return <div className="shell"><NavSidebar /><main id="main-content" className="main"><p className="eyebrow">PHASE 49 · INVESTIGATION WORKFLOW</p><h1>Financial investigations &amp; corrective actions</h1><p className="muted">Create an investigation from an exception, assign responsibility, capture evidence references and document resolution. Creating an investigation does not change ledger transactions.</p>
  <section className="panel"><label>Filter month<input className="input" type="month" value={month} onChange={e=>setMonth(e.target.value)}/></label><button className="btn" onClick={()=>void load()} disabled={loading}>Refresh</button>{error&&<p role="alert">{error}</p>}{message&&<p>{message}</p>}</section>
  <section className="panel"><h2>Open a financial investigation</h2><form onSubmit={create}><div className="grid">
  <label>Exception type<select style={style} value={type} onChange={e=>setType(e.target.value)}><option>Missing receipt</option><option>Possible duplicate</option><option>Unmatched statement row</option><option>Reconciliation difference</option><option>Other</option></select></label>

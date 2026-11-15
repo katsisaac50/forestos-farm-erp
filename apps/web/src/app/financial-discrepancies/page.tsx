@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { NavSidebar } from "@/components/NavSidebar";
 import { getData } from "../../lib/api";
 
 type Finding = { code: string; severity: string; spendRecordId?: string; relatedSpendRecordId?: string | null; message: string };
@@ -45,9 +45,7 @@ export default function FinancialDiscrepanciesPage() {
   }, [report, line, search, severity]);
 
   const findingCount = (r: Report | null, sev?: string) => (r?.proposals || []).reduce((n, p) => n + p.findings.filter(f => !sev || f.severity === sev).length, 0);
-  return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Masulita Green Farms</div><nav className="nav">
-    <Link href="/">Dashboard</Link><Link href="/capital-spend-verification">Capital spending</Link><Link href="/financial-reconciliation">Statement reconciliation</Link><Link href="/financial-discrepancies">Financial discrepancies</Link><Link href="/audit">Audit trail</Link>
-  </nav></aside><main className="main">
+  return <div className="shell"><NavSidebar /><main id="main-content" className="main">
     <div className="pageHeader"><div><p className="eyebrow">FINANCIAL CONTROL · PHASE 70</p><h1>Financial discrepancies</h1><p className="muted">Read-only view of differences found by the reconciliation service. Investigate before taking corrective action.</p></div><button className="btn" onClick={() => void load()} disabled={loading}>{loading ? "Refreshing…" : "Refresh report"}</button></div>
     {error && <div className="card error"><strong>Could not load report</strong><p>{error}</p><p>Check the API is running and sign in with an authorised owner account.</p></div>}
     {report && <>

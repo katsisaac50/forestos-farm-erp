@@ -1,6 +1,6 @@
 "use client";
 import {useMemo,useState} from "react";
-import Link from "next/link";
+import { NavSidebar } from "@/components/NavSidebar";
 
 type Activity={id:number;title:string;block:string;priority:"critical"|"high"|"medium"|"low";hours:number;labourRate:number;materials:number;deadline:string;reason:string};
 const initial:Activity[]=[
@@ -20,7 +20,8 @@ export default function ResourcePlanningPage(){
  const planned=rows.map(a=>{const fits=a.estimatedCost<=remaining; if(fits)remaining-=a.estimatedCost; return {...a,proposed:fits,remainingAfter:remaining};});
  const total=rows.reduce((s,a)=>s+a.estimatedCost,0),proposedTotal=planned.filter(a=>a.proposed).reduce((s,a)=>s+a.estimatedCost,0);
  function add(){if(!title.trim()){setReason("Enter an activity title before adding.");return}const h=Math.max(0,Number(hours)||0),m=Math.max(0,Number(materials)||0);setActivities(p=>[...p,{id:nextId,title:title.trim(),block:block.trim()||"Block not specified",priority,hours:h,labourRate:Math.max(0,Number(rate)||0),materials:m,deadline,reason:reason.trim()}]);setNextId(x=>x+1);setTitle("");setBlock("");setHours("2");setMaterials("0");setDeadline("");setReason("");}
- return <div className="shell"><aside className="sidebar"><div className="brand">🌳 ForestOS</div><div className="sub">Resource allocation</div><nav className="nav"><Link href="/">Dashboard</Link><Link href="/operations-intelligence">Operations intelligence</Link><Link href="/corrective-actions">Corrective actions</Link><Link href="/field-inspections">Field inspections</Link><Link href="/cost-intelligence">Cost intelligence</Link><Link href="/cashflow">Cash flow &amp; capital</Link><Link href="/workforce">Workforce</Link></nav></aside><main className="main">
+ return <div className="shell"><NavSidebar />
+ <main id="main-content" className="main">
  <p className="eyebrow">PHASE 40 · RESOURCE ALLOCATION</p><h1>Farm resource allocation planner</h1><p className="muted">Prepare a proposed work plan that respects cash reserves and existing commitments. Estimates are planning inputs, not approved spending.</p>
  <div className="grid"><section className="card"><label>Cash available (UGX)<input className="input" type="number" min="0" value={cash} onChange={e=>setCash(e.target.value)}/></label></section><section className="card"><label>Minimum cash reserve (UGX)<input className="input" type="number" min="0" value={reserve} onChange={e=>setReserve(e.target.value)}/></label></section><section className="card"><label>Other commitments (UGX)<input className="input" type="number" min="0" value={commitments} onChange={e=>setCommitments(e.target.value)}/></label></section><section className="card"><label>Default labour rate (UGX/hour)<input className="input" type="number" min="0" value={rate} onChange={e=>setRate(e.target.value)}/></label></section></div>
  <div className="grid" style={{marginTop:12}}><div className="card"><div className="muted">Spendable planning ceiling</div><div className="metric">{money(available)}</div></div><div className="card"><div className="muted">All listed activities</div><div className="metric">{money(total)}</div></div><div className="card"><div className="muted">Proposed fit within ceiling</div><div className="metric">{money(proposedTotal)}</div></div><div className="card"><div className="muted">Not proposed within ceiling</div><div className="metric">{money(Math.max(0,total-proposedTotal))}</div></div></div>
