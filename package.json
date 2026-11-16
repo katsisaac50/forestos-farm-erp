@@ -1,0 +1,13 @@
+{
+  "name": "forestos",
+  "private": true,
+  "scripts": {
+    "build:web": "cd apps/web && npm run build",
+    "build:api": "cd apps/api && npm run build",
+    "build": "npm run build:web && npm run build:api",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
