@@ -941,7 +941,7 @@ th,
 /* Legacy 800px rule from base shell */
 @media (max-width: 800px) {
   .shell { grid-template-columns: 1fr; }
-  .nav { display: flex; gap: 8px; overflow: auto; }
+  /* .nav { display: flex; gap: 8px; overflow: auto; } */
   .main { padding: 16px; }
   .grid { grid-template-columns: repeat(2, 1fr); }
 }
