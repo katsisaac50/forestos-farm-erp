@@ -180,7 +180,7 @@ const NAV_GROUPS: NavGroup[] = [
 
 const DESKTOP_QUERY = '(min-width: 1025px)';
 const STORAGE_KEY = 'forestos_nav_open_groups';
-const DESKTOP_DEFAULT_GROUPS = NAV_GROUPS.map(g => g.id);
+const INITIALIZED_KEY = 'forestos_nav_initialized';
 
 function matchGroupForPath(pathname: string): string | undefined {
   let best: { id: string; len: number } | undefined;
@@ -203,7 +203,7 @@ export function NavSidebar() {
   const [user, setUser] = useState<User | null>(null);
   const [authed, setAuthed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [openGroups, setOpenGroups] = useState<string[]>(DESKTOP_DEFAULT_GROUPS);
+  const [openGroups, setOpenGroups] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [hasUserToggled, setHasUserToggled] = useState(false);
 
@@ -225,45 +225,45 @@ export function NavSidebar() {
       .catch(() => setUser(null));
   }, []);
 
-  /* ---------- Hydrate: read stored groups + track desktop/mobile ---------- */
+  /* ---------- Hydrate: first visit = auto-open active; else restore saved ---------- */
   useEffect(() => {
     const mq = window.matchMedia(DESKTOP_QUERY);
     const onMqChange = (e: MediaQueryListEvent) => {
-      if (e.matches) {
-        // Entered desktop: open all groups, close any mobile drawer.
-        setMobileOpen(false);
-        setOpenGroups(DESKTOP_DEFAULT_GROUPS);
-      } else {
-        // Entered mobile: accordion — only active page's group open.
-        const activeId = matchGroupForPath(pathnameRef.current);
-        setOpenGroups(activeId ? [activeId] : []);
-      }
+      if (e.matches) setMobileOpen(false);
     };
     mq.addEventListener('change', onMqChange);
 
-    const isDesktop = mq.matches;
-    let initial: string[] = isDesktop
-      ? DESKTOP_DEFAULT_GROUPS
-      : (() => {
-          const activeId = matchGroupForPath(pathnameRef.current);
-          return activeId ? [activeId] : [];
-        })();
+    let initial: string[] = [];
+    const initialized = localStorage.getItem(INITIALIZED_KEY);
 
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed: unknown = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          const valid = parsed.filter(
-            (id): id is string =>
-              typeof id === 'string' && NAV_GROUPS.some(g => g.id === id),
-          );
-          if (valid.length) initial = valid;
-        }
+    if (!initialized) {
+      // First-ever visit: open the group containing the current page.
+      const activeId = matchGroupForPath(pathnameRef.current);
+      initial = activeId ? [activeId] : [];
+      try {
+        localStorage.setItem(INITIALIZED_KEY, '1');
+      } catch {
+        /* quota */
       }
-    } catch {
-      /* ignore corrupt storage */
+    } else {
+      // Returning user: restore whatever they last had open.
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed: unknown = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            const valid = parsed.filter(
+              (id): id is string =>
+                typeof id === 'string' && NAV_GROUPS.some(g => g.id === id),
+            );
+            initial = valid;
+          }
+        }
+      } catch {
+        /* ignore corrupt storage */
+      }
     }
+
     setOpenGroups(initial);
     setHydrated(true);
 
@@ -282,14 +282,6 @@ export function NavSidebar() {
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
-
-  /* ---------- Auto-open active group when drawer OPENS on mobile ---------- */
-  useEffect(() => {
-    if (!mobileOpen) return;
-    if (window.matchMedia(DESKTOP_QUERY).matches) return;
-    const activeId = matchGroupForPath(pathnameRef.current);
-    setOpenGroups(activeId ? [activeId] : []);
-  }, [mobileOpen]);
 
   /* ---------- Scroll lock + focus trap ---------- */
   useEffect(() => {
@@ -372,10 +364,8 @@ export function NavSidebar() {
     setOpenGroups(prev => {
       const isOpen = prev.includes(id);
       if (isMobile) {
-        // Accordion on mobile: only one group open at a time.
         return isOpen ? [] : [id];
       }
-      // Multi-open on desktop.
       return isOpen ? prev.filter(x => x !== id) : [...prev, id];
     });
   }, []);
