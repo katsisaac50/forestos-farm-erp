@@ -209,6 +209,11 @@ export function NavSidebar() {
 
   const drawerRef = useRef<HTMLElement | null>(null);
   const lastFocusedBeforeOpen = useRef<Element | null>(null);
+  const pathnameRef = useRef(pathname);
+
+  useEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
 
   /* ---------- Auth: fetch once on mount ---------- */
   useEffect(() => {
@@ -232,7 +237,8 @@ export function NavSidebar() {
     const initialized = localStorage.getItem(INITIALIZED_KEY);
 
     if (!initialized) {
-      const activeId = matchGroupForPath(window.location.pathname);
+      // First-ever visit: open the group containing the current page.
+      const activeId = matchGroupForPath(pathnameRef.current);
       initial = activeId ? [activeId] : [];
       try {
         localStorage.setItem(INITIALIZED_KEY, '1');
@@ -240,6 +246,7 @@ export function NavSidebar() {
         /* quota */
       }
     } else {
+      // Returning user: restore whatever they last had open.
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
@@ -276,10 +283,9 @@ export function NavSidebar() {
     setMobileOpen(false);
   }, [pathname]);
 
-  /* ---------- Scroll lock + focus trap (only when drawer open on mobile) ---------- */
+  /* ---------- Scroll lock + focus trap ---------- */
   useEffect(() => {
     if (!mobileOpen) return;
-    if (window.matchMedia(DESKTOP_QUERY).matches) return;
 
     lastFocusedBeforeOpen.current = document.activeElement;
     const scrollY = window.scrollY;
@@ -376,6 +382,23 @@ export function NavSidebar() {
     <>
       <a href="#main-content" className="skipLink">Skip to main content</a>
 
+      <header className="mobileBar">
+        <button
+          type="button"
+          className="hamburger"
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
+          aria-controls="nav-drawer"
+          onClick={() => setMobileOpen(v => !v)}
+        >
+          <span className={`hamburgerIcon ${mobileOpen ? 'open' : ''}`} />
+        </button>
+        <Link href="/" className="mobileBrand" onClick={() => setMobileOpen(false)}>
+          <Trees className="brandMark" size={18} strokeWidth={2} aria-hidden />
+          <span>ForestOS</span>
+        </Link>
+      </header>
+
       {mobileOpen && (
         <div className="navOverlay" onClick={() => setMobileOpen(false)} aria-hidden="true" />
       )}
@@ -386,23 +409,10 @@ export function NavSidebar() {
         className={`sidebar ${mobileOpen ? 'open' : ''}`}
         aria-label="Primary navigation"
       >
-        <div className="sidebarTop">
-          <button
-            type="button"
-            className="hamburger"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={mobileOpen}
-            aria-controls="nav-drawer"
-            onClick={() => setMobileOpen(v => !v)}
-          >
-            <span className={`hamburgerIcon ${mobileOpen ? 'open' : ''}`} />
-          </button>
-          <Link href="/" className="brand" onClick={() => setMobileOpen(false)}>
-            <Trees className="brandMark" size={22} strokeWidth={2} aria-hidden />
-            <span className="brandText">ForestOS</span>
-          </Link>
-        </div>
-
+        <Link href="/" className="brand" onClick={() => setMobileOpen(false)}>
+          <Trees className="brandMark" size={22} strokeWidth={2} aria-hidden />
+          <span>ForestOS</span>
+        </Link>
         <div className="sub">Masulita Green Farms</div>
 
         <nav className="nav" aria-label="Main">
@@ -417,7 +427,6 @@ export function NavSidebar() {
                   onClick={() => toggleGroup(group.id)}
                   aria-expanded={open}
                   aria-controls={`navgroup-${group.id}`}
-                  title={group.label}
                 >
                   <span className="navGroupLabel">
                     <group.icon className="navIcon" size={16} strokeWidth={1.75} aria-hidden />
