@@ -1,7 +1,6 @@
 'use client';
 import React,{useEffect,useState} from 'react';
 import {getData,postData,patchData} from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Row={_id?:string;runId:string;workerIdentifier:string;farmBlock:string;activityType:string;latitude:number;longitude:number;accuracyMeters:number;evidenceReference:string;reviewStatus:string;reviewNote?:string;createdAt?:string};
 
@@ -15,9 +14,7 @@ export default function FieldVerificationPage(){
  async function review(r:Row,approve:boolean){if(!r._id)return;const reviewNote=(reviews[r._id]||'').trim();if(!reviewNote){setMessage('A review note is required.');return}setBusy(true);try{await patchData('/field-verification/'+encodeURIComponent(r._id)+(approve?'/approve':'/reject'),{reviewNote});setMessage(approve?'Approved.':'Rejected.');await refresh()}catch(e:any){setMessage(e?.message||'Review failed; check owner role.')}finally{setBusy(false)}}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <div className="mx-auto max-w-4xl">
      <header className="mb-5 rounded-2xl border p-4">
       <p className="text-sm font-semibold uppercase">ForestOS · Phase 31</p>
@@ -90,7 +87,6 @@ export default function FieldVerificationPage(){
 
      <p className="mt-5 text-xs opacity-70">GPS is device-reported and can be inaccurate or spoofed. Evidence references are not validated against the evidence store in this phase.</p>
     </div>
-   </main>
-  </div>
+   </>
  );
 }

@@ -1,7 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {getData,postData} from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Item={_id:string;itemCode:string;name:string;unit:string;averageUnitCostUgx:number};
 type Event={_id:string;eventCode:string;eventType:string;sourceModule:string;sourceRecordId:string;sourceReference:string;stockItemId:string;quantity:number;movementType:string;unitCostUgx:number;movementDate:string;reason:string;status:string;resultNote:string;errorMessage:string;createdAt:string};
@@ -21,9 +20,7 @@ export default function IntegrationWorkflowsPage(){
  async function act(id:string,action:'process'|'cancel'){setBusy(true);setMessage('');try{await postData(`/integration-workflows/events/${id}/${action}`,{});setMessage(action==='process'?'Event processed. Stock movement was posted or an existing movement was detected.':'Event cancelled.');await load();}catch(err:any){setMessage(err?.message||`Could not ${action} event.`);await load();}finally{setBusy(false);}}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <header className="page-header">
      <div>
       <p className="eyebrow">FORESTOS · PHASE 21</p>
@@ -114,7 +111,6 @@ export default function IntegrationWorkflowsPage(){
     </section>
 
     <p className="muted">Operational safeguard: the workflow ledger records intent and outcome, but MongoDB writes across event and stock records are not a single database transaction. Review failed events and stock balances before retrying.</p>
-   </main>
-  </div>
+   </>
  );
 }

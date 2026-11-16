@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Worker={_id:string;workerCode:string;displayName:string;workerType:string;status:string;defaultDailyRateUgx?:number;contactDetails?:string};
 type Task={_id:string;taskCode:string;title:string;activity:string;plantationBlockId?:string;assignedWorkerCode?:string;plannedDate:string;priority:string;status:string;targetQuantity?:number;unit?:string;instructions?:string;recordedHours?:number;recordedOutput?:number;recordedLabourCostUgx?:number;costPerOutputUnit?:number;outputUnits?:string[]};
@@ -26,9 +25,7 @@ export default function Workforce(){
  const totalHours=entries.reduce((s,e)=>s+Number(e.hoursWorked||0),0),totalCost=entries.reduce((s,e)=>s+Number(e.labourCostUgx||0),0);
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <h1>Workforce &amp; labour productivity</h1>
     <p className="muted">Assign measurable work, record labour hours and costs, and verify completion. Use objective standards rather than assumptions.</p>
     {error&&<p className="error">{error}</p>}
@@ -127,7 +124,6 @@ export default function Workforce(){
       <li>Labour records are separate from finance transactions and need reconciliation.</li>
      </ul>
     </section>
-   </main>
-  </div>
+   </>
  );
 }

@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -354,10 +353,7 @@ export default function InventoryControlPage() {
   const totalItems = dash?.totals.items ?? 0;
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <div
           style={{
             display: 'flex',
@@ -946,7 +942,6 @@ export default function InventoryControlPage() {
             and is not a full accounting valuation.
           </p>
         </Callout>
-      </main>
-    </div>
+      </>
   );
 }

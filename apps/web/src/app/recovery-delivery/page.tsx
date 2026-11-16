@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { getData, postData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -198,9 +197,7 @@ export default function RecoveryDeliveryPage() {
     totalProcessed > 0 ? (100 * counts.sent) / totalProcessed : null;
 
   return (
-    <div className="shell">
-    <NavSidebar />
-    <main id="main-content" className="main">
+    <>
         <h1>Notification delivery &amp; audit</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Operational view of the recovery-escalation notification queue. Inspect delivery
@@ -566,7 +563,6 @@ export default function RecoveryDeliveryPage() {
             the same as end-user receipt or reading.
           </p>
         </Callout>
-      </main>
-    </div>
+      </>
   );
 }

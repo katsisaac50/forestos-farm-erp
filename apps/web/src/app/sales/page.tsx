@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import {useEffect,useState} from 'react';
 import {getData,postData} from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Sale={_id:string;orderId:string;orderDate:string;customerName:string;product:string;quantity:number;unit:string;unitPriceUgx:number;amountPaidUgx:number;status:string};
 
@@ -14,9 +13,7 @@ export default function Sales(){
  async function save(e:React.FormEvent){e.preventDefault();try{await postData('/sales',{...f,quantity:Number(f.quantity),unitPriceUgx:Number(f.unitPriceUgx),amountPaidUgx:Number(f.amountPaidUgx)});S({...f,orderId:`S-${String(rows.length+2).padStart(4,'0')}`,customerName:'',quantity:'',unitPriceUgx:'',amountPaidUgx:'0'});await load()}catch(e){setError(e instanceof Error?e.message:'Save failed')}}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <h1>Sales &amp; customers</h1>
     <p className="muted">Business operations · UGX</p>
     {error&&<p className="error">{error}</p>}
@@ -57,7 +54,6 @@ export default function Sales(){
       </table>
      </div>
     </section>
-   </main>
-  </div>
+   </>
  );
 }

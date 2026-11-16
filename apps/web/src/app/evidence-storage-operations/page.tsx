@@ -22,9 +22,7 @@ export default function Page(){
  }
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <div className="pageHeader">
      <div>
       <p className="eyebrow">OPERATIONS · PHASE 74</p>
@@ -71,7 +69,6 @@ export default function Page(){
     </>}
 
     <div className="card"><strong>Operational warning:</strong> This is bounded reconciliation, not a transactionally consistent snapshot. Orphan files are never auto-deleted. Restore missing files from verified backups before unquarantining or recreating records. Ensure private storage is durable and backed up.</div>
-   </main>
-  </div>
+   </>
  );
 }

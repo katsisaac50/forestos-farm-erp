@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Block = {
   _id: string;
@@ -98,10 +97,7 @@ export default function Growth() {
   }
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <h1>Growth monitoring</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Record repeatable sample-tree measurements. Use the same sampling method and
@@ -357,7 +353,6 @@ export default function Growth() {
             or sale value.
           </p>
         </section>
-      </main>
-    </div>
+      </>
   );
 }

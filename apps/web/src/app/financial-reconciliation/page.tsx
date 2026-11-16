@@ -53,7 +53,7 @@ export default function FinancialReconciliationPage() {
     catch (e) { setError(e instanceof Error ? e.message : "Could not update review."); }
   }
   const inputStyle: React.CSSProperties = { display: "block", width: "100%", padding: "10px", marginTop: "5px", border: "1px solid #cbd5e1", borderRadius: "8px" };
-  return <div className="shell"><NavSidebar /><main id="main-content" className="main"><p className="eyebrow">PHASE 46 · CASH CONTROL</p><h1>Financial reconciliation</h1>
+  return <><p className="eyebrow">PHASE 46 · CASH CONTROL</p><h1>Financial reconciliation</h1>
   <p className="muted">Record a statement or counted balance, calculate its expected closing balance, compare the difference and log an owner review.</p>
   <section className="panel"><label>Month<input style={inputStyle} type="month" value={month} onChange={e => setMonth(e.target.value)} /></label></section>
   <section className="panel"><h2>New reconciliation snapshot</h2><p className="muted">Use one record per account and month. The saved ledger totals are shown for context; they are not automatically matched to this individual account.</p>
@@ -72,5 +72,5 @@ export default function FinancialReconciliationPage() {
   {records.map(r => <tr key={r._id}><td>{r.accountName}</td><td>{r.accountType}</td><td>{r.month}</td><td>{fmt(r.openingBalanceUgx)}</td><td>{fmt(r.statementClosingBalanceUgx)}</td><td>{fmt(r.expectedClosingBalanceUgx)}</td><td>{fmt(r.closingDifferenceUgx)}</td><td>{r.status}</td><td>{r.reviewed ? `Reviewed by ${r.reviewedBy || "owner"}` : <button className="btn" onClick={() => void review(r._id)}>Mark reviewed</button>}</td></tr>)}
   {!records.length && !loading && <tr><td colSpan={9}>No reconciliation records for this month.</td></tr>}</tbody></table></div></section>
   <section className="panel"><h2>Controls and limitations</h2><ul><li>Expected closing balance = opening balance + statement income − statement expenses.</li><li>A difference greater than 1 UGX is flagged. This does not prove every ledger entry matches the statement.</li><li>Ledger totals displayed in saved records are all finance ledger entries for that month, not account-specific totals.</li><li>One account/month pair can only be saved once; correct or replace records through a controlled future amendment workflow.</li><li>This is a management control register, not a bank feed or audited reconciliation.</li></ul></section>
-  </main></div>;
+  </>;
 }

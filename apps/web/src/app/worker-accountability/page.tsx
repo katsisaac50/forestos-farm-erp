@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { getData } from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Action = { _id:string; title?:string; assignedTo?:string; status?:string; priority?:string; dueAt?:string; overdue?:boolean; farmBlock?:string; completionNote?:string; createdBy?:string };
 type Inspection = { _id:string; title?:string; assignedTo?:string; status?:string; blockCode?:string; findings?:string; createdAt?:string };
@@ -23,9 +22,7 @@ export default function WorkerAccountabilityPage(){
  const issueRows=actions.filter(a=>a.status!=='closed').sort((a,b)=>Number(b.overdue)-Number(a.overdue)||new Date(a.dueAt||'9999-12-31').getTime()-new Date(b.dueAt||'9999-12-31').getTime()).slice(0,25);
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <h1>Worker performance &amp; accountability</h1>
     <p className="muted">Phase 38 · Evidence-led view of assigned corrective actions, inspections and recorded labour activity.</p>
     {message&&<div className="notice">{message}</div>}
@@ -87,7 +84,6 @@ export default function WorkerAccountabilityPage(){
       <li>Do not treat this dashboard as an automated disciplinary decision or a payroll calculation.</li>
      </ul>
     </section>
-   </main>
-  </div>
+   </>
  );
 }

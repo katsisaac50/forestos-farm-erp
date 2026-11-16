@@ -22,7 +22,7 @@ export default function FinancialGovernancePage(){
  ["Possible duplicate groups","possibleDuplicateGroups"],["Statement matching rate","matchingRatePercent"],
  ["Average resolution time (days)","averageResolutionDays"],["Ledger transactions","ledgerTransactions"]
  ];
- return <div className="shell"><NavSidebar /><main id="main-content" className="main"><p className="eyebrow">PHASE 50 · FINANCIAL GOVERNANCE</p><h1>Financial governance scorecard</h1><p className="muted">An owner-level view of open control issues, statement matching and investigation performance. Indicators help prioritise review; they do not establish fraud.</p>
+ return <><p className="eyebrow">PHASE 50 · FINANCIAL GOVERNANCE</p><h1>Financial governance scorecard</h1><p className="muted">An owner-level view of open control issues, statement matching and investigation performance. Indicators help prioritise review; they do not establish fraud.</p>
  <section className="panel"><label>Report month<input className="input" type="month" value={month} onChange={e=>setMonth(e.target.value)}/></label> <button className="btn" onClick={()=>void load()} disabled={loading}>{loading?"Loading…":"Refresh"}</button>{error&&<p role="alert">{error}</p>}{report&&<p className="muted">Generated {new Date(report.generatedAt).toLocaleString()}</p>}</section>
  {report&&<><div className="grid">{metrics.map(([label,key])=><div className="card" key={key}><div className="muted">{label}</div><div className="metric">{key==="matchingRatePercent"?`${report.summary[key]??0}%`:report.summary[key]??0}</div></div>)}</div>
  {report.dataLimitsReached&&<section className="panel"><h2>Data coverage warning</h2><ul>{report.warnings.map((w,i)=><li key={i}>{w}</li>)}</ul></section>}
@@ -30,5 +30,5 @@ export default function FinancialGovernancePage(){
  <section className="panel"><h2>Reconciliation review queue</h2><div style={{overflowX:"auto"}}><table className="table"><thead><tr><th>Account</th><th>Type</th><th>Status</th><th>Reviewed</th><th>Closing difference</th></tr></thead><tbody>{report.reconciliationQueue.map((x,i)=><tr key={`${x.accountName}-${i}`}><td>{x.accountName}</td><td>{x.accountType}</td><td>{x.status}</td><td>{x.reviewed?"Yes":"No"}</td><td>{fmt(x.closingDifferenceUgx)}</td></tr>)}{!report.reconciliationQueue.length&&<tr><td colSpan={5}>No reconciliation records need attention.</td></tr>}</tbody></table></div></section>
  <section className="panel"><h2>Statement matching status</h2><div className="grid">{report.statementStatusCounts.map(x=><div className="card" key={x.status}><div className="muted">{x.status}</div><div className="metric">{x.count}</div></div>)}</div><p className="muted">Matching rate is matched rows divided by eligible retrieved rows (ignored rows excluded).</p></section>
  <section className="panel"><h2>How to use this scorecard</h2><ol>{report.interpretation.map((n,i)=><li key={i}>{n}</li>)}</ol><p><Link href="/financial-investigations">Open investigation register</Link> · <Link href="/financial-exceptions">Review exception report</Link></p></section></>}
- </main></div>;
+ </>;
 }

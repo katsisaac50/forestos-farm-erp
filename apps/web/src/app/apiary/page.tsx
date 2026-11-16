@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -217,10 +216,7 @@ export default function Apiary() {
   });
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <h1>Apiary register</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           One record per hive · colony status and harvest tracking
@@ -438,7 +434,6 @@ export default function Apiary() {
         <Callout title="Hive inspection discipline">
           Colony status reflects the last recorded assessment. Update it after every inspection to keep the apiary dashboard accurate. Hives marked Queenless, Weak, or Absconded require a follow-up inspection; absconded hives should be cleaned and rebaited before reuse.
         </Callout>
-      </main>
-    </div>
+      </>
   );
 }

@@ -46,8 +46,7 @@ export default function MonthlyFinancialReportPage() {
   };
 
   const records = useMemo(() => report?.records ?? [], [report]);
-  return <div className="shell"><NavSidebar />
-  <main id="main-content" className="main"><p className="eyebrow">PHASE 44 · PERSISTENT FINANCIAL REPORTING</p><h1>Monthly financial report</h1>
+  return <><p className="eyebrow">PHASE 44 · PERSISTENT FINANCIAL REPORTING</p><h1>Monthly financial report</h1>
   <p className="muted">Owner-only report generated from existing saved finance ledger transactions. It is read-only and does not create duplicate ledger entries.</p>
   <section className="panel"><div className="grid"><label>Report month<input className="input" type="month" value={month} onChange={e => setMonth(e.target.value)} /></label><div><div className="muted">Report source</div><strong>Saved finance ledger</strong></div><div><div className="muted">Last generated</div><strong>{report?.generatedAt ? new Date(report.generatedAt).toLocaleString() : "—"}</strong></div></div>
   <div className="row" style={{ marginTop: 12 }}><button className="btn" onClick={() => setRefresh(v => v + 1)} disabled={loading}>Refresh report</button><button className="btn" onClick={csv} disabled={!report}>Export CSV</button></div>
@@ -57,5 +56,5 @@ export default function MonthlyFinancialReportPage() {
   <section className="panel"><h2>Category breakdown</h2><div style={{ overflowX: "auto" }}><table className="table"><thead><tr><th>Direction</th><th>Category</th><th>Records</th><th>Total (UGX)</th></tr></thead><tbody>{report.byCategory.map((r, i) => <tr key={`${r.direction}-${r.category}-${i}`}><td>{r.direction}</td><td>{r.category}</td><td>{r.count}</td><td>{money(r.amountUgx)}</td></tr>)}{report.byCategory.length === 0 && <tr><td colSpan={4}>No finance transactions recorded for this month.</td></tr>}</tbody></table></div></section>
   <section className="panel"><h2>Saved ledger transactions</h2><div style={{ overflowX: "auto" }}><table className="table"><thead><tr><th>Date</th><th>Transaction ID</th><th>Direction</th><th>Business line</th><th>Category</th><th>Description</th><th>Amount (UGX)</th><th>Method</th><th>Reconciled</th></tr></thead><tbody>{records.map(r => <tr key={r.id}><td>{r.date?.slice(0, 10)}</td><td>{r.transactionId}</td><td>{r.direction}</td><td>{r.businessLine}</td><td>{r.category}</td><td>{r.description}</td><td>{money(Number(r.amountUgx) || 0)}</td><td>{r.paymentMethod}</td><td>{r.reconciled ? "Yes" : "No"}</td></tr>)}{records.length === 0 && <tr><td colSpan={9}>No saved transactions for this month.</td></tr>}</tbody></table></div></section>
   <section className="panel"><h2>Reporting notes</h2><ul>{report.notes.map((n, i) => <li key={i}>{n}</li>)}</ul><p className="muted">This summary is not an audited financial statement, tax report, or bank reconciliation. Confirm the underlying ledger, receipts and bank records.</p></section></>}
-  </main></div>;
+  </>;
 }

@@ -45,7 +45,7 @@ export default function FinancialDiscrepanciesPage() {
   }, [report, line, search, severity]);
 
   const findingCount = (r: Report | null, sev?: string) => (r?.proposals || []).reduce((n, p) => n + p.findings.filter(f => !sev || f.severity === sev).length, 0);
-  return <div className="shell"><NavSidebar /><main id="main-content" className="main">
+  return <>
     <div className="pageHeader"><div><p className="eyebrow">FINANCIAL CONTROL · PHASE 70</p><h1>Financial discrepancies</h1><p className="muted">Read-only view of differences found by the reconciliation service. Investigate before taking corrective action.</p></div><button className="btn" onClick={() => void load()} disabled={loading}>{loading ? "Refreshing…" : "Refresh report"}</button></div>
     {error && <div className="card error"><strong>Could not load report</strong><p>{error}</p><p>Check the API is running and sign in with an authorised owner account.</p></div>}
     {report && <>
@@ -64,5 +64,5 @@ export default function FinancialDiscrepanciesPage() {
       {rows.filter(p=>p.proposalId===selected).map(p=><div className="panel" key={p.proposalId}><h2>Findings — {p.proposalCode || p.proposalId}</h2><p><strong>Remaining approved capital:</strong> {money(p.remainingApprovedAmountUgx)}</p>{p.findings.length===0?<p className="muted">No discrepancies recorded for this proposal in the current scan.</p>:p.findings.map((f,i)=><div className="card" key={`${f.code}-${i}`}><div className="row"><strong>{f.severity.toUpperCase()}</strong><code>{f.code}</code></div><p>{f.message}</p>{f.spendRecordId&&<p className="muted">Spend record: {f.spendRecordId}</p>}{f.relatedSpendRecordId&&<p className="muted">Related record: {f.relatedSpendRecordId}</p>}</div>)}</div>)}
       <div className="card"><strong>Important:</strong> This screen does not change financial records, approve corrections, or execute payments. A discrepancy is a signal to investigate, not proof of fraud or an instruction to change records.</div>
     </>}
-  </main></div>;
+  </>;
 }

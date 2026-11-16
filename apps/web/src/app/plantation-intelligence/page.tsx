@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Block = {
   _id: string;
@@ -53,10 +52,7 @@ export default function PlantationIntelligence() {
   }, []);
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <div
           style={{
             display: 'flex',
@@ -290,8 +286,7 @@ export default function PlantationIntelligence() {
             </section>
           </>
         )}
-      </main>
-    </div>
+      </>
   );
 }
 

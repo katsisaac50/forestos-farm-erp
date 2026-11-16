@@ -1,7 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {getData,postData} from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Action={_id:string;title:string;description:string;priority:'low'|'medium'|'high'|'critical';status:'open'|'in_progress'|'submitted'|'closed';assignedTo:string;farmBlock?:string;locationLabel?:string;sourceInspectionId?:string;completionNote?:string;reviewNote?:string;dueAt:string;overdue?:boolean};
 type FieldInspection={_id:string;title:string;status:string;assignedTo:string;locationLabel:string;blockCode?:string;findings?:string;correctiveAction?:string};
@@ -19,9 +18,7 @@ export default function CorrectiveActionsPage(){
  async function review(r:Action,status:'closed'|'in_progress'){const reviewNote=window.prompt(status==='closed'?'Enter closure review note:':'Explain why action is returned:');if(!reviewNote?.trim()){setMessage('Review note is required.');return}try{await postData('/corrective-actions/'+r._id+'/review',{status,reviewNote});setMessage(status==='closed'?'Action closed.':'Action returned to work.');await load()}catch(e:any){setMessage(e?.message||'Could not review action. Owner access may be required.')}}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <div style={{maxWidth:1200,margin:'0 auto'}}>
      <header style={{marginBottom:20}}>
       <h1>Inspection Analytics &amp; Corrective Action Tracking</h1>
@@ -96,7 +93,6 @@ export default function CorrectiveActionsPage(){
 
      <p style={{fontSize:13,marginTop:16}}>Analytics use recorded corrective-action entries only. Source inspection IDs are text references in this phase.</p>
     </div>
-   </main>
-  </div>
+   </>
  );
 }

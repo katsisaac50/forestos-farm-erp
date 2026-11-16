@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -354,9 +353,7 @@ export default function NotificationPoliciesPage() {
   });
 
   return (
-    <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+    <>
         <h1>Notification policies</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Escalation rules that fire on overdue, due-soon, approval-waiting, or
@@ -969,7 +966,6 @@ export default function NotificationPoliciesPage() {
           require an exact match, so two admins editing the same policy simultaneously will see
           one succeed and one 409.
         </Callout>
-      </main>
-    </div>
+      </>
   );
 }

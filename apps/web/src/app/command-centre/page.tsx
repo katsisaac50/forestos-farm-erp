@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -102,9 +101,7 @@ export default function CommandCentrePage() {
   });
 
   return (
-    <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+    <>
         <div
           style={{
             display: 'flex',
@@ -410,8 +407,7 @@ export default function CommandCentrePage() {
             </Callout>
           </>
         )}
-      </main>
-    </div>
+      </>
   );
 }
 

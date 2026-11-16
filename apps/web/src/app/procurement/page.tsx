@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import {useEffect,useMemo,useState} from 'react';
 import {getData,postData,patchData} from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Supplier={_id:string;supplierCode:string;name:string;contactPerson:string;phone:string;email:string;categories:string;paymentTerms:string;performanceRating:number;status:string};
 type Request={_id:string;requestCode:string;title:string;requestedBy:string;neededBy:string;businessLine:string;justification:string;estimatedTotalUgx:number;status:string;decisionNote:string};
@@ -47,9 +46,7 @@ export default function ProcurementPage(){
  function setLine(i:number,key:string,value:any){setOrder((o:any)=>({...o,lines:o.lines.map((l:any,j:number)=>i===j?{...l,[key]:value}:l)}));}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <header className="pageHeader">
      <div>
       <p className="eyebrow">PHASE 19 · PURCHASING CONTROL</p>
@@ -203,7 +200,6 @@ export default function ProcurementPage(){
     </div>
 
     <footer className="muted footer">Purchase order values are operational commitments, not verified cash balances or accounting liabilities. Goods receipts do not update maintenance stock, nursery inventory or the finance ledger automatically. This module does not send orders to suppliers or enforce a multi-person approval policy.</footer>
-   </main>
-  </div>
+   </>
  );
 }

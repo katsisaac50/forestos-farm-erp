@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -215,10 +214,7 @@ export default function Inventory() {
   });
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <h1>Inventory</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Stock register · business operations · UGX
@@ -429,7 +425,6 @@ export default function Inventory() {
             </div>
           )}
         </section>
-      </main>
-    </div>
+      </>
   );
 }

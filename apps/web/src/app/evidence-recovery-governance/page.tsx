@@ -19,9 +19,7 @@ export default function Page(){
  async function close(r:Incident){const reason=window.prompt("Closure reason?");if(!reason?.trim())return;const resolutionSummary=window.prompt("What was recovered or how was the issue resolved?");if(!resolutionSummary?.trim())return;try{await request(`/case-evidence/recovery-incidents/${r._id}/close`,"POST",{reason,resolutionSummary});setNotice("Incident closed with resolution record.");await load()}catch(e){setError(e instanceof Error?e.message:"Closure failed")}}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <div className="pageHeader">
      <div>
       <p className="eyebrow">GOVERNANCE · PHASE 75</p>
@@ -83,7 +81,6 @@ export default function Page(){
      </div>)}
     </div>}
     <div className="card"><strong>Governance rule:</strong> Critical and high incidents require an independent approval before closure. Creator and assigned owner cannot approve closure. This starter workflow is owner-role protected; the actor identity is based on the authenticated request.</div>
-   </main>
-  </div>
+   </>
  );
 }

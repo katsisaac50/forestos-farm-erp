@@ -51,9 +51,7 @@ export default function RecoveryGovernancePage() {
   const metric = (label: string, value: unknown) => <div key={label} className="rounded-xl border p-4"><div className="text-sm opacity-70">{label}</div><div className="mt-1 text-2xl font-semibold">{String(value ?? "—")}</div></div>;
 
   return (
-    <div className="shell">
-      <NavSidebar />
-      <main id="main-content" className="main">
+    <>
         <div className="mx-auto max-w-7xl space-y-6">
 
           <div className="flex flex-wrap items-start justify-between gap-3">
@@ -140,7 +138,6 @@ export default function RecoveryGovernancePage() {
 
           <p className="text-xs opacity-70">Reliability note: "Provider accepted" means the configured endpoint returned HTTP 2xx. It does not prove that a person received, opened, or read a notification. CSV export contains only the records currently loaded in this view.</p>
         </div>
-      </main>
-    </div>
+      </>
   );
 }

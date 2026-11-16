@@ -1,7 +1,6 @@
 'use client';
 import React,{useEffect,useState} from 'react';
 import {getData,patchData} from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Result={code?:string;label?:string;result?:string;note?:string;evidenceReference?:string;[k:string]:any};
 type Run={_id?:string;id?:string;title?:string;siteOrBlock?:string;scheduledDate?:string;status?:string;checklistResults?:Result[];[k:string]:any};
@@ -20,9 +19,7 @@ export default function FieldWorkPage(){
  async function sync(){if(!online){setMessage('Offline. Drafts remain queued.');return}setBusy(true);let left=[...queue],sent=0;for(const d of queue){try{await patchData('/sops/runs/'+encodeURIComponent(d.runId),d.payload);left=left.filter(x=>x.id!==d.id);sent++;save(left)}catch(e:any){left=left.map(x=>x.id===d.id?{...x,error:e?.message||'Sync failed; review before retrying.'}:x);save(left)}}setBusy(false);setMessage(sent+' update(s) synced; '+left.length+' draft(s) remain queued. Review failed updates before retrying.');await refresh()}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <div className="mx-auto max-w-3xl">
      <header className="mb-5 rounded-2xl border p-4 shadow-sm">
       <p className="text-sm font-semibold uppercase tracking-wide">ForestOS · Field Work</p>
@@ -79,7 +76,6 @@ export default function FieldWorkPage(){
       Automatic sync is foreground-only while this page is open; browser background sync, encrypted local storage, file upload and automatic conflict resolution are not implemented. Failed updates remain queued for review.
      </div>
     </div>
-   </main>
-  </div>
+   </>
  );
 }

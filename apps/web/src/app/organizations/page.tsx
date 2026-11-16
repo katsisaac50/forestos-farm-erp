@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { getData, postData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -178,9 +177,7 @@ export default function OrganizationsPage() {
   const totalAuditEvents = audit.length;
 
   return (
-    <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+    <>
         <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.4, color: '#36764b', margin: '0 0 8px' }}>
           FORESTOS · ORGANIZATION REGISTRY
         </p>
@@ -556,7 +553,6 @@ export default function OrganizationsPage() {
             collection above has been verified to enforce organization scope end-to-end.
           </p>
         </Callout>
-      </main>
-    </div>
+      </>
   );
 }

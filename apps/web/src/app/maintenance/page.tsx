@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import {useEffect,useMemo,useState} from 'react';
 import {getData,postData,patchData} from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 type Asset={_id:string;assetCode:string;name:string;assetType:string;location:string;assignedTo:string;status:string;purchaseCostUgx:number;lastServiceDate?:string|null;nextServiceDate?:string|null;serviceIntervalDays:number;notes:string;makeModel?:string;description?:string;serialNumber?:string;purchaseDate?:string;supplier?:string};
 type RecordItem={_id:string;assetId:string;maintenanceCode:string;maintenanceType:string;title:string;plannedDate:string;completedDate?:string|null;status:string;assignedTo:string;labourCostUgx:number;partsCostUgx:number;otherCostUgx:number;partsUsed:string;notes:string};
 type Part={_id:string;partCode:string;name:string;category:string;unit:string;quantityOnHand:number;reorderLevel:number;unitCostUgx:number;storageLocation:string;supplier:string};
@@ -31,9 +30,7 @@ export default function MaintenancePage(){
  async function adjustPart(p:Part){const raw=window.prompt(`New quantity on hand for ${p.name} (${p.unit}):`,String(p.quantityOnHand));if(raw===null)return;const n=Number(raw);if(!Number.isFinite(n)||n<0){setError('Enter a valid non-negative quantity.');return;}try{await patchData('/maintenance/parts/'+p._id,{quantityOnHand:n});setMessage('Stock quantity updated.');await refresh();}catch(e:any){setError(e?.message||'Could not update stock');}}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <header className="pageHeader">
      <div>
       <p className="eyebrow">PHASE 18 · ASSET CARE</p>
@@ -151,7 +148,6 @@ export default function MaintenancePage(){
      </section>
     </div>
     <footer className="muted footer">This is an operational register, not a complete asset-accounting or inventory-control system. Spare-part consumption is not automatically deducted when a maintenance record is completed; maintenance costs are not posted to finance; dates and costs require human verification.</footer>
-   </main>
-  </div>
+   </>
  );
 }

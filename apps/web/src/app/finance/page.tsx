@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -143,9 +142,7 @@ export default function Finance() {
   });
 
   return (
-    <div className="shell">
-      <NavSidebar />
-      <main id="main-content" className="main">
+    <>
         <h1>Finance</h1>
         <p className="muted" style={{ marginBottom: 24 }}>Transaction register · business operations · UGX</p>
 
@@ -262,7 +259,6 @@ export default function Finance() {
         <Callout title="Reconciliation discipline">
           Reconciliation status is not automated. Mark transactions as reconciled after manual review of the receipt and ledger. Transactions marked pending should be reviewed before month close.
         </Callout>
-      </main>
-    </div>
+      </>
   );
 }

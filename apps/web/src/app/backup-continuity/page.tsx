@@ -1,7 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {getData,postData} from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Row={_id:string;backupDate:string;backupType:string;location:string;fileName:string;sizeBytes:number;checksum:string;status:string;verificationMethod:string;retentionUntil:string;verificationNotes:string};
 type Dash={totals:{records:number;verified:number;failed:number;latestStatus:string};records:Row[]};
@@ -22,9 +21,7 @@ export default function BackupContinuityPage(){
  const bytes=(n:number)=>n>=1024**3?`${(n/1024**3).toFixed(2)} GB`:n>=1024**2?`${(n/1024**2).toFixed(2)} MB`:n>=1024?`${(n/1024).toFixed(2)} KB`:`${n||0} bytes`;
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <header className="page-header">
      <div>
       <p className="eyebrow">FORESTOS · PHASE 24</p>
@@ -121,7 +118,6 @@ export default function BackupContinuityPage(){
       <li>Test restoration periodically and record the outcome, recovery time, and missing data.</li>
      </ol>
     </section>
-   </main>
-  </div>
+   </>
  );
 }

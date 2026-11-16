@@ -2,7 +2,6 @@
 import {useEffect,useState} from 'react';
 import Link from 'next/link';
 import {getData,postData,patchData} from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Template={_id:string;sopCode:string;title:string;workstream:string;cadence:string;purpose:string;checklist:any[];status:string;safetyNotes:string};
 type Run={_id:string;sopCode:string;title:string;workstream:string;siteOrBlock:string;scheduledDate:string;assignedTo:string;status:string;checklistResults:any[];completionSummary?:string;exceptionNotes?:string;verificationNote?:string;evidenceReference?:string;createdAt:string;updatedAt:string};
@@ -21,9 +20,7 @@ export default function SOPPage(){
  const fmt=(n:any)=>Number(n||0).toLocaleString();
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <div className="commandHeader">
      <div>
       <p className="eyebrow">PHASE 29 · STANDARD WORK</p>
@@ -89,7 +86,6 @@ export default function SOPPage(){
       </div>
      </>}
     </section>}
-   </main>
-  </div>
+   </>
  );
 }

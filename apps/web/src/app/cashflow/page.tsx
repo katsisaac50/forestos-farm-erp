@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -327,10 +326,7 @@ export default function CashflowPage() {
   });
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <h1>Cash flow &amp; capital allocation</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Liquidity planning, reserves, and disciplined reinvestment · UGX
@@ -976,7 +972,6 @@ export default function CashflowPage() {
             </li>
           </ol>
         </Callout>
-      </main>
-    </div>
+      </>
   );
 }

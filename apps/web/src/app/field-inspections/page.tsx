@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { getData, postData } from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type MapFeature = {
   _id: string; featureType: 'block'|'hive'|'inspection_point'|'access_point'|'other';
@@ -89,9 +88,7 @@ export default function FieldInspectionsPage() {
   }
 
   return (
-    <div className="shell">
-      <NavSidebar />
-      <main id="main-content" className="main">
+    <>
         <div style={{maxWidth:1200,margin:'0 auto'}}>
           <header style={{marginBottom:20}}>
             <h1>Field Inspection &amp; Location Integration</h1>
@@ -130,7 +127,6 @@ export default function FieldInspectionsPage() {
             <p style={{fontSize:13}}>Non-owner accounts should see only inspections assigned to their login identifier. Review controls are intended for owner accounts; verify authorization behaviour in your deployment.</p>
           </section>
         </div>
-      </main>
-    </div>
+      </>
   );
 }

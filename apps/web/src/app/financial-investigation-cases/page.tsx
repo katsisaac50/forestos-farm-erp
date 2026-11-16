@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -234,10 +233,7 @@ export default function FinancialInvestigationCasesPage() {
   const awaitingReview = cases.filter(c => c.secondReviewRequired && !c.secondReviewedBy && c.status !== 'closed').length;
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <h1>Investigation cases</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Assign responsibility, document evidence references, and preserve full case history.
@@ -403,7 +399,6 @@ export default function FinancialInvestigationCasesPage() {
           and critical cases require independent second review before closure. The creator of a
           case cannot serve as its independent reviewer.
         </Callout>
-      </main>
-    </div>
+      </>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { getData, postData } from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type MapFeature = {
   _id: string;
@@ -117,9 +116,7 @@ export default function FieldNavigationPage() {
   }
 
   return (
-    <div className="shell">
-      <NavSidebar />
-      <main id="main-content" className="main">
+    <>
         <div style={{ maxWidth: 1150, margin: '0 auto' }}>
           <header style={{ marginBottom: 20 }}>
             <h1>Field Navigation &amp; Map Integration</h1>
@@ -176,7 +173,6 @@ export default function FieldNavigationPage() {
             </div>}
           </section>
         </div>
-      </main>
-    </div>
+      </>
   );
 }

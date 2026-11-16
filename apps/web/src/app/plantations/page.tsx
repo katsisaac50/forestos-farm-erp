@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Block = {
   _id: string;
@@ -188,10 +187,7 @@ export default function Plantations() {
   }
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <h1>Plantation register</h1>
         <p className="muted">One record per eucalyptus block. Click a row&apos;s Edit button to update measurements.</p>
 
@@ -394,7 +390,6 @@ export default function Plantations() {
             </p>
           )}
         </section>
-      </main>
-    </div>
+      </>
   );
 }

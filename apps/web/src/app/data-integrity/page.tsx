@@ -1,7 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {getData} from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Issue={severity:string;area:string;code:string;title:string;detail:string;action:string;recordId:string};
 type Report={generatedAt:string;note:string;scope:Record<string,number>;counts:Record<string,number>;totalIssues:number;issues:Issue[]};
@@ -13,9 +12,7 @@ export default function DataIntegrityPage(){
  const issues=(report?.issues||[]).filter(x=>filter==='all'||x.severity===filter);
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <header className="page-header">
      <div>
       <p className="eyebrow">FORESTOS · PHASE 23</p>
@@ -82,7 +79,6 @@ export default function DataIntegrityPage(){
       </div>
      </section>
     </>}
-   </main>
-  </div>
+   </>
  );
 }

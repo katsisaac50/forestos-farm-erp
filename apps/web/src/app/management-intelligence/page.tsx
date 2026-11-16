@@ -1,7 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {getData} from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Exception={priority:string;area:string;title:string;detail:string;action:string};
 type Report={generatedAt:string;note:string;finance:any;workforce:any;inventory:any;workflows:any;inspections:any;risks:any;exceptions:Exception[]};
@@ -28,9 +27,7 @@ export default function ManagementIntelligencePage(){
  ]:[];
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <header className="page-header">
      <div>
       <p className="eyebrow">FORESTOS · PHASE 22</p>
@@ -89,7 +86,6 @@ export default function ManagementIntelligencePage(){
       </div>
      </section>
     </>}
-   </main>
-  </div>
+   </>
  );
 }

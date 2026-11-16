@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Risk = {
   _id:string; riskCode:string; title:string; category:string; businessLine:string; description:string;
@@ -45,9 +44,7 @@ export default function RiskManagement(){
  const selectedActions=useMemo(()=>actions.filter(a=>a.riskId===selected),[actions,selected]);
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <header className="pageHeader">
      <div>
       <p className="eyebrow">PHASE 17 · GOVERNANCE</p>
@@ -155,7 +152,6 @@ export default function RiskManagement(){
     </div>
 
     <footer className="muted footer">Risk scores are qualitative management ratings, not probabilities, insurance advice, or guarantees. Review risk assumptions, controls and dates with a competent person. This register does not automatically detect hazards or send notifications.</footer>
-   </main>
-  </div>
+   </>
  );
 }

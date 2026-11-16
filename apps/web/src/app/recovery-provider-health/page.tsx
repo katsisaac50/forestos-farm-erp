@@ -1,7 +1,6 @@
 'use client';
 import {useCallback,useEffect,useState} from 'react';
 import {getData,postData} from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 export default function RecoveryProviderHealthPage(){
  const [health,setHealth]=useState<any>(null);const [events,setEvents]=useState<any[]>([]);const [reason,setReason]=useState('');const [selected,setSelected]=useState('');const [busy,setBusy]=useState(false);const [message,setMessage]=useState('');
@@ -10,9 +9,7 @@ export default function RecoveryProviderHealthPage(){
  async function replay(){if(!selected)return;setBusy(true);setMessage('');try{const result=await postData<any>(`/case-evidence/recovery-escalations/events/${encodeURIComponent(selected)}/replay`,{reason});setMessage(`Replay queued for ${result.incidentCode}. The scheduler or delivery worker must process it.`);setReason('');setSelected('');await refresh()}catch(err:any){setMessage(err?.message||'Replay request failed')}finally{setBusy(false)}}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <div className="mx-auto max-w-6xl space-y-6">
      <header>
       <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">ForestOS · Phase 81</p>
@@ -74,7 +71,6 @@ export default function RecoveryProviderHealthPage(){
 
      <p className="text-xs text-slate-500">Provider HTTP acceptance does not prove recipient delivery. Protect the webhook secret and only configure endpoints you trust.</p>
     </div>
-   </main>
-  </div>
+   </>
  );
 }

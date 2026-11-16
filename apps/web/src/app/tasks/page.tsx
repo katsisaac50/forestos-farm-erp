@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -257,10 +256,7 @@ export default function Tasks() {
   });
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <h1>Field tasks</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Task register · assignments, deadlines, and cost tracking
@@ -630,7 +626,6 @@ export default function Tasks() {
         <Callout title="Task accountability discipline">
           Overdue tasks are highlighted in red. Mark tasks completed only after verification — the status is part of the audit trail. Actual costs should be updated when invoices or receipts are received; the variance against budget is visible on the summary row.
         </Callout>
-      </main>
-    </div>
+      </>
   );
 }

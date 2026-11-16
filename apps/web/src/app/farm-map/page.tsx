@@ -2,7 +2,6 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useState } from 'react';
 import { getData, postData } from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import type { FarmMapFeatureView } from '../../components/farm-map/FarmMapClient';
 const FarmMapClient=dynamic(()=>import('../../components/farm-map/FarmMapClient'),{ssr:false,loading:()=> <div className="card">Loading map…</div>});
 type FeatureType='block'|'hive'|'inspection_point'|'access_point'|'other';
@@ -40,9 +39,7 @@ export default function FarmMapPage() {
  async function archive(id:string){if(!window.confirm('Archive this feature?'))return;try{await postData('/farm-map/'+id+'/archive',{});setMessage('Feature archived.');await load()}catch(e:any){setMessage(e?.message||'Could not archive feature. Owner access may be required.')}}
  const points=features.filter(f=>f.geometryType==='Point').length,blocks=features.filter(f=>f.featureType==='block').length;
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <div style={{maxWidth:1200,margin:'0 auto'}}>
      <header style={{marginBottom:20}}>
       <h1>Farm Mapping &amp; Geospatial Intelligence</h1>
@@ -102,7 +99,6 @@ export default function FarmMapPage() {
       }
      </section>
     </div>
-   </main>
-  </div>
+   </>
  );
 }

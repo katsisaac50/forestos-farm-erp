@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import {useEffect,useState} from 'react';
 import {getData} from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import type {DashboardSummary} from '../dashboard-types';
 
 const money=(n:number)=>new Intl.NumberFormat('en-UG',{maximumFractionDigits:0}).format(n)+' UGX';
@@ -13,9 +12,7 @@ export default function Insights(){
  useEffect(()=>{getData<DashboardSummary>('/dashboard/summary').then(S).catch(e=>E(e instanceof Error?e.message:'API unavailable'))},[]);
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <h1>Financial intelligence</h1>
     <p className="muted">Calculated from saved transactions and orders. Verify completeness before making decisions.</p>
     {error&&<p className="error">{error}</p>}
@@ -45,7 +42,6 @@ export default function Insights(){
       <p className="muted">Generated {new Date(data.generatedAt).toLocaleString()}</p>
      </section>
     </>}
-   </main>
-  </div>
+   </>
  );
 }

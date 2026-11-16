@@ -1,7 +1,6 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {getData,postData,patchData} from '../../lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 
 type Target={_id:string;targetCode:string;title:string;area:string;unit:string;baseline:number;targetValue:number;latestActual:number;progressPct:number;direction:string;periodStart:string;periodEnd:string;status:string;statusComputed:string;ownerResponsible:string;sourceOrMethod:string;notes:string;latestUpdateDate:string};
 type Dash={generatedAt:string;totals:Record<string,number>;targets:Target[];recentUpdates:any[]};
@@ -18,9 +17,7 @@ export default function PerformanceStrategyPage(){
  async function addUpdate(e:any){e.preventDefault();if(!selected){setError('Select a target first.');return;}setBusy(true);try{await postData(`/performance-strategy/targets/${selected}/updates`,{...u,actualValue:Number(u.actualValue)});setMessage('Actual value recorded. Add evidence or notes so the figure can be verified.');await load();}catch(e:any){setError(e?.message||'Could not record actual value.');}finally{setBusy(false);}}
 
  return (
-  <div className="shell">
-   <NavSidebar />
-   <main id="main-content" className="main">
+  <>
     <header className="page-header">
      <div>
       <p className="eyebrow">FORESTOS · PHASE 25</p>
@@ -101,7 +98,6 @@ export default function PerformanceStrategyPage(){
       {!data?.targets?.length&&<p className="muted">No targets created yet.</p>}
      </div>
     </section>
-   </main>
-  </div>
+   </>
  );
 }

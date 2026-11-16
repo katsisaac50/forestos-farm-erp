@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '@/lib/api';
-import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -193,10 +192,7 @@ export default function Home() {
   }
 
   return (
-    <div className="shell">
-      <NavSidebar />
-
-      <main id="main-content" className="main">
+    <>
         <h1>Executive dashboard</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Eucalyptus forestry + beekeeping · Masulita, Wakiso, Uganda
@@ -537,8 +533,7 @@ export default function Home() {
             Starter build. Do not expose publicly before authentication, role permissions, backups and deployment security are implemented.
           </p>
         </section>
-      </main>
-    </div>
+      </>
   );
 }
 
