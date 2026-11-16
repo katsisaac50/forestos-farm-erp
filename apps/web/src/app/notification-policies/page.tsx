@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { getData, postData, patchData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -354,29 +355,8 @@ export default function NotificationPoliciesPage() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          {[
-            ['/', 'Dashboard'],
-            ['/plantations', 'Plantations'],
-            ['/apiary', 'Apiary'],
-            ['/finance', 'Finance'],
-            ['/sales', 'Sales'],
-            ['/inventory', 'Inventory'],
-            ['/tasks', 'Tasks'],
-            ['/organizations', 'Organizations'],
-            ['/notification-policies', 'Notification policies'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
-
-      <main className="main">
+   <NavSidebar />
+   <main id="main-content" className="main">
         <h1>Notification policies</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Escalation rules that fire on overdue, due-soon, approval-waiting, or

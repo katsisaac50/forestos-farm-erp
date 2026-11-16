@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { getData, postData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -178,28 +179,8 @@ export default function OrganizationsPage() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          {[
-            ['/', 'Dashboard'],
-            ['/plantations', 'Plantations'],
-            ['/apiary', 'Apiary'],
-            ['/finance', 'Finance'],
-            ['/sales', 'Sales'],
-            ['/inventory', 'Inventory'],
-            ['/tasks', 'Tasks'],
-            ['/organizations', 'Organizations'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
-
-      <main className="main">
+   <NavSidebar />
+   <main id="main-content" className="main">
         <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.4, color: '#36764b', margin: '0 0 8px' }}>
           FORESTOS · ORGANIZATION REGISTRY
         </p>

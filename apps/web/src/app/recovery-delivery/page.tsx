@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { getData, postData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Segmented,
@@ -198,28 +199,8 @@ export default function RecoveryDeliveryPage() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Masulita Green Farms</div>
-        <nav className="nav">
-          {[
-            ['/', 'Dashboard'],
-            ['/case-evidence', 'Case evidence'],
-            ['/recovery-alerts', 'Recovery alerts'],
-            ['/recovery-escalations', 'Escalations'],
-            ['/recovery-delivery', 'Delivery & audit'],
-            ['/recovery-provider-health', 'Provider health'],
-            ['/recovery-scheduler', 'Scheduler'],
-            ['/notification-policies', 'Notification policies'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
-
-      <main className="main">
+    <NavSidebar />
+    <main id="main-content" className="main">
         <h1>Notification delivery &amp; audit</h1>
         <p className="muted" style={{ marginBottom: 24 }}>
           Operational view of the recovery-escalation notification queue. Inspect delivery

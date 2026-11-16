@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getData } from '@/lib/api';
+import { NavSidebar } from '@/components/NavSidebar';
 import {
   MetricCard,
   Badge,
@@ -102,30 +103,8 @@ export default function CommandCentrePage() {
 
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <div className="brand">🌳 ForestOS</div>
-        <div className="sub">Farm command centre</div>
-        <nav className="nav">
-          {[
-            ['/', 'Dashboard'],
-            ['/command-centre', 'Command centre'],
-            ['/alert-center', 'Alerts & escalation'],
-            ['/management-intelligence', 'Management intelligence'],
-            ['/cashflow', 'Cash flow & capital'],
-            ['/workforce', 'Workforce'],
-            ['/inventory-control', 'Central inventory'],
-            ['/risk-management', 'Risk management'],
-            ['/maintenance', 'Maintenance'],
-            ['/performance-strategy', 'Performance strategy'],
-          ].map(([u, l]) => (
-            <Link key={u} href={u}>
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </aside>
-
-      <main className="main">
+   <NavSidebar />
+   <main id="main-content" className="main">
         <div
           style={{
             display: 'flex',
