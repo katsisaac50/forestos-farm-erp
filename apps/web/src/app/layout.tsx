@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 // @ts-ignore -- Next.js handles this stylesheet import.
 import './globals.css';
 import PwaRegister from './pwa-register';
+import { SessionProvider } from '@/lib/session-context';
 
 export const metadata: Metadata = {
   title: 'ForestOS | Masulita Green Farms',
@@ -18,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body suppressHydrationWarning>
         <PwaRegister />
-        {children}
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );

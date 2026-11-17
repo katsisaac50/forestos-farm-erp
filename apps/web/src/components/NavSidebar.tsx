@@ -19,9 +19,8 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getData } from '@/lib/api';
+import { useSession } from '@/lib/session-context';
 
-type User = { id: string; email: string; role: string };
 type NavItem = { href: string; label: string };
 type NavGroup = { id: string; label: string; icon: LucideIcon; items: NavItem[] };
 
@@ -200,8 +199,8 @@ function matchGroupForPath(pathname: string): string | undefined {
 
 export function NavSidebar() {
   const pathname = usePathname();
-  const [user, setUser] = useState<User | null>(null);
-  const [authed, setAuthed] = useState(false);
+  const { status, user, logout } = useSession();
+  const authed = status === 'authenticated';
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
@@ -214,16 +213,6 @@ export function NavSidebar() {
   useEffect(() => {
     pathnameRef.current = pathname;
   }, [pathname]);
-
-  /* ---------- Auth: fetch once on mount ---------- */
-  useEffect(() => {
-    const hasToken = !!localStorage.getItem('forestos_token');
-    setAuthed(hasToken);
-    if (!hasToken) return;
-    getData<User>('/auth/me')
-      .then(setUser)
-      .catch(() => setUser(null));
-  }, []);
 
   /* ---------- Hydrate: first visit = auto-open active; else restore saved ---------- */
   useEffect(() => {
@@ -371,10 +360,7 @@ export function NavSidebar() {
   }, []);
 
   function signOut() {
-    localStorage.removeItem('forestos_token');
-    localStorage.removeItem('forestos_user');
-    localStorage.removeItem('forestos_organization_id');
-    localStorage.removeItem('forestos_active_organization');
+    logout();
     window.location.href = '/login';
   }
 
@@ -476,6 +462,10 @@ export function NavSidebar() {
             <button type="button" className="btn navSignOut" onClick={signOut}>
               Sign out
             </button>
+          ) : status === 'checking' ? (
+            <span className="muted">Checking session…</span>
+          ) : status === 'unavailable' ? (
+            <Link href="/login" className="btn navSignOut">Retry sign in</Link>
           ) : (
             <Link href="/login" className="btn navSignOut">Sign in</Link>
           )}

@@ -1,8 +1,7 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import { useSession } from '@/lib/session-context';
 import { useRouter } from 'next/navigation';
-
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -10,49 +9,30 @@ export default function Login() {
   const [busy, setBusy] = useState(false);
   const passwordRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const { status, login } = useSession();
+
   useEffect(() => {
-    if (localStorage.getItem('forestos_token')) {
-      router.replace('/');
-    }
-  }, [router]);
+    if (status === 'authenticated') router.replace('/');
+  }, [status, router]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError('');
+
     try {
-      const r = await fetch(API + '/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password: passwordRef.current?.value ?? '',
-        }),
+      const result = await login({
+        email,
+        password: passwordRef.current?.value ?? '',
       });
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.message || 'Sign in failed');
 
-      localStorage.setItem('forestos_token', data.accessToken);
-      localStorage.setItem('forestos_user', JSON.stringify(data.user));
-
-      // Fetch org context and store it so tenant-scoped pages can send X-Organization-Id.
-      try {
-        const orgRes = await fetch(API + '/organization-access/mine', {
-          headers: { Authorization: 'Bearer ' + data.accessToken },
-        });
-        if (orgRes.ok) {
-          const orgs = await orgRes.json();
-          const first = orgs?.organizations?.[0];
-          if (first?.organizationId) {
-            localStorage.setItem('forestos_organization_id', first.organizationId);
-            localStorage.setItem('forestos_active_organization', first.organizationId);
-          }
-        }
-      } catch {
-        // Non-fatal: allow login to proceed even if org fetch fails.
+      if (result === 'authenticated') {
+        router.push('/');
+      } else if (result === 'unavailable') {
+        setError('Your credentials could not be verified because the service is unavailable. Please try again.');
+      } else {
+        setError('Sign in could not be completed. Please try again.');
       }
-
-      router.push('/');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Sign in failed');
     } finally {

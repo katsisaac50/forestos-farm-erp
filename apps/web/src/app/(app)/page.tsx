@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useSession } from '@/lib/session-context';
 import { getData } from '@/lib/api';
 import {
   MetricCard,
@@ -87,12 +88,9 @@ type AuditEvent = {
   createdAt: string;
 };
 
-type User = { id: string; email: string; role: string };
-
 // ---- Component ----
 export default function Home() {
-  const [authed, setAuthed] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { status, refreshSession } = useSession();
   const [summary, setSummary] = useState<Summary | null>(null);
   const [plantations, setPlantations] = useState<PlantationIntel | null>(null);
   const [hives, setHives] = useState<Hive[]>([]);
@@ -100,40 +98,35 @@ export default function Home() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const hasToken = !!localStorage.getItem('forestos_token');
-    setAuthed(hasToken);
-    if (!hasToken) {
-      setLoading(false);
-      return;
-    }
-
-    void load();
-  }, []);
-
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [s, p, h, a, me] = await Promise.all([
+      const [s, p, h, a] = await Promise.all([
         getData<Summary>('/dashboard/summary'),
         getData<PlantationIntel>('/plantations/intelligence'),
         getData<Hive[]>('/hives'),
         getData<AuditEvent[]>('/audit').catch(() => [] as AuditEvent[]),
-        getData<User>('/auth/me').catch(() => null),
       ]);
       setSummary(s);
       setPlantations(p);
       setHives(h);
       setAudit(a);
-      setUser(me);
       setError('');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load dashboard');
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
+  useEffect(() => {
+    if (status === 'authenticated') {
+      void load();
+      return;
+    }
+
+    setLoading(status === 'checking');
+  }, [status, load]);
   // ---- Derived values ----
   const totalAcres = plantations?.totals.areaAcres ?? 0;
   const totalInitialTrees = plantations?.totals.initialTreesRecorded ?? 0;
@@ -199,18 +192,24 @@ export default function Home() {
         </p>
 
         {error && <p className="error">{error}</p>}
-
-        {!authed && !loading && (
+        {status === 'unauthenticated' && !loading && (
           <Callout title="Sign in to see your farm data" tone="info">
             The dashboard shows real numbers from your database. <Link href="/login">Sign in</Link> to view them.
           </Callout>
         )}
+        {status === 'checking' && <p className="muted">Checking session…</p>}
 
-        {authed && loading && (
-          <p className="muted">Loading dashboard…</p>
+        {status === 'unavailable' && (
+          <div className="panel">
+            <p className="muted">The server could not verify your session. Your saved credentials have been preserved.</p>
+            <button type="button" className="btn" onClick={() => void refreshSession()}>Retry session verification</button>
+          </div>
         )}
 
-        {authed && !loading && summary && plantations && (
+        {status === 'authenticated' && loading && (
+          <p className="muted">Loading dashboard…</p>
+        )}
+        {status === 'authenticated' && !loading && summary && plantations && (
           <>
             {/* === Business overview === */}
             <h2 style={{ marginTop: 24, marginBottom: 12, fontSize: 18 }}>Business overview</h2>
