@@ -5,14 +5,17 @@ import { FinanceController } from './finance.controller';
 import { FinanceService } from './finance.service';
 import { AuditModule } from '../audit/audit.module';
 import { OrganizationsModule } from '../organizations/organizations.module';
+import { AccountingModule } from '../accounting/accounting.module';
+import { FinanceGlAdapter } from '../accounting/finance-gl-adapter.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: FinanceTransaction.name, schema: FinanceTransactionSchema }]),
     AuditModule,
+    AccountingModule,
     OrganizationsModule,
   ],
   controllers: [FinanceController],
-  providers: [FinanceService],
+  providers: [FinanceService, FinanceGlAdapter],
 })
 export class FinanceModule {}
