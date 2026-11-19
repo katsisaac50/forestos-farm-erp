@@ -6,7 +6,6 @@ import { FinanceService } from './finance.service';
 import { AuditModule } from '../audit/audit.module';
 import { OrganizationsModule } from '../organizations/organizations.module';
 import { AccountingModule } from '../accounting/accounting.module';
-import { FinanceGlAdapter } from '../accounting/finance-gl-adapter.service';
 
 @Module({
   imports: [
@@ -16,6 +15,6 @@ import { FinanceGlAdapter } from '../accounting/finance-gl-adapter.service';
     OrganizationsModule,
   ],
   controllers: [FinanceController],
-  providers: [FinanceService, FinanceGlAdapter],
+  providers: [FinanceService],
 })
 export class FinanceModule {}

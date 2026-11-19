@@ -107,6 +107,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/capital-spend-verification', label: 'Capital spend verification' },
       { href: '/reinvestment-intelligence', label: 'Reinvestment intelligence' },
       { href: '/reinvestment-decision-engine', label: 'Reinvestment decision engine' },
+      { href: '/accounting/trial-balance', label: 'Trial balance' },
     ],
   },
   {
