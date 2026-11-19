@@ -162,30 +162,63 @@ export function SessionProvider({
       email,
       password,
     }: LoginCredentials): Promise<SessionStatus> => {
-      const response = await fetch(`${API}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      let response: Response;
 
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        const message =
-          typeof data?.message === 'string'
-            ? data.message
-            : 'Sign in failed';
-
-        throw new Error(message);
+      try {
+        response = await fetch(`${API}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+      } catch {
+        throw new ApiError(
+          0,
+          'Unable to reach ForestOS. Check your connection and try again.',
+          'network',
+        );
       }
 
+      const responseData: unknown = await response.json().catch(() => null);
+
+      const payload =
+        typeof responseData === 'object' && responseData !== null
+          ? (responseData as Record<string, unknown>)
+          : {};
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new ApiError(401, 'Email or password is incorrect.');
+        }
+
+        if (response.status >= 500) {
+          throw new ApiError(
+            response.status,
+            'ForestOS is temporarily unavailable. Please try again.',
+          );
+        }
+
+        const message =
+          typeof payload.message === 'string'
+            ? payload.message
+            : 'Sign in failed. Check your details and try again.';
+
+        throw new ApiError(response.status, message);
+      }
+
+      const accessToken = payload.accessToken;
+
+      const responseUser =
+        typeof payload.user === 'object' && payload.user !== null
+          ? (payload.user as Record<string, unknown>)
+          : null;
+
       if (
-        typeof data?.accessToken !== 'string' ||
-        !data.accessToken ||
-        !data.user ||
-        typeof data.user.id !== 'string' ||
-        typeof data.user.email !== 'string' ||
-        typeof data.user.role !== 'string'
+        typeof accessToken !== 'string' ||
+        !accessToken ||
+        !responseUser ||
+        typeof responseUser.id !== 'string' ||
+        typeof responseUser.email !== 'string' ||
+        typeof responseUser.role !== 'string'
       ) {
         throw new Error('The server returned an invalid login response.');
       }
@@ -193,8 +226,8 @@ export function SessionProvider({
       // A successful login starts a new authentication context.
       clearAuthentication();
 
-      localStorage.setItem('forestos_token', data.accessToken);
-      localStorage.setItem('forestos_user', JSON.stringify(data.user));
+      localStorage.setItem('forestos_token', accessToken);
+      localStorage.setItem('forestos_user', JSON.stringify(responseUser));
 
       const result = await refreshSession();
 
@@ -205,7 +238,7 @@ export function SessionProvider({
             `${API}/organization-access/mine`,
             {
               headers: {
-                Authorization: `Bearer ${data.accessToken}`,
+                Authorization: `Bearer ${accessToken}`,
               },
             },
           );

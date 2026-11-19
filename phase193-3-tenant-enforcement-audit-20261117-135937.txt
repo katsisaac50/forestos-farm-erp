@@ -1,0 +1,1957 @@
+FORESTOS PHASE 193.3 — BACKEND TENANT ENFORCEMENT AUDIT
+Generated: 2026-11-17 13:59:37
+READ-ONLY — NO SOURCE FILES MODIFIED
+
+
+========== SEARCH: OrganizationAccessService ==========
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 2
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 7
+  constructor(private readonly actions: ApiaryActionsService, private readonly organizationAccess: OrganizationAccessService) {}
+apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts : LINE 2
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts : LINE 7
+  constructor(private readonly intelligence: ApiaryIntelligenceService, private readonly organizationAccess: OrganizationAccessService) {}
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 2
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 9
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\audit\audit.controller.ts : LINE 10
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\audit\audit.controller.ts : LINE 17
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\dashboard\dashboard.controller.ts : LINE 4
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\dashboard\dashboard.controller.ts : LINE 10
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\evidence\evidence.controller.ts : LINE 17
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\evidence\evidence.controller.ts : LINE 23
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\field-capture\field-capture.controller.ts : LINE 4
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\field-capture\field-capture.controller.ts : LINE 10
+  constructor(private readonly captures: FieldCaptureService, private readonly evidence: EvidenceStorageService, private readonly access: OrganizationAccessService) {}
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 2
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 7
+  constructor(private readonly workforce: FieldWorkforceService, private readonly access: OrganizationAccessService) {}
+apps\api\src\finance\finance.controller.ts : LINE 5
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\finance\finance.controller.ts : LINE 12
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\growth\growth.controller.ts : LINE 4
+  import {OrganizationAccessService} from '../organizations/organization-access.service';
+apps\api\src\growth\growth.controller.ts : LINE 7
+  constructor(private service:GrowthService,private access:OrganizationAccessService){}
+apps\api\src\hives\hives.controller.ts : LINE 2
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\hives\hives.controller.ts : LINE 10
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\inspections\inspections.controller.ts : LINE 15
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\inspections\inspections.controller.ts : LINE 21
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 15
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 23
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 97
+  // import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 106
+  //   private organizationAccess: OrganizationAccessService,
+apps\api\src\inventory\inventory.controller.ts : LINE 1
+  import {BadRequestException,Body,Controller,Get,Headers,Patch,Param,Post,Req} from '@nestjs/common';import {InventoryService} from './inventory.service';import {CreateInventoryDto} from './dto';import {OrganizationAccessService} from '../organizations/organization-access.service';
+apps\api\src\inventory\inventory.controller.ts : LINE 3
+  constructor(private service:InventoryService,private organizationAccess:OrganizationAccessService){}
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 3
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 11
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\organizations\organization-access.controller.ts : LINE 10
+  import { OrganizationAccessService } from './organization-access.service';
+apps\api\src\organizations\organization-access.controller.ts : LINE 18
+  constructor(private readonly access: OrganizationAccessService) {}
+apps\api\src\organizations\organization-access.service.ts : LINE 16
+  export class OrganizationAccessService {
+apps\api\src\organizations\organizations.module.ts : LINE 10
+  import { OrganizationAccessService } from './organization-access.service';
+apps\api\src\organizations\organizations.module.ts : LINE 22
+  providers: [OrganizationsService, OrganizationAccessService],
+apps\api\src\organizations\organizations.module.ts : LINE 23
+  exports: [OrganizationAccessService],
+apps\api\src\plantations\plantations.controller.ts : LINE 6
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\plantations\plantations.controller.ts : LINE 12
+  private readonly organizationAccess: OrganizationAccessService,
+apps\api\src\sales\sales.controller.ts : LINE 1
+  import {BadRequestException,Body,Controller,Get,Headers,Patch,Param,Post,Req} from '@nestjs/common';import {SalesService} from './sales.service';import {CreateSalesDto} from './dto';import {OrganizationAccessService} from '../organizations/organization-access.service';
+apps\api\src\sales\sales.controller.ts : LINE 3
+  constructor(private service:SalesService,private organizationAccess:OrganizationAccessService){}
+apps\api\src\tasks\tasks.controller.ts : LINE 14
+  import { OrganizationAccessService } from '../organizations/organization-access.service';
+apps\api\src\tasks\tasks.controller.ts : LINE 20
+  private readonly organizationAccess: OrganizationAccessService,
+
+========== SEARCH: resolveContext ==========
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 13
+  return this.organizationAccess.resolveContext(userId, organizationId);
+apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts : LINE 12
+  return this.organizationAccess.resolveContext(userId, organizationId);
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 16
+  return this.organizationAccess.resolveContext(userId, organizationId);
+apps\api\src\audit\audit.controller.ts : LINE 36
+  const context = await this.organizationAccess.resolveContext(userId, organizationId);
+apps\api\src\dashboard\dashboard.controller.ts : LINE 24
+  const context = await this.organizationAccess.resolveContext(
+apps\api\src\evidence\evidence.controller.ts : LINE 32
+  return this.organizationAccess.resolveContext(String(userId), organizationId);
+apps\api\src\field-capture\field-capture.controller.ts : LINE 15
+  return this.access.resolveContext(userId, orgId);
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 12
+  return this.access.resolveContext(userId, orgId);
+apps\api\src\finance\finance.controller.ts : LINE 19
+  return this.organizationAccess.resolveContext(String(userId), organizationId);
+apps\api\src\growth\growth.controller.ts : LINE 12
+  return this.access.resolveContext(userId,organizationId);
+apps\api\src\hives\hives.controller.ts : LINE 17
+  return this.organizationAccess.resolveContext(userId, organizationId);
+apps\api\src\inspections\inspections.controller.ts : LINE 30
+  return this.organizationAccess.resolveContext(String(userId), organizationId);
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 42
+  return this.organizationAccess.resolveContext(userId, organizationId);
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 125
+  //   return this.organizationAccess.resolveContext(userId, organizationId);
+apps\api\src\inventory\inventory.controller.ts : LINE 4
+  private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 18
+  return this.organizationAccess.resolveContext(userId, organizationId);
+apps\api\src\organizations\organization-access.controller.ts : LINE 38
+  context: await this.access.resolveContext(userId, requestedOrganizationId),
+apps\api\src\organizations\organization-access.service.ts : LINE 29
+  async resolveContext(userId: string, requestedOrganizationId: string): Promise<OrganizationContext> {
+apps\api\src\plantations\plantations.controller.ts : LINE 19
+  return this.organizationAccess.resolveContext(userId, organizationId);
+apps\api\src\sales\sales.controller.ts : LINE 4
+  private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+apps\api\src\tasks\tasks.controller.ts : LINE 29
+  return this.organizationAccess.resolveContext(String(userId), organizationId);
+
+========== SEARCH: listMyOrganizations ==========
+apps\api\src\organizations\organization-access.controller.ts : LINE 24
+  return { organizations: await this.access.listMyOrganizations(userId) };
+apps\api\src\organizations\organization-access.service.ts : LINE 66
+  async listMyOrganizations(userId: string) {
+
+========== SEARCH: OrganizationContext ==========
+apps\api\src\accounting\finance-gl-adapter.service.ts : LINE 7
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\accounting\finance-gl-adapter.service.ts : LINE 28
+  context: OrganizationContext,
+apps\api\src\accounting\finance-gl-adapter.service.ts : LINE 31
+  const ctx = requireOrganizationContext(context);
+apps\api\src\accounting\finance-gl-adapter.service.ts : LINE 92
+  async hasPostedEntry(context: OrganizationContext, sourceId: string): Promise<boolean> {
+apps\api\src\accounting\finance-gl-adapter.service.ts : LINE 93
+  const ctx = requireOrganizationContext(context);
+apps\api\src\accounting\finance-gl-adapter.service.ts : LINE 104
+  private async ensureChart(context: OrganizationContext): Promise<void> {
+apps\api\src\accounting\finance-gl-adapter.service.ts : LINE 105
+  const ctx = requireOrganizationContext(context);
+apps\api\src\accounting\posting.service.ts : LINE 10
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\accounting\posting.service.ts : LINE 40
+  async post(rawContext: OrganizationContext, input: PostEntryInput): Promise<JournalEntry> {
+apps\api\src\accounting\posting.service.ts : LINE 41
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\accounting\posting.service.ts : LINE 153
+  async ensurePeriod(context: OrganizationContext, date: Date) {
+apps\api\src\accounting\posting.service.ts : LINE 154
+  const ctx = requireOrganizationContext(context);
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 4
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 23
+  private async assertHive(context: OrganizationContext, hiveId: string) {
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 29
+  private async event(context: OrganizationContext, actionId: string, actorId: string, eventType: string, changes?: any, note?: string) {
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 33
+  async list(rawContext: OrganizationContext, filters: any = {}) {
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 34
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 49
+  async create(dto: any, rawContext: OrganizationContext, actorId: string) {
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 50
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 79
+  async update(id: string, dto: any, rawContext: OrganizationContext, actorId: string) {
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 80
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 108
+  async summary(rawContext: OrganizationContext) {
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 109
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 123
+  async history(id: string, rawContext: OrganizationContext) {
+apps\api\src\apiary-actions\apiary-actions.service.ts : LINE 124
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-intelligence\apiary-intelligence.service.ts : LINE 4
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\apiary-intelligence\apiary-intelligence.service.ts : LINE 17
+  async dashboard(rawContext: OrganizationContext) {
+apps\api\src\apiary-intelligence\apiary-intelligence.service.ts : LINE 18
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-intelligence\apiary-intelligence.service.ts : LINE 77
+  async productivity(rawContext: OrganizationContext) {
+apps\api\src\apiary-intelligence\apiary-intelligence.service.ts : LINE 78
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 4
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 17
+  private async assertHive(context: OrganizationContext, hiveId: string) {
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 23
+  async listInspections(rawContext: OrganizationContext, hiveId?: string) {
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 24
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 30
+  async createInspection(dto: any, rawContext: OrganizationContext, actor: string) {
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 31
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 41
+  async listHarvests(rawContext: OrganizationContext, hiveId?: string) {
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 42
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 48
+  async createHarvest(dto: any, rawContext: OrganizationContext, actor: string) {
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 49
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 69
+  async summary(rawContext: OrganizationContext) {
+apps\api\src\apiary-operations\apiary-operations.service.ts : LINE 70
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\dashboard\dashboard.service.ts : LINE 11
+  OrganizationContext,
+apps\api\src\dashboard\dashboard.service.ts : LINE 12
+  requireOrganizationContext,
+apps\api\src\dashboard\dashboard.service.ts : LINE 27
+  async summary(rawContext: OrganizationContext) {
+apps\api\src\dashboard\dashboard.service.ts : LINE 28
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\evidence\evidence.service.ts : LINE 7
+  OrganizationContext,
+apps\api\src\evidence\evidence.service.ts : LINE 8
+  requireOrganizationContext,
+apps\api\src\evidence\evidence.service.ts : LINE 21
+  rawContext: OrganizationContext,
+apps\api\src\evidence\evidence.service.ts : LINE 23
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\evidence\evidence.service.ts : LINE 41
+  rawContext: OrganizationContext,
+apps\api\src\evidence\evidence.service.ts : LINE 43
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\evidence\evidence.service.ts : LINE 75
+  rawContext: OrganizationContext,
+apps\api\src\evidence\evidence.service.ts : LINE 77
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\field-capture\evidence-storage.service.ts : LINE 7
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\field-capture\evidence-storage.service.ts : LINE 32
+  private async capture(raw: OrganizationContext, id: string) {
+apps\api\src\field-capture\evidence-storage.service.ts : LINE 33
+  const c = requireOrganizationContext(raw);
+apps\api\src\field-capture\evidence-storage.service.ts : LINE 40
+  async upload(id: string, file: any, raw: OrganizationContext, actorId: string) {
+apps\api\src\field-capture\evidence-storage.service.ts : LINE 88
+  async getDownload(id: string, evidenceId: string, raw: OrganizationContext, actorId: string) {
+apps\api\src\field-capture\evidence-storage.service.ts : LINE 111
+  async deleteEvidence(id: string, evidenceId: string, raw: OrganizationContext, actorId: string) {
+apps\api\src\field-capture\evidence-storage.service.ts : LINE 131
+  async governanceSummary(raw: OrganizationContext) {
+apps\api\src\field-capture\evidence-storage.service.ts : LINE 132
+  const context = requireOrganizationContext(raw);
+apps\api\src\field-capture\field-capture.service.ts : LINE 4
+  import { OrganizationContext, hasOrganizationRole, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\field-capture\field-capture.service.ts : LINE 20
+  private isManager(c: OrganizationContext) { return hasOrganizationRole(c, MANAGERS); }
+apps\api\src\field-capture\field-capture.service.ts : LINE 21
+  private async assertTask(c: OrganizationContext, taskId: string) {
+apps\api\src\field-capture\field-capture.service.ts : LINE 27
+  async submit(dto: any, raw: OrganizationContext, actorId: string) {
+apps\api\src\field-capture\field-capture.service.ts : LINE 28
+  const c = requireOrganizationContext(raw);
+apps\api\src\field-capture\field-capture.service.ts : LINE 72
+  async list(raw: OrganizationContext, filters: any = {}) {
+apps\api\src\field-capture\field-capture.service.ts : LINE 73
+  const c = requireOrganizationContext(raw);
+apps\api\src\field-capture\field-capture.service.ts : LINE 84
+  async review(id: string, dto: any, raw: OrganizationContext, actorId: string) {
+apps\api\src\field-capture\field-capture.service.ts : LINE 85
+  const c = requireOrganizationContext(raw);
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 4
+  import { OrganizationContext, hasOrganizationRole, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 22
+  private manager(context: OrganizationContext) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 25
+  private async worker(context: OrganizationContext, workerId: string) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 30
+  private async log(context: OrganizationContext, taskId: string, actorId: string, eventType: string, details?: any, note?: string) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 34
+  async listWorkers(raw: OrganizationContext) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 35
+  const c = requireOrganizationContext(raw);
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 38
+  async createWorker(dto: any, raw: OrganizationContext, actorId: string) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 39
+  const c = requireOrganizationContext(raw); this.manager(c);
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 49
+  async listTasks(raw: OrganizationContext, filters: any = {}) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 50
+  const c = requireOrganizationContext(raw);
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 65
+  async createTask(dto: any, raw: OrganizationContext, actorId: string) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 66
+  const c = requireOrganizationContext(raw); this.manager(c);
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 86
+  async transition(id: string, dto: any, raw: OrganizationContext, actorId: string) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 87
+  const c = requireOrganizationContext(raw);
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 135
+  async summary(raw: OrganizationContext) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 136
+  const c = requireOrganizationContext(raw);
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 147
+  async history(id: string, raw: OrganizationContext) {
+apps\api\src\field-workforce\field-workforce.service.ts : LINE 148
+  const c = requireOrganizationContext(raw);
+apps\api\src\finance\finance.service.ts : LINE 7
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\finance\finance.service.ts : LINE 31
+  findAll(rawContext: OrganizationContext) {
+apps\api\src\finance\finance.service.ts : LINE 32
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\finance\finance.service.ts : LINE 36
+  async create(dto: CreateFinanceDto, rawContext: OrganizationContext, actorEmail: string) {
+apps\api\src\finance\finance.service.ts : LINE 37
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\finance\finance.service.ts : LINE 84
+  async update(id: string, dto: Partial<CreateFinanceDto>, rawContext: OrganizationContext, actorEmail: string) {
+apps\api\src\finance\finance.service.ts : LINE 85
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\growth\growth.controller.ts : LINE 5
+  import {OrganizationContext} from '../organizations/organization-context';
+apps\api\src\growth\growth.controller.ts : LINE 8
+  private async context(req:any,organizationId?:string):Promise<OrganizationContext>{
+apps\api\src\growth\growth.service.ts : LINE 4
+  import {OrganizationContext,requireOrganizationContext} from '../organizations/organization-context';
+apps\api\src\growth\growth.service.ts : LINE 8
+  async list(context:OrganizationContext,blockId?:string){
+apps\api\src\growth\growth.service.ts : LINE 9
+  const verified=requireOrganizationContext(context);
+apps\api\src\growth\growth.service.ts : LINE 12
+  async create(dto:CreateGrowthSampleDto,context:OrganizationContext,actorEmail:string){
+apps\api\src\growth\growth.service.ts : LINE 13
+  const verified=requireOrganizationContext(context);
+apps\api\src\growth\growth.service.ts : LINE 19
+  async trend(blockId:string,context:OrganizationContext){
+apps\api\src\growth\growth.service.ts : LINE 20
+  const verified=requireOrganizationContext(context);
+apps\api\src\hives\hives.service.ts : LINE 6
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\hives\hives.service.ts : LINE 13
+  findAll(rawContext: OrganizationContext) {
+apps\api\src\hives\hives.service.ts : LINE 14
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\hives\hives.service.ts : LINE 18
+  async create(dto: CreateHiveDto, rawContext: OrganizationContext) {
+apps\api\src\hives\hives.service.ts : LINE 19
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\hives\hives.service.ts : LINE 33
+  async update(id: string, dto: Partial<CreateHiveDto>, rawContext: OrganizationContext) {
+apps\api\src\hives\hives.service.ts : LINE 34
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\inspections\inspections.service.ts : LINE 8
+  OrganizationContext,
+apps\api\src\inspections\inspections.service.ts : LINE 9
+  requireOrganizationContext,
+apps\api\src\inspections\inspections.service.ts : LINE 24
+  rawContext: OrganizationContext,
+apps\api\src\inspections\inspections.service.ts : LINE 26
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\inspections\inspections.service.ts : LINE 47
+  rawContext: OrganizationContext,
+apps\api\src\inspections\inspections.service.ts : LINE 49
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\inspections\inspections.service.ts : LINE 73
+  rawContext: OrganizationContext,
+apps\api\src\inspections\inspections.service.ts : LINE 75
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 16
+  import { OrganizationContext } from '../organizations/organization-context';
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 29
+  ): Promise<OrganizationContext> {
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 98
+  // import { OrganizationContext } from '../organizations/organization-context';
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 112
+  // ): Promise<OrganizationContext> {
+apps\api\src\integration-workflows\integration-workflows.service.ts : LINE 6
+  import { OrganizationContext } from '../organizations/organization-context';
+apps\api\src\integration-workflows\integration-workflows.service.ts : LINE 46
+  async process(rawContext: OrganizationContext, id:string,actor=''){
+apps\api\src\inventory\inventory.service.ts : LINE 2
+  import {OrganizationContext,requireOrganizationContext} from '../organizations/organization-context';
+apps\api\src\inventory\inventory.service.ts : LINE 6
+  findAll(rawContext:OrganizationContext){const c=requireOrganizationContext(rawContext);return this.model.find(organizationFilter(c)).sort({name:1}).limit(500).lean();}
+apps\api\src\inventory\inventory.service.ts : LINE 7
+  create(dto:CreateInventoryDto,rawContext:OrganizationContext){const c=requireOrganizationContext(rawContext);return this.model.create(organizationDocument(c,dto as unknown as Record<string,unknown>));}
+apps\api\src\inventory\inventory.service.ts : LINE 8
+  async update(id:string,dto:Partial<CreateInventoryDto>,rawContext:OrganizationContext){const c=requireOrganizationContext(rawContext);const safe:any={...dto};delete safe.organizationId;delete safe.createdBy;const x=await this.model.findOneAndUpdate(organizationFilter(c,{_id:id}),safe,{new:true,runValidators:true}).lean();if(!x)throw new NotFoundException('Inventory item not found');return x;}
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 5
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 29
+  async dashboard(rawContext: OrganizationContext) {
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 30
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 52
+  async listItems(rawContext: OrganizationContext, q: any = {}) {
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 53
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 60
+  async createItem(rawContext: OrganizationContext, b: any, actor = '') {
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 61
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 96
+  async updateItem(rawContext: OrganizationContext, id: string, b: any) {
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 97
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 113
+  async listMovements(rawContext: OrganizationContext, itemId?: string) {
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 114
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 124
+  async findMovementByCode(rawContext: OrganizationContext, code: string) {
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 125
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 129
+  async postMovement(rawContext: OrganizationContext, b: any, actor = '') {
+apps\api\src\inventory-control\inventory-control.service.ts : LINE 130
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\organizations\organization-access.service.ts : LINE 13
+  import { OrganizationContext } from './organization-context';
+apps\api\src\organizations\organization-access.service.ts : LINE 29
+  async resolveContext(userId: string, requestedOrganizationId: string): Promise<OrganizationContext> {
+apps\api\src\organizations\organization-context.ts : LINE 10
+  export interface OrganizationContext {
+apps\api\src\organizations\organization-context.ts : LINE 16
+  export const ORGANIZATION_CONTEXT_KEY = 'forestOS.organizationContext';
+apps\api\src\organizations\organization-context.ts : LINE 18
+  export class OrganizationContextError extends Error {
+apps\api\src\organizations\organization-context.ts : LINE 21
+  this.name = 'OrganizationContextError';
+apps\api\src\organizations\organization-context.ts : LINE 25
+  export function requireOrganizationContext(
+apps\api\src\organizations\organization-context.ts : LINE 26
+  context: OrganizationContext | undefined | null,
+apps\api\src\organizations\organization-context.ts : LINE 27
+  ): OrganizationContext {
+apps\api\src\organizations\organization-context.ts : LINE 29
+  throw new OrganizationContextError();
+apps\api\src\organizations\organization-context.ts : LINE 35
+  context: OrganizationContext,
+apps\api\src\organizations\organization-scope.ts : LINE 12
+  OrganizationContext,
+apps\api\src\organizations\organization-scope.ts : LINE 13
+  requireOrganizationContext,
+apps\api\src\organizations\organization-scope.ts : LINE 19
+  rawContext: OrganizationContext | undefined | null,
+apps\api\src\organizations\organization-scope.ts : LINE 22
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\organizations\organization-scope.ts : LINE 28
+  rawContext: OrganizationContext | undefined | null,
+apps\api\src\organizations\organization-scope.ts : LINE 31
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\plantations\plantations.service.ts : LINE 8
+  import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
+apps\api\src\plantations\plantations.service.ts : LINE 19
+  findAll(rawContext: OrganizationContext) {
+apps\api\src\plantations\plantations.service.ts : LINE 20
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\plantations\plantations.service.ts : LINE 24
+  async create(dto: CreatePlantationDto, rawContext: OrganizationContext, actorEmail?: string) {
+apps\api\src\plantations\plantations.service.ts : LINE 25
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\plantations\plantations.service.ts : LINE 46
+  async update(id: string, dto: Partial<CreatePlantationDto>, rawContext: OrganizationContext, actorEmail?: string) {
+apps\api\src\plantations\plantations.service.ts : LINE 47
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\plantations\plantations.service.ts : LINE 71
+  async intelligence(rawContext: OrganizationContext) {
+apps\api\src\plantations\plantations.service.ts : LINE 72
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\sales\sales.service.ts : LINE 2
+  import {OrganizationContext,requireOrganizationContext} from '../organizations/organization-context';
+apps\api\src\sales\sales.service.ts : LINE 6
+  findAll(rawContext:OrganizationContext){const c=requireOrganizationContext(rawContext);return this.model.find(organizationFilter(c)).sort({orderDate:-1}).limit(500).lean();}
+apps\api\src\sales\sales.service.ts : LINE 7
+  create(dto:CreateSalesDto,rawContext:OrganizationContext){const c=requireOrganizationContext(rawContext);return this.model.create(organizationDocument(c,dto as unknown as Record<string,unknown>));}
+apps\api\src\sales\sales.service.ts : LINE 8
+  async update(id:string,dto:Partial<CreateSalesDto>,rawContext:OrganizationContext){const c=requireOrganizationContext(rawContext);const safe:any={...dto};delete safe.organizationId;delete safe.createdBy;const x=await this.model.findOneAndUpdate(organizationFilter(c,{_id:id}),safe,{new:true,runValidators:true}).lean();if(!x)throw new NotFoundException('Sales order not found');return x;}
+apps\api\src\tasks\tasks.service.ts : LINE 7
+  OrganizationContext,
+apps\api\src\tasks\tasks.service.ts : LINE 8
+  requireOrganizationContext,
+apps\api\src\tasks\tasks.service.ts : LINE 21
+  findAll(rawContext: OrganizationContext) {
+apps\api\src\tasks\tasks.service.ts : LINE 22
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\tasks\tasks.service.ts : LINE 30
+  create(dto: CreateTaskDto, rawContext: OrganizationContext) {
+apps\api\src\tasks\tasks.service.ts : LINE 31
+  const context = requireOrganizationContext(rawContext);
+apps\api\src\tasks\tasks.service.ts : LINE 39
+  rawContext: OrganizationContext,
+apps\api\src\tasks\tasks.service.ts : LINE 41
+  const context = requireOrganizationContext(rawContext);
+
+========== SEARCH: x-organization-id ==========
+apps\api\src\main.ts : LINE 27
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With', 'X-Organization-Id'],
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 12
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 17
+  async list(@Req() req: any, @Headers('x-organization-id') organizationId?: string, @Query() query?: any) {
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 22
+  async summary(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 27
+  async history(@Param('id') id: string, @Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 32
+  async create(@Body() body: any, @Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 38
+  async update(@Param('id') id: string, @Body() body: any, @Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts : LINE 11
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts : LINE 15
+  async dashboard(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts : LINE 19
+  async productivity(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 15
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 22
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 32
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 41
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 51
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 58
+  async harvestSummary(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\audit\audit.controller.ts : LINE 24
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\audit\audit.controller.ts : LINE 33
+  'Set X-Organization-Id to an organization you belong to',
+apps\api\src\dashboard\dashboard.controller.ts : LINE 17
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\dashboard\dashboard.controller.ts : LINE 22
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\evidence\evidence.controller.ts : LINE 30
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\evidence\evidence.controller.ts : LINE 39
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\evidence\evidence.controller.ts : LINE 53
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\evidence\evidence.controller.ts : LINE 62
+  @Headers('x-organization-id') organizationId: string | undefined,
+apps\api\src\field-capture\field-capture.controller.ts : LINE 14
+  if (!orgId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\field-capture\field-capture.controller.ts : LINE 18
+  async submit(@Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 24
+  async uploadEvidence(@Param('id') id: string, @UploadedFile() file: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 30
+  async downloadEvidence(@Param('id') id: string, @Param('evidenceId') evidenceId: string, @Req() req: any, @Headers('x-organization-id') orgId?: string, @Res() res?: any) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 43
+  async deleteEvidence(@Param('id') id: string, @Param('evidenceId') evidenceId: string, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 53
+  async evidenceGovernanceSummary(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 58
+  async list(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query() query?: any) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 62
+  async review(@Param('id') id: string, @Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 11
+  if (!orgId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 16
+  async workers(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 20
+  async createWorker(@Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 25
+  async tasks(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query() query?: any) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 29
+  async createTask(@Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 34
+  async transition(@Param('id') id: string, @Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 39
+  async summary(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 43
+  async history(@Param('id') id: string, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\finance\finance.controller.ts : LINE 18
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\finance\finance.controller.ts : LINE 28
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\finance\finance.controller.ts : LINE 36
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\finance\finance.controller.ts : LINE 46
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\growth\growth.controller.ts : LINE 11
+  if(!organizationId)throw new BadRequestException('Set X-Organization-Id');
+apps\api\src\growth\growth.controller.ts : LINE 14
+  @Get() async list(@Req() req:any,@Headers('x-organization-id') organizationId?:string,@Query('blockId') blockId?:string){
+apps\api\src\growth\growth.controller.ts : LINE 17
+  @Roles('owner','admin','manager') @Post() async create(@Body() dto:CreateGrowthSampleDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){
+apps\api\src\growth\growth.controller.ts : LINE 22
+  @Get('trend') async trend(@Query('blockId') blockId:string,@Req() req:any,@Headers('x-organization-id') organizationId?:string){
+apps\api\src\hives\hives.controller.ts : LINE 16
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\hives\hives.controller.ts : LINE 21
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\hives\hives.controller.ts : LINE 29
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\hives\hives.controller.ts : LINE 39
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\inspections\inspections.controller.ts : LINE 28
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\inspections\inspections.controller.ts : LINE 36
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\inspections\inspections.controller.ts : LINE 46
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\inspections\inspections.controller.ts : LINE 56
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 38
+  'Set X-Organization-Id to an organization you belong to',
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 67
+  @Headers('x-organization-id') orgId?: string,
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 121
+  //       'Set X-Organization-Id to an organization you belong to',
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 134
+  //   @Headers('x-organization-id') orgId?: string,
+apps\api\src\inventory\inventory.controller.ts : LINE 4
+  private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+apps\api\src\inventory\inventory.controller.ts : LINE 5
+  @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+apps\api\src\inventory\inventory.controller.ts : LINE 6
+  @Post() async create(@Body() dto:CreateInventoryDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.create(dto,await this.context(req,organizationId));}
+apps\api\src\inventory\inventory.controller.ts : LINE 7
+  @Patch(':id') async update(@Param('id') id:string,@Body() dto:Partial<CreateInventoryDto>,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.update(id,dto,await this.context(req,organizationId));}
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 17
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 22
+  async dashboard(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 27
+  async items(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query() q: any = {}) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 32
+  async createItem(@Body() b: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 38
+  async updateItem(@Param('id') id: string, @Body() b: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 43
+  async movements(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query('itemId') id?: string) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 48
+  async movement(@Body() b: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\lib\api.ts : LINE 12
+  //   if (orgId) headers['X-Organization-Id'] = orgId;
+apps\api\src\organizations\organization-access.controller.ts : LINE 30
+  @Headers('x-organization-id') requestedOrganizationId?: string,
+apps\api\src\organizations\organization-access.controller.ts : LINE 35
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\plantations\plantations.controller.ts : LINE 18
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\plantations\plantations.controller.ts : LINE 23
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\plantations\plantations.controller.ts : LINE 29
+  async intelligence(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\plantations\plantations.controller.ts : LINE 39
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\plantations\plantations.controller.ts : LINE 51
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\sales\sales.controller.ts : LINE 4
+  private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+apps\api\src\sales\sales.controller.ts : LINE 5
+  @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+apps\api\src\sales\sales.controller.ts : LINE 6
+  @Post() async create(@Body() dto:CreateSalesDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.create(dto,await this.context(req,organizationId));}
+apps\api\src\sales\sales.controller.ts : LINE 7
+  @Patch(':id') async update(@Param('id') id:string,@Body() dto:Partial<CreateSalesDto>,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.update(id,dto,await this.context(req,organizationId));}
+apps\api\src\tasks\tasks.controller.ts : LINE 27
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\tasks\tasks.controller.ts : LINE 33
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\tasks\tasks.controller.ts : LINE 41
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\tasks\tasks.controller.ts : LINE 51
+  @Headers('x-organization-id') organizationId?: string,
+
+========== SEARCH: X-Organization-Id ==========
+apps\api\src\main.ts : LINE 27
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With', 'X-Organization-Id'],
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 12
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 17
+  async list(@Req() req: any, @Headers('x-organization-id') organizationId?: string, @Query() query?: any) {
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 22
+  async summary(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 27
+  async history(@Param('id') id: string, @Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 32
+  async create(@Body() body: any, @Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-actions\apiary-actions.controller.ts : LINE 38
+  async update(@Param('id') id: string, @Body() body: any, @Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts : LINE 11
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts : LINE 15
+  async dashboard(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts : LINE 19
+  async productivity(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 15
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 22
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 32
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 41
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 51
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\apiary-operations\apiary-operations.controller.ts : LINE 58
+  async harvestSummary(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\audit\audit.controller.ts : LINE 24
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\audit\audit.controller.ts : LINE 33
+  'Set X-Organization-Id to an organization you belong to',
+apps\api\src\dashboard\dashboard.controller.ts : LINE 17
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\dashboard\dashboard.controller.ts : LINE 22
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\evidence\evidence.controller.ts : LINE 30
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\evidence\evidence.controller.ts : LINE 39
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\evidence\evidence.controller.ts : LINE 53
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\evidence\evidence.controller.ts : LINE 62
+  @Headers('x-organization-id') organizationId: string | undefined,
+apps\api\src\field-capture\field-capture.controller.ts : LINE 14
+  if (!orgId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\field-capture\field-capture.controller.ts : LINE 18
+  async submit(@Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 24
+  async uploadEvidence(@Param('id') id: string, @UploadedFile() file: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 30
+  async downloadEvidence(@Param('id') id: string, @Param('evidenceId') evidenceId: string, @Req() req: any, @Headers('x-organization-id') orgId?: string, @Res() res?: any) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 43
+  async deleteEvidence(@Param('id') id: string, @Param('evidenceId') evidenceId: string, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 53
+  async evidenceGovernanceSummary(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 58
+  async list(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query() query?: any) {
+apps\api\src\field-capture\field-capture.controller.ts : LINE 62
+  async review(@Param('id') id: string, @Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 11
+  if (!orgId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 16
+  async workers(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 20
+  async createWorker(@Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 25
+  async tasks(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query() query?: any) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 29
+  async createTask(@Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 34
+  async transition(@Param('id') id: string, @Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 39
+  async summary(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\field-workforce\field-workforce.controller.ts : LINE 43
+  async history(@Param('id') id: string, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\finance\finance.controller.ts : LINE 18
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\finance\finance.controller.ts : LINE 28
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\finance\finance.controller.ts : LINE 36
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\finance\finance.controller.ts : LINE 46
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\growth\growth.controller.ts : LINE 11
+  if(!organizationId)throw new BadRequestException('Set X-Organization-Id');
+apps\api\src\growth\growth.controller.ts : LINE 14
+  @Get() async list(@Req() req:any,@Headers('x-organization-id') organizationId?:string,@Query('blockId') blockId?:string){
+apps\api\src\growth\growth.controller.ts : LINE 17
+  @Roles('owner','admin','manager') @Post() async create(@Body() dto:CreateGrowthSampleDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){
+apps\api\src\growth\growth.controller.ts : LINE 22
+  @Get('trend') async trend(@Query('blockId') blockId:string,@Req() req:any,@Headers('x-organization-id') organizationId?:string){
+apps\api\src\hives\hives.controller.ts : LINE 16
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\hives\hives.controller.ts : LINE 21
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\hives\hives.controller.ts : LINE 29
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\hives\hives.controller.ts : LINE 39
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\inspections\inspections.controller.ts : LINE 28
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\inspections\inspections.controller.ts : LINE 36
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\inspections\inspections.controller.ts : LINE 46
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\inspections\inspections.controller.ts : LINE 56
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 38
+  'Set X-Organization-Id to an organization you belong to',
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 67
+  @Headers('x-organization-id') orgId?: string,
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 121
+  //       'Set X-Organization-Id to an organization you belong to',
+apps\api\src\integration-workflows\integration-workflows.controller.ts : LINE 134
+  //   @Headers('x-organization-id') orgId?: string,
+apps\api\src\inventory\inventory.controller.ts : LINE 4
+  private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+apps\api\src\inventory\inventory.controller.ts : LINE 5
+  @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+apps\api\src\inventory\inventory.controller.ts : LINE 6
+  @Post() async create(@Body() dto:CreateInventoryDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.create(dto,await this.context(req,organizationId));}
+apps\api\src\inventory\inventory.controller.ts : LINE 7
+  @Patch(':id') async update(@Param('id') id:string,@Body() dto:Partial<CreateInventoryDto>,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.update(id,dto,await this.context(req,organizationId));}
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 17
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 22
+  async dashboard(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 27
+  async items(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query() q: any = {}) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 32
+  async createItem(@Body() b: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 38
+  async updateItem(@Param('id') id: string, @Body() b: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 43
+  async movements(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query('itemId') id?: string) {
+apps\api\src\inventory-control\inventory-control.controller.ts : LINE 48
+  async movement(@Body() b: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+apps\api\src\lib\api.ts : LINE 12
+  //   if (orgId) headers['X-Organization-Id'] = orgId;
+apps\api\src\organizations\organization-access.controller.ts : LINE 30
+  @Headers('x-organization-id') requestedOrganizationId?: string,
+apps\api\src\organizations\organization-access.controller.ts : LINE 35
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\plantations\plantations.controller.ts : LINE 18
+  if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\plantations\plantations.controller.ts : LINE 23
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\plantations\plantations.controller.ts : LINE 29
+  async intelligence(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\plantations\plantations.controller.ts : LINE 39
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\plantations\plantations.controller.ts : LINE 51
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\sales\sales.controller.ts : LINE 4
+  private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+apps\api\src\sales\sales.controller.ts : LINE 5
+  @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+apps\api\src\sales\sales.controller.ts : LINE 6
+  @Post() async create(@Body() dto:CreateSalesDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.create(dto,await this.context(req,organizationId));}
+apps\api\src\sales\sales.controller.ts : LINE 7
+  @Patch(':id') async update(@Param('id') id:string,@Body() dto:Partial<CreateSalesDto>,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.update(id,dto,await this.context(req,organizationId));}
+apps\api\src\tasks\tasks.controller.ts : LINE 27
+  throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+apps\api\src\tasks\tasks.controller.ts : LINE 33
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+apps\api\src\tasks\tasks.controller.ts : LINE 41
+  @Headers('x-organization-id') organizationId?: string,
+apps\api\src\tasks\tasks.controller.ts : LINE 51
+  @Headers('x-organization-id') organizationId?: string,
+
+========== COMPLETE CONTROLLER SOURCES ==========
+
+====================================================================================================
+CONTROLLER: apps\api\src\apiary-actions\apiary-actions.controller.ts
+SHA256: 43DBE36C79FC81771B139A788A5F588E0DAE412A5C97A27A4162F1ED4F3C7A09
+LINES: 43
+====================================================================================================
+import { BadRequestException, Body, Controller, Get, Headers, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { ApiaryActionsService } from './apiary-actions.service';
+
+@Controller('apiary-actions')
+export class ApiaryActionsController {
+  constructor(private readonly actions: ApiaryActionsService, private readonly organizationAccess: OrganizationAccessService) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    return this.organizationAccess.resolveContext(userId, organizationId);
+  }
+
+  @Get()
+  async list(@Req() req: any, @Headers('x-organization-id') organizationId?: string, @Query() query?: any) {
+    return this.actions.list(await this.context(req, organizationId), query || {});
+  }
+
+  @Get('summary')
+  async summary(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    return this.actions.summary(await this.context(req, organizationId));
+  }
+
+  @Get(':id/history')
+  async history(@Param('id') id: string, @Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    return this.actions.history(id, await this.context(req, organizationId));
+  }
+
+  @Post()
+  async create(@Body() body: any, @Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    const context = await this.context(req, organizationId);
+    return this.actions.create(body, context, req.user?.email || context.userId);
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() body: any, @Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    const context = await this.context(req, organizationId);
+    return this.actions.update(id, body, context, req.user?.email || context.userId);
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts
+SHA256: BAEC47688EDA5DB41C9C16A1D8B8E0DC481DC5FE56E4C78AFD3CAAABC633416D
+LINES: 23
+====================================================================================================
+import { BadRequestException, Controller, Get, Headers, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { ApiaryIntelligenceService } from './apiary-intelligence.service';
+
+@Controller('apiary-intelligence')
+export class ApiaryIntelligenceController {
+  constructor(private readonly intelligence: ApiaryIntelligenceService, private readonly organizationAccess: OrganizationAccessService) {}
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    return this.organizationAccess.resolveContext(userId, organizationId);
+  }
+  @Get('dashboard')
+  async dashboard(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    return this.intelligence.dashboard(await this.context(req, organizationId));
+  }
+  @Get('productivity')
+  async productivity(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    return this.intelligence.productivity(await this.context(req, organizationId));
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\apiary-operations\apiary-operations.controller.ts
+SHA256: 10F1AE29E7CEDFF81BEDC04602DE8162D2BFBD725FEC3F2DFCCDF854E5C51CE8
+LINES: 62
+====================================================================================================
+import { BadRequestException, Body, Controller, Get, Headers, Post, Query, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { ApiaryOperationsService } from './apiary-operations.service';
+
+@Controller('apiary-operations')
+export class ApiaryOperationsController {
+  constructor(
+    private readonly operations: ApiaryOperationsService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    return this.organizationAccess.resolveContext(userId, organizationId);
+  }
+
+  @Get('inspections')
+  async listInspections(
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+    @Query('hiveId') hiveId?: string,
+  ) {
+    return this.operations.listInspections(await this.context(req, organizationId), hiveId);
+  }
+
+  @Post('inspections')
+  async createInspection(
+    @Body() body: any,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    const context = await this.context(req, organizationId);
+    return this.operations.createInspection(body, context, req.user?.email || context.userId);
+  }
+
+  @Get('harvests')
+  async listHarvests(
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+    @Query('hiveId') hiveId?: string,
+  ) {
+    return this.operations.listHarvests(await this.context(req, organizationId), hiveId);
+  }
+
+  @Post('harvests')
+  async createHarvest(
+    @Body() body: any,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    const context = await this.context(req, organizationId);
+    return this.operations.createHarvest(body, context, req.user?.email || context.userId);
+  }
+
+  @Get('harvest-summary')
+  async harvestSummary(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    return this.operations.summary(await this.context(req, organizationId));
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\audit\audit.controller.ts
+SHA256: 1F564ECEAA861FB63AC373D68EEA0923537DDF989FFE3C88B196A13E11568FEF
+LINES: 39
+====================================================================================================
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Req,
+} from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { AuditService } from './audit.service';
+
+@Controller('audit')
+export class AuditController {
+  constructor(
+    private readonly service: AuditService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  @Roles('owner')
+  @Get()
+  async list(
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new BadRequestException('Authenticated user ID is missing');
+    }
+    if (!organizationId) {
+      throw new BadRequestException(
+        'Set X-Organization-Id to an organization you belong to',
+      );
+    }
+    const context = await this.organizationAccess.resolveContext(userId, organizationId);
+    return this.service.list(context.organizationId, Number(limit) || 100);
+  }
+}
+
+====================================================================================================
+CONTROLLER: apps\api\src\dashboard\dashboard.controller.ts
+SHA256: 27A65DAFB056AF798C5313752C3AECFD0FC27BD2C83E0A78CD08B4F93671083A
+LINES: 38
+====================================================================================================
+import { BadRequestException, Controller, Get, Headers, Req } from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator';
+import { DashboardService } from './dashboard.service';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('dashboard')
+export class DashboardController {
+  constructor(
+    private readonly service: DashboardService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  @Roles('owner')
+  @Get('summary')
+  async summary(
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) {
+      throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    }
+    const context = await this.organizationAccess.resolveContext(
+      String(userId),
+      organizationId,
+    );
+    return this.service.summary(context);
+  }
+}
+
+
+// import {Controller,Get} from '@nestjs/common';
+// import {Roles} from '../auth/roles.decorator';
+// import {DashboardService} from './dashboard.service';
+// @Controller('dashboard')
+// export class DashboardController {constructor(private readonly service:DashboardService){} @Roles('owner') @Get('summary') summary(){return this.service.summary();}}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\evidence\evidence.controller.ts
+SHA256: 43F4084808DAE9C6FFA253E8FE8F3E786B2D1093C0B6C4614D4CBE2A26DF7376
+LINES: 86
+====================================================================================================
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Post,
+  Query,
+  Req,
+  Res,
+} from '@nestjs/common';
+import { Response } from 'express';
+import { Roles } from '../auth/roles.decorator';
+import { EvidenceService } from './evidence.service';
+import { CreateEvidenceDto } from './dto';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('evidence')
+export class EvidenceController {
+  constructor(
+    private readonly service: EvidenceService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) {
+      throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    }
+    return this.organizationAccess.resolveContext(String(userId), organizationId);
+  }
+
+  @Get()
+  async list(
+    @Query('inspectionId') inspectionId: string,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.service.list(
+      inspectionId,
+      req.user,
+      await this.context(req, organizationId),
+    );
+  }
+
+  @Roles('owner', 'field_worker')
+  @Post()
+  async create(
+    @Body() dto: CreateEvidenceDto,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.service.create(dto, req.user, await this.context(req, organizationId));
+  }
+
+  @Get(':id/image')
+  async image(
+    @Param('id') id: string,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId: string | undefined,
+    @Res() res: Response,
+  ) {
+    const doc: any = await this.service.image(
+      id,
+      req.user,
+      await this.context(req, organizationId),
+    );
+    res.setHeader('Content-Type', doc.mimeType);
+    res.setHeader('Cache-Control', 'no-store');
+    return res.send(Buffer.from(doc.dataBase64, 'base64'));
+  }
+}
+
+
+// import {Body,Controller,Get,Param,Post,Query,Req,Res} from '@nestjs/common';
+// import {Response} from 'express';import {Roles} from '../auth/roles.decorator';import {EvidenceService} from './evidence.service';import {CreateEvidenceDto} from './dto';
+// @Controller('evidence')
+// export class EvidenceController {
+//  constructor(private service:EvidenceService){}
+//  @Get() list(@Query('inspectionId') id:string,@Req() req:any){return this.service.list(id,req.user);}
+//  @Roles('owner','field_worker') @Post() create(@Body() dto:CreateEvidenceDto,@Req() req:any){return this.service.create(dto,req.user);}
+//  @Get(':id/image') async image(@Param('id') id:string,@Req() req:any,@Res() res:Response){const d:any=await this.service.image(id,req.user);res.setHeader('Content-Type',d.mimeType);res.setHeader('Cache-Control','no-store');return res.send(Buffer.from(d.dataBase64,'base64'));}
+// }
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\field-capture\field-capture.controller.ts
+SHA256: E016EB267662D58D9CC3162B2A757A3F3E0D4127F0B4A11AAE4C36582C4E76C4
+LINES: 67
+====================================================================================================
+import { BadRequestException, Body, Controller, Delete, ForbiddenException, Get, Headers, Param, Patch, Post, Query, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { FieldCaptureService } from './field-capture.service';
+import { EvidenceStorageService } from './evidence-storage.service';
+
+@Controller('field-capture')
+export class FieldCaptureController {
+  constructor(private readonly captures: FieldCaptureService, private readonly evidence: EvidenceStorageService, private readonly access: OrganizationAccessService) {}
+  private async context(req: any, orgId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!orgId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    return this.access.resolveContext(userId, orgId);
+  }
+  @Post()
+  async submit(@Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    const c = await this.context(req, orgId);
+    return this.captures.submit(body, c, req.user?.email || c.userId);
+  }
+  @Post(':id/evidence')
+  @UseInterceptors(FileInterceptor('file', { storage: memoryStorage(), limits: { fileSize: 15 * 1024 * 1024, files: 1 } }))
+  async uploadEvidence(@Param('id') id: string, @UploadedFile() file: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    const c = await this.context(req, orgId);
+    return this.evidence.upload(id, file, c, req.user?.email || c.userId);
+  }
+
+  @Get(':id/evidence/:evidenceId')
+  async downloadEvidence(@Param('id') id: string, @Param('evidenceId') evidenceId: string, @Req() req: any, @Headers('x-organization-id') orgId?: string, @Res() res?: any) {
+    const c = await this.context(req, orgId);
+    const item = await this.evidence.getDownload(id, evidenceId, c, req.user?.email || c.userId);
+    res.setHeader('Content-Type', item.mimeType);
+    res.setHeader('Content-Length', String(item.bytes.length));
+    res.setHeader('Content-Disposition', `attachment; filename="evidence-${evidenceId}"`);
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Cache-Control', 'private, no-store');
+    return res.status(200).send(item.bytes);
+  }
+
+
+  @Delete(':id/evidence/:evidenceId')
+  async deleteEvidence(@Param('id') id: string, @Param('evidenceId') evidenceId: string, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    const c = await this.context(req, orgId);
+    const normalized = (c.roles || []).map((r: any) => String(r).toLowerCase());
+    if (!normalized.some((r: string) => ['owner', 'admin', 'manager'].includes(r))) {
+      throw new ForbiddenException('Only an organization owner, admin, or manager may delete evidence');
+    }
+    return this.evidence.deleteEvidence(id, evidenceId, c, req.user?.email || c.userId);
+  }
+
+  @Get('governance/summary')
+  async evidenceGovernanceSummary(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    return this.evidence.governanceSummary(await this.context(req, orgId));
+  }
+
+  @Get()
+  async list(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query() query?: any) {
+    return this.captures.list(await this.context(req, orgId), query || {});
+  }
+  @Patch(':id/review')
+  async review(@Param('id') id: string, @Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    const c = await this.context(req, orgId);
+    return this.captures.review(id, body, c, req.user?.email || c.userId);
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\field-workforce\field-workforce.controller.ts
+SHA256: 660605E551B65C1C522A7953C3A35C4D8038C2A7BB950BEFD5E4FC709FB045D4
+LINES: 47
+====================================================================================================
+import { BadRequestException, Body, Controller, Get, Headers, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { FieldWorkforceService } from './field-workforce.service';
+
+@Controller('field-workforce')
+export class FieldWorkforceController {
+  constructor(private readonly workforce: FieldWorkforceService, private readonly access: OrganizationAccessService) {}
+  private async context(req: any, orgId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!orgId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    return this.access.resolveContext(userId, orgId);
+  }
+
+  @Get('workers')
+  async workers(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    return this.workforce.listWorkers(await this.context(req, orgId));
+  }
+  @Post('workers')
+  async createWorker(@Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    const c = await this.context(req, orgId);
+    return this.workforce.createWorker(body, c, req.user?.email || c.userId);
+  }
+  @Get('tasks')
+  async tasks(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query() query?: any) {
+    return this.workforce.listTasks(await this.context(req, orgId), query || {});
+  }
+  @Post('tasks')
+  async createTask(@Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    const c = await this.context(req, orgId);
+    return this.workforce.createTask(body, c, req.user?.email || c.userId);
+  }
+  @Patch('tasks/:id/status')
+  async transition(@Param('id') id: string, @Body() body: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    const c = await this.context(req, orgId);
+    return this.workforce.transition(id, body, c, req.user?.email || c.userId);
+  }
+  @Get('tasks/summary')
+  async summary(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    return this.workforce.summary(await this.context(req, orgId));
+  }
+  @Get('tasks/:id/history')
+  async history(@Param('id') id: string, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    return this.workforce.history(id, await this.context(req, orgId));
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\finance\finance.controller.ts
+SHA256: E22F25BE0EB21F09A318654825D31982655DBFEB150C8D38FED8D8644768F344
+LINES: 51
+====================================================================================================
+import { BadRequestException, Body, Controller, Get, Headers, Param, Patch, Post, Req } from '@nestjs/common';
+import { FinanceService } from './finance.service';
+import { CreateFinanceDto } from './dto';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('finance')
+@Roles('owner')
+export class FinanceController {
+  constructor(
+    private readonly service: FinanceService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    return this.organizationAccess.resolveContext(String(userId), organizationId);
+  }
+
+  private actor(req: any): string {
+    const user = req.user || {};
+    return String(user.email || user.username || user.sub || 'unknown').toLowerCase();
+  }
+
+  @Get()
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    return this.service.findAll(await this.context(req, organizationId));
+  }
+
+  @Post()
+  async create(
+    @Body() dto: CreateFinanceDto,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.service.create(dto, await this.context(req, organizationId), this.actor(req));
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: Partial<CreateFinanceDto>,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.service.update(id, dto, await this.context(req, organizationId), this.actor(req));
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\growth\growth.controller.ts
+SHA256: 68F82C837E157A5EF3142394F0A2EACD16F83C44068549BABB11256FF72FFC69
+LINES: 27
+====================================================================================================
+import {BadRequestException,Body,Controller,Get,Headers,Post,Query,Req,ForbiddenException} from '@nestjs/common';
+import {Roles} from '../auth/roles.decorator';
+import {GrowthService} from './growth.service';import {CreateGrowthSampleDto} from './dto';
+import {OrganizationAccessService} from '../organizations/organization-access.service';
+import {OrganizationContext} from '../organizations/organization-context';
+@Controller('growth') export class GrowthController {
+ constructor(private service:GrowthService,private access:OrganizationAccessService){}
+ private async context(req:any,organizationId?:string):Promise<OrganizationContext>{
+  const userId=req.user?.sub||req.user?.userId||req.user?.id;
+  if(!userId)throw new BadRequestException('Authenticated user ID is missing');
+  if(!organizationId)throw new BadRequestException('Set X-Organization-Id');
+  return this.access.resolveContext(userId,organizationId);
+ }
+ @Get() async list(@Req() req:any,@Headers('x-organization-id') organizationId?:string,@Query('blockId') blockId?:string){
+  return this.service.list(await this.context(req,organizationId),blockId);
+ }
+ @Roles('owner','admin','manager') @Post() async create(@Body() dto:CreateGrowthSampleDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){
+  const context=await this.context(req,organizationId);
+  if(!context.roles.some(r=>['owner','admin','manager','field_worker'].includes(r)))throw new ForbiddenException('Organization membership does not allow growth entry');
+  return this.service.create(dto,context,req.user?.email);
+ }
+ @Get('trend') async trend(@Query('blockId') blockId:string,@Req() req:any,@Headers('x-organization-id') organizationId?:string){
+  if(!blockId)throw new BadRequestException('blockId is required');
+  return this.service.trend(blockId,await this.context(req,organizationId));
+ }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\hives\hives.controller.ts
+SHA256: 7F79E6C99ED4453BEE34BB0FF69E7497908A208EC593F564497EAFCDAD93240F
+LINES: 44
+====================================================================================================
+import { BadRequestException, Body, Controller, Get, Headers, Patch, Param, Post, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { CreateHiveDto } from './dto';
+import { HivesService } from './hives.service';
+
+@Controller('hives')
+export class HivesController {
+  constructor(
+    private readonly hives: HivesService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    return this.organizationAccess.resolveContext(userId, organizationId);
+  }
+
+  @Get()
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    return this.hives.findAll(await this.context(req, organizationId));
+  }
+
+  @Post()
+  async create(
+    @Body() dto: CreateHiveDto,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.hives.create(dto, await this.context(req, organizationId));
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: Partial<CreateHiveDto>,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.hives.update(id, dto, await this.context(req, organizationId));
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\inspections\inspections.controller.ts
+SHA256: 009F6D41C303A8638527573CF5A1E95E1E32FED87AED43E2B6371B60B37182C8
+LINES: 74
+====================================================================================================
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator';
+import { InspectionsService } from './inspections.service';
+import { CreateInspectionDto, UpdateInspectionDto } from './dto';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('inspections')
+export class InspectionsController {
+  constructor(
+    private readonly service: InspectionsService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) {
+      throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    }
+    return this.organizationAccess.resolveContext(String(userId), organizationId);
+  }
+
+  @Get()
+  async list(
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.service.list(req.user, await this.context(req, organizationId));
+  }
+
+  @Roles('owner')
+  @Post()
+  async create(
+    @Body() dto: CreateInspectionDto,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.service.create(dto, req.user, await this.context(req, organizationId));
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateInspectionDto,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.service.update(id, dto, req.user, await this.context(req, organizationId));
+  }
+}
+
+
+// import {Body,Controller,Get,Param,Patch,Post,Req} from '@nestjs/common';
+// import {Roles} from '../auth/roles.decorator';
+// import {InspectionsService} from './inspections.service';
+// import {CreateInspectionDto,UpdateInspectionDto} from './dto';
+// @Controller('inspections')
+// export class InspectionsController {
+//  constructor(private service:InspectionsService){}
+//  @Get() list(@Req() req:any){return this.service.list(req.user);}
+//  @Roles('owner') @Post() create(@Body() dto:CreateInspectionDto,@Req() req:any){return this.service.create(dto,req.user);}
+//  @Patch(':id') update(@Param('id') id:string,@Body() dto:UpdateInspectionDto,@Req() req:any){return this.service.update(id,dto,req.user);}
+// }
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\integration-workflows\integration-workflows.controller.ts
+SHA256: 06AD51E7A30E46A4800CF7717EDB892B10EF68E4A2444AF0A56F6A802ADAFF4B
+LINES: 147
+====================================================================================================
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
+
+import { IntegrationWorkflowsService } from './integration-workflows.service';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { OrganizationContext } from '../organizations/organization-context';
+
+@Controller('integration-workflows')
+@Roles('owner')
+export class IntegrationWorkflowsController {
+  constructor(
+    private readonly service: IntegrationWorkflowsService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(
+    req: any,
+    organizationId?: string,
+  ): Promise<OrganizationContext> {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+    if (!userId) {
+      throw new BadRequestException('Authenticated user ID is missing');
+    }
+
+    if (!organizationId) {
+      throw new BadRequestException(
+        'Set X-Organization-Id to an organization you belong to',
+      );
+    }
+
+    return this.organizationAccess.resolveContext(userId, organizationId);
+  }
+
+  @Get('dashboard')
+  dashboard() {
+    return this.service.dashboard();
+  }
+
+  @Get('events')
+  list(@Query() q: any) {
+    return this.service.list(q);
+  }
+
+  @Post('events')
+  create(@Body() b: any, @Req() req: any) {
+    return this.service.create(
+      b,
+      req.user?.sub || req.user?.email || 'owner',
+    );
+  }
+
+  @Post('events/:id/process')
+  async process(
+    @Param('id') id: string,
+    @Req() req: any,
+    @Headers('x-organization-id') orgId?: string,
+  ) {
+    const context = await this.context(req, orgId);
+
+    return this.service.process(context, id, context.userId);
+  }
+
+  @Post('events/:id/cancel')
+  cancel(@Param('id') id: string, @Req() req: any) {
+    return this.service.cancel(
+      id,
+      req.user?.sub || req.user?.email || 'owner',
+    );
+  }
+}
+
+
+
+
+
+// import {Body,Controller,Get,Param,Post,Query,Req,UseGuards} from '@nestjs/common';
+// import {IntegrationWorkflowsService} from './integration-workflows.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+// import {
+//   BadRequestException,
+//   Headers,
+// } from '@nestjs/common';
+
+// import { OrganizationAccessService } from '../organizations/organization-access.service';
+// import { OrganizationContext } from '../organizations/organization-context';
+
+// @Controller('integration-workflows')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class IntegrationWorkflowsController{
+//  constructor(
+//   private service: IntegrationWorkflowsService,
+//   private organizationAccess: OrganizationAccessService,
+// ) {}
+
+// private async context(
+//   req: any,
+//   organizationId?: string,
+// ): Promise<OrganizationContext> {
+//   const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+//   if (!userId) {
+//     throw new BadRequestException('Authenticated user ID is missing');
+//   }
+
+//   if (!organizationId) {
+//     throw new BadRequestException(
+//       'Set X-Organization-Id to an organization you belong to',
+//     );
+//   }
+
+//   return this.organizationAccess.resolveContext(userId, organizationId);
+// }
+//  @Get('dashboard') dashboard(){return this.service.dashboard();}
+//  @Get('events') list(@Query()q:any){return this.service.list(q);}
+//  @Post('events') create(@Body()b:any,@Req()req:any){return this.service.create(b,req.user?.sub||req.user?.email||'owner');}
+//  @Post('events/:id/process')
+// async process(
+//   @Param('id') id: string,
+//   @Req() req: any,
+//   @Headers('x-organization-id') orgId?: string,
+// ) {
+//   const context = await this.context(req, orgId);
+
+//   return this.service.process(
+//     context,
+//     id,
+//     context.userId,
+//   );
+// }
+// //  @Post('events/:id/process') process(@Param('id')id:string,@Req()req:any){return this.service.process(id,req.user?.sub||req.user?.email||'owner');}
+//  @Post('events/:id/cancel') cancel(@Param('id')id:string,@Req()req:any){return this.service.cancel(id,req.user?.sub||req.user?.email||'owner');}
+// }
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\inventory\inventory.controller.ts
+SHA256: 84BAC252AF573AED7FDE2378E7EAD2E4EAC6AF5CEDD74E25780AD8D504092996
+LINES: 9
+====================================================================================================
+import {BadRequestException,Body,Controller,Get,Headers,Patch,Param,Post,Req} from '@nestjs/common';import {InventoryService} from './inventory.service';import {CreateInventoryDto} from './dto';import {OrganizationAccessService} from '../organizations/organization-access.service';
+@Controller('inventory') export class InventoryController {
+ constructor(private service:InventoryService,private organizationAccess:OrganizationAccessService){}
+ private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+ @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+ @Post() async create(@Body() dto:CreateInventoryDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.create(dto,await this.context(req,organizationId));}
+ @Patch(':id') async update(@Param('id') id:string,@Body() dto:Partial<CreateInventoryDto>,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.update(id,dto,await this.context(req,organizationId));}
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\inventory-control\inventory-control.controller.ts
+SHA256: 2450D1F808AAA909B78E8270725AC626C5FF305CF7201C7C178CB2E0C07142D1
+LINES: 53
+====================================================================================================
+import { BadRequestException, Body, Controller, Get, Headers, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { InventoryControlService } from './inventory-control.service';
+
+@Controller('inventory-control')
+@Roles('owner')
+export class InventoryControlController {
+  constructor(
+    private readonly service: InventoryControlService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    return this.organizationAccess.resolveContext(userId, organizationId);
+  }
+
+  @Get('dashboard')
+  async dashboard(@Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    return this.service.dashboard(await this.context(req, orgId));
+  }
+
+  @Get('items')
+  async items(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query() q: any = {}) {
+    return this.service.listItems(await this.context(req, orgId), q);
+  }
+
+  @Post('items')
+  async createItem(@Body() b: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    const context = await this.context(req, orgId);
+    return this.service.createItem(context, b, context.userId);
+  }
+
+  @Patch('items/:id')
+  async updateItem(@Param('id') id: string, @Body() b: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    return this.service.updateItem(await this.context(req, orgId), id, b);
+  }
+
+  @Get('movements')
+  async movements(@Req() req: any, @Headers('x-organization-id') orgId?: string, @Query('itemId') id?: string) {
+    return this.service.listMovements(await this.context(req, orgId), id);
+  }
+
+  @Post('movements')
+  async movement(@Body() b: any, @Req() req: any, @Headers('x-organization-id') orgId?: string) {
+    const context = await this.context(req, orgId);
+    return this.service.postMovement(context, b, context.userId);
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\organizations\organization-access.controller.ts
+SHA256: BDDD800867B440D72D95C353B2B5364C637DC6DC85C240417BBE0243D68BD7A5
+LINES: 43
+====================================================================================================
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Headers,
+  Req,
+} from '@nestjs/common';
+import { Request } from 'express';
+
+import { OrganizationAccessService } from './organization-access.service';
+
+type AuthenticatedRequest = Request & {
+  user?: { sub?: string; userId?: string; id?: string };
+};
+
+@Controller('organization-access')
+export class OrganizationAccessController {
+  constructor(private readonly access: OrganizationAccessService) {}
+
+  @Get('mine')
+  async mine(@Req() req: AuthenticatedRequest) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    return { organizations: await this.access.listMyOrganizations(userId) };
+  }
+
+  @Get('context')
+  async context(
+    @Req() req: AuthenticatedRequest,
+    @Headers('x-organization-id') requestedOrganizationId?: string,
+  ) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!requestedOrganizationId) {
+      throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    }
+    return {
+      context: await this.access.resolveContext(userId, requestedOrganizationId),
+      note: 'Context is verified for this response; domain endpoints must explicitly enforce it.',
+    };
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\plantations\plantations.controller.ts
+SHA256: F4ED5483215BEF999FD35862E5029E2B4728121D2B744A3CE85E3C82BA87BE6B
+LINES: 57
+====================================================================================================
+import { BadRequestException, Body, Controller, Get, Headers, Patch, Param, Post, Req } from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator';
+
+import { CreatePlantationDto } from './dto';
+import { PlantationsService } from './plantations.service';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('plantations')
+export class PlantationsController {
+  constructor(
+    private readonly plantations: PlantationsService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    return this.organizationAccess.resolveContext(userId, organizationId);
+  }
+
+  @Get()
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    return this.plantations.findAll(await this.context(req, organizationId));
+  }
+
+  @Roles('owner', 'admin', 'manager')
+  @Get('intelligence')
+  async intelligence(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    const context = await this.context(req, organizationId);
+    return this.plantations.intelligence(context);
+  }
+
+  @Roles('owner', 'admin', 'manager')
+  @Post()
+  async create(
+    @Body() dto: CreatePlantationDto,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    const context = await this.context(req, organizationId);
+    return this.plantations.create(dto, context, req.user?.email);
+  }
+
+  @Roles('owner', 'admin', 'manager')
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: Partial<CreatePlantationDto>,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    const context = await this.context(req, organizationId);
+    return this.plantations.update(id, dto, context, req.user?.email);
+  }
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\sales\sales.controller.ts
+SHA256: 997FDDC94299378A2A5C597A6FC29B015B97D684784E0886FDC81BAA8C3E628A
+LINES: 9
+====================================================================================================
+import {BadRequestException,Body,Controller,Get,Headers,Patch,Param,Post,Req} from '@nestjs/common';import {SalesService} from './sales.service';import {CreateSalesDto} from './dto';import {OrganizationAccessService} from '../organizations/organization-access.service';
+@Controller('sales') export class SalesController {
+ constructor(private service:SalesService,private organizationAccess:OrganizationAccessService){}
+ private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+ @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+ @Post() async create(@Body() dto:CreateSalesDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.create(dto,await this.context(req,organizationId));}
+ @Patch(':id') async update(@Param('id') id:string,@Body() dto:Partial<CreateSalesDto>,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.update(id,dto,await this.context(req,organizationId));}
+}
+
+
+====================================================================================================
+CONTROLLER: apps\api\src\tasks\tasks.controller.ts
+SHA256: 05F29D3BBFAB1568FA1F06C508E07C35A8A4AAE1314F52714F3535D552293F50
+LINES: 59
+====================================================================================================
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
+import { TasksService } from './tasks.service';
+import { CreateTaskDto } from './dto';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('tasks')
+export class TasksController {
+  constructor(
+    private readonly service: TasksService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) {
+      throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    }
+    return this.organizationAccess.resolveContext(String(userId), organizationId);
+  }
+
+  @Get()
+  async all(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+    return this.service.findAll(await this.context(req, organizationId));
+  }
+
+  @Post()
+  async create(
+    @Body() dto: CreateTaskDto,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.service.create(dto, await this.context(req, organizationId));
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: Partial<CreateTaskDto>,
+    @Req() req: any,
+    @Headers('x-organization-id') organizationId?: string,
+  ) {
+    return this.service.update(id, dto, await this.context(req, organizationId));
+  }
+}
+
+// import {Body,Controller,Get,Patch,Param,Post} from '@nestjs/common';import {TasksService} from './tasks.service';import {CreateTaskDto} from './dto';
+// @Controller('tasks') export class TasksController {constructor(private service:TasksService){} @Get() all(){return this.service.findAll();}@Post() create(@Body() dto:CreateTaskDto){return this.service.create(dto);}@Patch(':id') update(@Param('id') id:string,@Body() dto:Partial<CreateTaskDto>){return this.service.update(id,dto);}}

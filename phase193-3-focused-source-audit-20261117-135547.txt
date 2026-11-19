@@ -1,0 +1,1957 @@
+FORESTOS PHASE 193.3 — FOCUSED SOURCE AUDIT
+Generated: 2026-11-17 13:55:47
+Project root: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity
+READ-ONLY AUDIT — NO SOURCE FILES MODIFIED
+
+
+====================================================================================================
+FILE: apps\web\src\lib\session-context.tsx
+====================================================================================================
+STATUS: FOUND
+SHA256: D5D8D982F7EC62D92E2E25237F87CE912D0DDC215CE9743B14EA8C954AA7ACCE
+LINES: 315
+
+'use client';
+
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { ApiError, getData } from '@/lib/api';
+
+export type SessionStatus =
+  | 'checking'
+  | 'authenticated'
+  | 'unauthenticated'
+  | 'unavailable';
+
+export type SessionUser = {
+  id: string;
+  email: string;
+  role: string;
+};
+
+type LoginCredentials = {
+  email: string;
+  password: string;
+};
+
+type SessionContextValue = {
+  status: SessionStatus;
+  user: SessionUser | null;
+  refreshSession: () => Promise<SessionStatus>;
+  login: (credentials: LoginCredentials) => Promise<SessionStatus>;
+  logout: () => void;
+};
+
+const SessionContext = createContext<SessionContextValue | null>(null);
+
+const API =
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
+function clearAuthentication() {
+  localStorage.removeItem('forestos_token');
+  localStorage.removeItem('forestos_user');
+  localStorage.removeItem('forestos_organization_id');
+  localStorage.removeItem('forestos_active_organization');
+}
+
+function readCachedUser(): SessionUser | null {
+  try {
+    const raw = localStorage.getItem('forestos_user');
+    if (!raw) return null;
+
+    const value: unknown = JSON.parse(raw);
+
+    if (
+      typeof value === 'object' &&
+      value !== null &&
+      'id' in value &&
+      'email' in value &&
+      'role' in value &&
+      typeof value.id === 'string' &&
+      typeof value.email === 'string' &&
+      typeof value.role === 'string'
+    ) {
+      return value as SessionUser;
+    }
+  } catch {
+    // Cached display data is optional and never authenticates a user.
+  }
+
+  return null;
+}
+
+export function SessionProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [status, setStatus] = useState<SessionStatus>('checking');
+  const [user, setUser] = useState<SessionUser | null>(null);
+  const requestVersion = useRef(0);
+
+  const refreshSession = useCallback(async (): Promise<SessionStatus> => {
+    const version = ++requestVersion.current;
+
+    let token: string | null;
+
+    try {
+      token = localStorage.getItem('forestos_token');
+    } catch {
+      if (version === requestVersion.current) {
+        setUser(null);
+        setStatus('unavailable');
+      }
+      return 'unavailable';
+    }
+
+    if (!token) {
+      if (version === requestVersion.current) {
+        setUser(null);
+        setStatus('unauthenticated');
+      }
+      return 'unauthenticated';
+    }
+
+    if (version === requestVersion.current) {
+      setStatus('checking');
+      setUser(null);
+    }
+
+    try {
+      const authenticatedUser = await getData<SessionUser>('/auth/me');
+
+      if (version !== requestVersion.current) return 'checking';
+
+      if (
+        !authenticatedUser ||
+        typeof authenticatedUser.id !== 'string' ||
+        typeof authenticatedUser.email !== 'string' ||
+        typeof authenticatedUser.role !== 'string'
+      ) {
+        setUser(null);
+        setStatus('unavailable');
+        return 'unavailable';
+      }
+
+      setUser(authenticatedUser);
+
+      try {
+        localStorage.setItem(
+          'forestos_user',
+          JSON.stringify(authenticatedUser),
+        );
+      } catch {
+        // Session validation must not depend on cached user storage.
+      }
+
+      setStatus('authenticated');
+      return 'authenticated';
+    } catch (error) {
+      if (version !== requestVersion.current) return 'checking';
+
+      if (error instanceof ApiError && error.status === 401) {
+        clearAuthentication();
+        setUser(null);
+        setStatus('unauthenticated');
+        return 'unauthenticated';
+      }
+
+      // Preserve potentially valid credentials during network/server failure.
+      setUser(null);
+      setStatus('unavailable');
+      return 'unavailable';
+    }
+  }, []);
+
+  const login = useCallback(
+    async ({
+      email,
+      password,
+    }: LoginCredentials): Promise<SessionStatus> => {
+      let response: Response;
+
+      try {
+        response = await fetch(`${API}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+      } catch {
+        throw new ApiError(
+          0,
+          'Unable to reach ForestOS. Check your connection and try again.',
+          'network',
+        );
+      }
+
+      const responseData: unknown = await response.json().catch(() => null);
+
+      const payload =
+        typeof responseData === 'object' && responseData !== null
+          ? (responseData as Record<string, unknown>)
+          : {};
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new ApiError(401, 'Email or password is incorrect.');
+        }
+
+        if (response.status >= 500) {
+          throw new ApiError(
+            response.status,
+            'ForestOS is temporarily unavailable. Please try again.',
+          );
+        }
+
+        const message =
+          typeof payload.message === 'string'
+            ? payload.message
+            : 'Sign in failed. Check your details and try again.';
+
+        throw new ApiError(response.status, message);
+      }
+
+      const accessToken = payload.accessToken;
+
+      const responseUser =
+        typeof payload.user === 'object' && payload.user !== null
+          ? (payload.user as Record<string, unknown>)
+          : null;
+
+      if (
+        typeof accessToken !== 'string' ||
+        !accessToken ||
+        !responseUser ||
+        typeof responseUser.id !== 'string' ||
+        typeof responseUser.email !== 'string' ||
+        typeof responseUser.role !== 'string'
+      ) {
+        throw new Error('The server returned an invalid login response.');
+      }
+
+      // A successful login starts a new authentication context.
+      clearAuthentication();
+
+      localStorage.setItem('forestos_token', accessToken);
+      localStorage.setItem('forestos_user', JSON.stringify(responseUser));
+
+      const result = await refreshSession();
+
+      if (result === 'authenticated') {
+        // Organisation discovery is non-fatal; full selection is Phase 193.3.
+        try {
+          const orgResponse = await fetch(
+            `${API}/organization-access/mine`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            },
+          );
+
+          if (orgResponse.ok) {
+            const orgs = await orgResponse.json();
+            const organizationId =
+              orgs?.organizations?.[0]?.organizationId;
+
+            if (typeof organizationId === 'string' && organizationId) {
+              localStorage.setItem(
+                'forestos_organization_id',
+                organizationId,
+              );
+              localStorage.setItem(
+                'forestos_active_organization',
+                organizationId,
+              );
+            }
+          }
+        } catch {
+          // Do not turn a verified login into a failure.
+        }
+      }
+
+      return result;
+    },
+    [refreshSession],
+  );
+
+  const logout = useCallback(() => {
+    // Invalidate any pending validation request.
+    requestVersion.current += 1;
+
+    clearAuthentication();
+    setUser(null);
+    setStatus('unauthenticated');
+  }, []);
+
+  useEffect(() => {
+    void refreshSession();
+
+    return () => {
+      requestVersion.current += 1;
+    };
+  }, [refreshSession]);
+
+  const value = useMemo(
+    () => ({
+      status,
+      user,
+      refreshSession,
+      login,
+      logout,
+    }),
+    [status, user, refreshSession, login, logout],
+  );
+
+  return (
+    <SessionContext.Provider value={value}>
+      {children}
+    </SessionContext.Provider>
+  );
+}
+
+export function useSession(): SessionContextValue {
+  const context = useContext(SessionContext);
+
+  if (!context) {
+    throw new Error('useSession must be used inside SessionProvider.');
+  }
+
+  return context;
+}
+
+====================================================================================================
+FILE: apps\web\src\lib\api.ts
+====================================================================================================
+STATUS: FOUND
+SHA256: 16C0BE5937D808DEAD093AE478C21F4A99BD5751E0F070BC7DC754FD7330AEBB
+LINES: 193
+
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+
+export type ApiErrorKind = 'http' | 'network';
+
+export class ApiError extends Error {
+  constructor(
+    public readonly status: number,
+    message: string,
+    public readonly kind: ApiErrorKind = 'http',
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
+function authHeaders(): Record<string, string> {
+  if (typeof window === 'undefined') return {};
+
+  const token = localStorage.getItem('forestos_token');
+  const orgId =
+    localStorage.getItem('forestos_organization_id') ||
+    localStorage.getItem('forestos_active_organization');
+
+  const headers: Record<string, string> = {};
+
+  if (token) headers.Authorization = `Bearer ${token}`;
+  if (orgId) headers['X-Organization-Id'] = orgId;
+
+  return headers;
+}
+
+function parseResponse<T>(text: string): T {
+  if (!text) return undefined as T;
+
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return text as unknown as T;
+  }
+}
+
+async function throwResponseError(response: Response): Promise<never> {
+  const text = await response.text().catch(() => '');
+
+  if (response.status === 401) {
+    throw new ApiError(401, 'Please sign in to continue.');
+  }
+
+  if (response.status === 400 && text.includes('X-Organization-Id')) {
+    throw new ApiError(
+      400,
+      'No organization selected. Sign in again to refresh your organization context.',
+    );
+  }
+
+  throw new ApiError(
+    response.status,
+    text || `API request failed: ${response.status}`,
+  );
+}
+
+async function request<T>(
+  path: string,
+  init: RequestInit = {},
+): Promise<T> {
+  const headers = {
+    ...authHeaders(),
+    ...(init.headers as Record<string, string> | undefined),
+  };
+
+  let response: Response;
+
+  try {
+    response = await fetch(API + path, {
+      ...init,
+      cache: init.cache ?? 'no-store',
+      headers,
+    });
+  } catch {
+    throw new ApiError(
+      0,
+      'Unable to reach the ForestOS API. Check your connection and try again.',
+      'network',
+    );
+  }
+
+  if (!response.ok) {
+    return throwResponseError(response);
+  }
+
+  const text = await response.text();
+  return parseResponse<T>(text);
+}
+
+/**
+ * GET JSON data.
+ * Preserves the existing API signature.
+ */
+export async function getData<T>(path: string): Promise<T> {
+  return request<T>(path, { method: 'GET' });
+}
+
+/**
+ * POST JSON data.
+ * Preserves the existing API signature.
+ */
+export async function postData<T>(
+  path: string,
+  body: unknown,
+): Promise<T> {
+  return request<T>(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+/**
+ * PATCH JSON data.
+ * Preserves the existing API signature.
+ */
+export async function patchData<T>(
+  path: string,
+  body: unknown,
+): Promise<T> {
+  return request<T>(path, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+/**
+ * PUT JSON data.
+ */
+export async function putData<T>(
+  path: string,
+  body: unknown,
+): Promise<T> {
+  return request<T>(path, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+/**
+ * DELETE a resource.
+ */
+export async function deleteData<T>(path: string): Promise<T> {
+  return request<T>(path, { method: 'DELETE' });
+}
+
+/**
+ * Upload FormData.
+ * Do not set Content-Type manually: fetch must generate the multipart boundary.
+ */
+export async function postFormData<T>(
+  path: string,
+  formData: FormData,
+): Promise<T> {
+  return request<T>(path, {
+    method: 'POST',
+    body: formData,
+  });
+}
+
+/**
+ * Download binary content.
+ */
+export async function getBlob(path: string): Promise<Blob> {
+  let response: Response;
+
+  try {
+    response = await fetch(API + path, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: authHeaders(),
+    });
+  } catch {
+    throw new ApiError(
+      0,
+      'Unable to reach the ForestOS API. Check your connection and try again.',
+      'network',
+    );
+  }
+
+  if (!response.ok) {
+    return throwResponseError(response);
+  }
+
+  return response.blob();
+}
+
+====================================================================================================
+FILE: apps\web\src\components\NavSidebar.tsx
+====================================================================================================
+STATUS: FOUND
+SHA256: 11D3B03A2BD17E747F87CBBBC68AEF602B883AE6CEF659BC6D50A3AF9CDACF19
+LINES: 476
+
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  ChevronDown,
+  Compass,
+  Database,
+  LayoutDashboard,
+  RefreshCw,
+  ShieldAlert,
+  ShieldCheck,
+  Sprout,
+  Target,
+  Trees,
+  Users,
+  Wallet,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSession } from '@/lib/session-context';
+
+type NavItem = { href: string; label: string };
+type NavGroup = { id: string; label: string; icon: LucideIcon; items: NavItem[] };
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    id: 'overview',
+    label: 'Overview',
+    icon: LayoutDashboard,
+    items: [
+      { href: '/', label: 'Dashboard' },
+      { href: '/executive', label: 'Executive intelligence' },
+      { href: '/command-centre', label: 'Farm command centre' },
+      { href: '/insights', label: 'Insights' },
+      { href: '/management-intelligence', label: 'Management intelligence' },
+      { href: '/operations-intelligence', label: 'Operations intelligence' },
+    ],
+  },
+  {
+    id: 'field',
+    label: 'Plantations & field',
+    icon: Sprout,
+    items: [
+      { href: '/plantations', label: 'Plantations' },
+      { href: '/plantation-intelligence', label: 'Plantation intelligence' },
+      { href: '/growth', label: 'Growth samples' },
+      { href: '/harvest-planning', label: 'Harvest planning' },
+      { href: '/regeneration', label: 'Replanting & regeneration' },
+      { href: '/nursery', label: 'Nursery & seedlings' },
+      { href: '/field-logs', label: 'Field logs' },
+      { href: '/field-work', label: 'Field work' },
+      { href: '/field-inspections', label: 'Field inspections' },
+      { href: '/inspections', label: 'Inspections' },
+      { href: '/farm-map', label: 'Farm map' },
+      { href: '/field-navigation', label: 'Field navigation' },
+      { href: '/field-verification', label: 'Field verification' },
+      { href: '/photo-evidence', label: 'Photo evidence' },
+    ],
+  },
+  {
+    id: 'apiary',
+    label: 'Apiary',
+    icon: Compass,
+    items: [{ href: '/apiary', label: 'Apiary' }],
+  },
+  {
+    id: 'workforce',
+    label: 'Workforce',
+    icon: Users,
+    items: [
+      { href: '/workforce', label: 'Workforce & labour' },
+      { href: '/worker-accountability', label: 'Worker accountability' },
+      { href: '/tasks', label: 'Tasks' },
+      { href: '/corrective-actions', label: 'Corrective actions' },
+      { href: '/sops', label: 'SOPs & verification' },
+    ],
+  },
+  {
+    id: 'operations',
+    label: 'Operations',
+    icon: Wrench,
+    items: [
+      { href: '/inventory', label: 'Inventory' },
+      { href: '/inventory-control', label: 'Central inventory' },
+      { href: '/procurement', label: 'Procurement' },
+      { href: '/maintenance', label: 'Maintenance & assets' },
+      { href: '/sales', label: 'Sales' },
+      { href: '/integration-workflows', label: 'Integration workflows' },
+    ],
+  },
+  {
+    id: 'finance',
+    label: 'Finance',
+    icon: Wallet,
+    items: [
+      { href: '/finance', label: 'Finance ledger' },
+      { href: '/cashflow', label: 'Cash flow & capital' },
+      { href: '/cost-intelligence', label: 'Cost intelligence' },
+      { href: '/monthly-financial-report', label: 'Monthly financial report' },
+      { href: '/monthly-financial-close', label: 'Monthly financial close' },
+      { href: '/budget-execution', label: 'Budget execution' },
+      { href: '/resource-planning', label: 'Resource planning' },
+      { href: '/investment', label: 'Investment analysis' },
+      { href: '/capital-allocation', label: 'Capital allocation' },
+      { href: '/capital-spend-verification', label: 'Capital spend verification' },
+      { href: '/reinvestment-intelligence', label: 'Reinvestment intelligence' },
+      { href: '/reinvestment-decision-engine', label: 'Reinvestment decision engine' },
+    ],
+  },
+  {
+    id: 'governance',
+    label: 'Financial governance',
+    icon: ShieldCheck,
+    items: [
+      { href: '/financial-governance', label: 'Governance scorecard' },
+      { href: '/financial-exceptions', label: 'Financial exceptions' },
+      { href: '/financial-discrepancies', label: 'Financial discrepancies' },
+      { href: '/financial-investigations', label: 'Investigations' },
+      { href: '/financial-investigation-cases', label: 'Investigation cases' },
+      { href: '/financial-action-centre', label: 'Action centre' },
+      { href: '/financial-evidence', label: 'Evidence register' },
+      { href: '/case-evidence', label: 'Case evidence' },
+      { href: '/financial-audit-trail', label: 'Audit trail' },
+      { href: '/financial-escalations', label: 'Escalation centre' },
+      { href: '/financial-control-report', label: 'Control management report' },
+      { href: '/financial-control-performance', label: 'Control performance' },
+      { href: '/financial-reconciliation', label: 'Reconciliation' },
+      { href: '/statement-matching', label: 'Statement matching' },
+    ],
+  },
+  {
+    id: 'performance',
+    label: 'Performance',
+    icon: Target,
+    items: [
+      { href: '/performance-strategy', label: 'Performance strategy' },
+      { href: '/performance-intelligence', label: 'Automated KPI integration' },
+    ],
+  },
+  {
+    id: 'risk',
+    label: 'Risk & alerts',
+    icon: ShieldAlert,
+    items: [
+      { href: '/risk-management', label: 'Risk management' },
+      { href: '/alert-center', label: 'Alerts & escalation' },
+    ],
+  },
+  {
+    id: 'recovery',
+    label: 'Recovery & governance',
+    icon: RefreshCw,
+    items: [
+      { href: '/recovery-alerts', label: 'Recovery alerts' },
+      { href: '/recovery-escalations', label: 'Reminders & escalation' },
+      { href: '/recovery-scheduler', label: 'Scheduler status' },
+      { href: '/recovery-delivery', label: 'Recovery delivery' },
+      { href: '/recovery-provider-health', label: 'Provider health' },
+      { href: '/recovery-governance', label: 'Recovery governance' },
+      { href: '/evidence-recovery-governance', label: 'Evidence recovery governance' },
+      { href: '/evidence-storage-operations', label: 'Evidence storage ops' },
+      { href: '/notification-policies', label: 'Notification policies' },
+    ],
+  },
+  {
+    id: 'platform',
+    label: 'Platform',
+    icon: Database,
+    items: [
+      { href: '/audit', label: 'Audit trail' },
+      { href: '/data-integrity', label: 'Data integrity' },
+      { href: '/backup-continuity', label: 'Backup continuity' },
+      { href: '/organizations', label: 'Organizations' },
+    ],
+  },
+];
+
+const DESKTOP_QUERY = '(min-width: 1025px)';
+const STORAGE_KEY = 'forestos_nav_open_groups';
+const INITIALIZED_KEY = 'forestos_nav_initialized';
+
+function matchGroupForPath(pathname: string): string | undefined {
+  let best: { id: string; len: number } | undefined;
+  for (const g of NAV_GROUPS) {
+    for (const item of g.items) {
+      const matched =
+        item.href === '/'
+          ? pathname === '/'
+          : pathname === item.href || pathname.startsWith(item.href + '/');
+      if (matched && (!best || item.href.length > best.len)) {
+        best = { id: g.id, len: item.href.length };
+      }
+    }
+  }
+  return best?.id;
+}
+
+export function NavSidebar() {
+  const pathname = usePathname();
+  const { status, user, logout } = useSession();
+  const authed = status === 'authenticated';
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [openGroups, setOpenGroups] = useState<string[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+  const [hasUserToggled, setHasUserToggled] = useState(false);
+
+  const drawerRef = useRef<HTMLElement | null>(null);
+  const lastFocusedBeforeOpen = useRef<Element | null>(null);
+  const pathnameRef = useRef(pathname);
+
+  useEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
+
+  /* ---------- Hydrate: first visit = auto-open active; else restore saved ---------- */
+  useEffect(() => {
+    const mq = window.matchMedia(DESKTOP_QUERY);
+    const onMqChange = (e: MediaQueryListEvent) => {
+      if (e.matches) setMobileOpen(false);
+    };
+    mq.addEventListener('change', onMqChange);
+
+    let initial: string[] = [];
+    const initialized = localStorage.getItem(INITIALIZED_KEY);
+
+    if (!initialized) {
+      // First-ever visit: open the group containing the current page.
+      const activeId = matchGroupForPath(pathnameRef.current);
+      initial = activeId ? [activeId] : [];
+      try {
+        localStorage.setItem(INITIALIZED_KEY, '1');
+      } catch {
+        /* quota */
+      }
+    } else {
+      // Returning user: restore whatever they last had open.
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed: unknown = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            const valid = parsed.filter(
+              (id): id is string =>
+                typeof id === 'string' && NAV_GROUPS.some(g => g.id === id),
+            );
+            initial = valid;
+          }
+        }
+      } catch {
+        /* ignore corrupt storage */
+      }
+    }
+
+    setOpenGroups(initial);
+    setHydrated(true);
+
+    return () => mq.removeEventListener('change', onMqChange);
+  }, []);
+
+  useEffect(() => {
+    if (!hasUserToggled || !hydrated) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(openGroups));
+    } catch {
+      /* quota */
+    }
+  }, [openGroups, hasUserToggled, hydrated]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  /* ---------- Scroll lock + focus trap ---------- */
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    lastFocusedBeforeOpen.current = document.activeElement;
+    const scrollY = window.scrollY;
+    const html = document.documentElement;
+    const body = document.body;
+
+    html.style.overflow = 'hidden';
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+
+    const raf = requestAnimationFrame(() => {
+      const first = drawerRef.current?.querySelector<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      first?.focus();
+    });
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setMobileOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const root = drawerRef.current;
+      if (!root) return;
+      const focusables = Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter(el => el.offsetParent !== null);
+      if (!focusables.length) return;
+      const firstEl = focusables[0];
+      const lastEl = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === firstEl) {
+        e.preventDefault();
+        lastEl.focus();
+      } else if (!e.shiftKey && document.activeElement === lastEl) {
+        e.preventDefault();
+        firstEl.focus();
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('keydown', onKey);
+      html.style.overflow = '';
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      body.style.width = '';
+      window.scrollTo(0, scrollY);
+      if (lastFocusedBeforeOpen.current instanceof HTMLElement) {
+        lastFocusedBeforeOpen.current.focus();
+      }
+    };
+  }, [mobileOpen]);
+
+  const isActive = useCallback(
+    (href: string) =>
+      href === '/'
+        ? pathname === '/'
+        : pathname === href || pathname.startsWith(href + '/'),
+    [pathname],
+  );
+
+  const toggleGroup = useCallback((id: string) => {
+    setHasUserToggled(true);
+    const isMobile = !window.matchMedia(DESKTOP_QUERY).matches;
+    setOpenGroups(prev => {
+      const isOpen = prev.includes(id);
+      if (isMobile) {
+        return isOpen ? [] : [id];
+      }
+      return isOpen ? prev.filter(x => x !== id) : [...prev, id];
+    });
+  }, []);
+
+  function signOut() {
+    logout();
+    window.location.href = '/login';
+  }
+
+  return (
+    <>
+      <a href="#main-content" className="skipLink">Skip to main content</a>
+
+      <header className="mobileBar">
+        <button
+          type="button"
+          className="hamburger"
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
+          aria-controls="nav-drawer"
+          onClick={() => setMobileOpen(v => !v)}
+        >
+          <span className={`hamburgerIcon ${mobileOpen ? 'open' : ''}`} />
+        </button>
+        <Link href="/" className="mobileBrand" onClick={() => setMobileOpen(false)}>
+          <Trees className="brandMark" size={18} strokeWidth={2} aria-hidden />
+          <span>ForestOS</span>
+        </Link>
+      </header>
+
+      {mobileOpen && (
+        <div className="navOverlay" onClick={() => setMobileOpen(false)} aria-hidden="true" />
+      )}
+
+      <aside
+        id="nav-drawer"
+        ref={drawerRef}
+        className={`sidebar ${mobileOpen ? 'open' : ''}`}
+        aria-label="Primary navigation"
+      >
+        <Link href="/" className="brand" onClick={() => setMobileOpen(false)}>
+          <Trees className="brandMark" size={22} strokeWidth={2} aria-hidden />
+          <span>ForestOS</span>
+        </Link>
+        <div className="sub">Masulita Green Farms</div>
+
+        <nav className="nav" aria-label="Main">
+          {NAV_GROUPS.map(group => {
+            const open = openGroups.includes(group.id);
+            const hasActive = group.items.some(i => isActive(i.href));
+            return (
+              <div key={group.id} className={`navGroup ${open ? 'open' : ''}`}>
+                <button
+                  type="button"
+                  className={`navGroupHeader ${hasActive ? 'hasActive' : ''}`}
+                  onClick={() => toggleGroup(group.id)}
+                  aria-expanded={open}
+                  aria-controls={`navgroup-${group.id}`}
+                >
+                  <span className="navGroupLabel">
+                    <group.icon className="navIcon" size={16} strokeWidth={1.75} aria-hidden />
+                    <span className="navGroupText">{group.label}</span>
+                  </span>
+                  <span className="navGroupMeta">
+                    {hasActive && !open && (
+                      <span className="navActiveDot" aria-label="Contains current page" />
+                    )}
+                    <ChevronDown className="navChevron" size={14} strokeWidth={2} aria-hidden />
+                  </span>
+                </button>
+                <div
+                  id={`navgroup-${group.id}`}
+                  className="navGroupBody"
+                  role="group"
+                  aria-label={group.label}
+                >
+                  {group.items.map(item => {
+                    const active = isActive(item.href);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`navLink ${active ? 'active' : ''}`}
+                        aria-current={active ? 'page' : undefined}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </nav>
+
+        <div className="navFooter">
+          {authed && user && (
+            <div className="navUser" title={user.email}>
+              <span className="navUserEmail">{user.email}</span>
+              {user.role && <span className="navUserRole">{user.role}</span>}
+            </div>
+          )}
+          {authed ? (
+            <button type="button" className="btn navSignOut" onClick={signOut}>
+              Sign out
+            </button>
+          ) : status === 'checking' ? (
+            <span className="muted">Checking session…</span>
+          ) : status === 'unavailable' ? (
+            <Link href="/login" className="btn navSignOut">Retry sign in</Link>
+          ) : (
+            <Link href="/login" className="btn navSignOut">Sign in</Link>
+          )}
+        </div>
+      </aside>
+    </>
+  );
+}
+
+====================================================================================================
+FILE: apps\web\src\app\(app)\organizations\page.tsx
+====================================================================================================
+STATUS: FOUND
+SHA256: 37B0253CC868EBF49DD387CE20EEC145E8DFFFA2727CEB92D3D0BD9C0E61B312
+LINES: 558
+
+'use client';
+import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
+import { getData, postData } from '@/lib/api';
+import {
+  MetricCard,
+  Badge,
+  FormSection,
+  CollapsibleSection,
+  NoticeBanner,
+  Callout,
+  thLeft,
+  tdLeft,
+  tableStyle,
+  theadRow,
+  bodyRow,
+  mono,
+} from '@/components/ui';
+
+// ---- Types ----
+type Organization = {
+  _id: string;
+  slug: string;
+  name: string;
+  status: string;
+  baseCurrency: string;
+  timezone: string;
+  country: string;
+  createdBy?: string;
+  createdAt?: string;
+};
+
+type Membership = {
+  _id: string;
+  userId: string;
+  organizationId: string;
+  role: string;
+  status: string;
+  addedBy?: string;
+  createdAt?: string;
+};
+
+type AuditEvent = {
+  _id: string;
+  action: string;
+  actor: string;
+  reason?: string;
+  createdAt?: string;
+};
+
+type OrgForm = {
+  slug: string;
+  name: string;
+  baseCurrency: string;
+  timezone: string;
+  country: string;
+  reason: string;
+};
+
+type MemberForm = {
+  userId: string;
+  role: string;
+  reason: string;
+};
+
+const initialOrg: OrgForm = {
+  slug: '',
+  name: '',
+  baseCurrency: 'UGX',
+  timezone: 'Africa/Kampala',
+  country: 'Uganda',
+  reason: '',
+};
+
+const initialMember: MemberForm = {
+  userId: '',
+  role: 'manager',
+  reason: '',
+};
+
+const ROLES = ['owner', 'admin', 'manager', 'field_worker', 'finance', 'viewer'];
+const OBJECT_ID_RE = /^[a-fA-F0-9]{24}$/;
+
+export default function OrganizationsPage() {
+  const [items, setItems] = useState<Organization[]>([]);
+  const [selected, setSelected] = useState<Organization | null>(null);
+  const [members, setMembers] = useState<Membership[]>([]);
+  const [audit, setAudit] = useState<AuditEvent[]>([]);
+  const [orgForm, setOrgForm] = useState<OrgForm>(initialOrg);
+  const [memberForm, setMemberForm] = useState<MemberForm>(initialMember);
+  const [orgFormOpen, setOrgFormOpen] = useState(false);
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const load = useCallback(async () => {
+    setBusy(true);
+    setError('');
+    try {
+      const r = await getData<{ items: Organization[] }>('/organizations');
+      setItems(r?.items ?? []);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not load organizations');
+    } finally {
+      setBusy(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  async function choose(o: Organization) {
+    setSelected(o);
+    setError('');
+    try {
+      const [m, a] = await Promise.all([
+        getData<{ items: Membership[] }>(`/organizations/${o._id}/memberships`),
+        getData<AuditEvent[]>(`/organizations/${o._id}/audit?limit=100`).catch(
+          () => [] as AuditEvent[]
+        ),
+      ]);
+      setMembers(m?.items ?? []);
+      setAudit(Array.isArray(a) ? a : []);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not load details');
+    }
+  }
+
+  async function createOrg(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError('');
+    setNotice('');
+    try {
+      await postData('/organizations', orgForm);
+      setNotice('Organization created. No membership was granted.');
+      setOrgForm({ ...initialOrg });
+      setOrgFormOpen(false);
+      await load();
+      setTimeout(() => setNotice(''), 5000);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Creation failed');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function addMembership(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selected) return;
+    if (!OBJECT_ID_RE.test(memberForm.userId.trim())) {
+      setError('User ID must be a valid 24-character Mongo ObjectId.');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    setNotice('');
+    try {
+      await postData('/organizations/memberships', {
+        organizationId: selected._id,
+        ...memberForm,
+      });
+      setNotice('Membership added.');
+      setMemberForm({ ...initialMember });
+      await choose(selected);
+      setTimeout(() => setNotice(''), 5000);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Membership creation failed');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const activeOrgs = items.filter(o => o.status === 'active').length;
+  const totalMemberships = selected ? members.length : 0;
+  const totalAuditEvents = audit.length;
+
+  return (
+    <>
+        <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.4, color: '#36764b', margin: '0 0 8px' }}>
+          FORESTOS · ORGANIZATION REGISTRY
+        </p>
+        <h1 style={{ marginTop: 0 }}>Organization Registry</h1>
+        <p className="muted" style={{ marginBottom: 24, maxWidth: 900 }}>
+          A foundation for multiple farms and agribusiness organizations. Creating an
+          organization does not grant access to its data — membership must be granted
+          explicitly.
+        </p>
+
+        {error && <p className="error">{error}</p>}
+        {notice && <NoticeBanner message={notice} />}
+
+        {/* Metric cards */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 16,
+            marginBottom: 24,
+          }}
+        >
+          <MetricCard
+            label="Organizations"
+            value={String(items.length)}
+            detail={`${activeOrgs} active`}
+          />
+          <MetricCard
+            label="Selected organization"
+            value={selected ? selected.slug : '—'}
+            detail={selected ? selected.name : 'Click an organization to inspect'}
+          />
+          <MetricCard
+            label="Memberships"
+            value={selected ? String(totalMemberships) : '—'}
+            detail={selected ? `in ${selected.slug}` : 'Not selected'}
+          />
+          <MetricCard
+            label="Audit events"
+            value={selected ? String(totalAuditEvents) : '—'}
+            detail={selected ? 'for this organization' : 'Not selected'}
+          />
+        </div>
+
+        {/* Create org — collapsible */}
+        <CollapsibleSection
+          title="Create organization"
+          open={orgFormOpen}
+          onToggle={() => setOrgFormOpen(o => !o)}
+          actionLabel="+ New organization"
+        >
+          <form onSubmit={createOrg}>
+            <FormSection title="Identity">
+              <label>
+                Unique slug *
+                <input
+                  value={orgForm.slug}
+                  onChange={e => setOrgForm({ ...orgForm, slug: e.target.value })}
+                  placeholder="forestos-demo-org"
+                  required
+                />
+              </label>
+              <label>
+                Organization name *
+                <input
+                  value={orgForm.name}
+                  onChange={e => setOrgForm({ ...orgForm, name: e.target.value })}
+                  placeholder="ForestOS Demo Org"
+                  required
+                />
+              </label>
+            </FormSection>
+
+            <FormSection title="Regional settings">
+              <label>
+                Base currency
+                <input
+                  value={orgForm.baseCurrency}
+                  onChange={e => setOrgForm({ ...orgForm, baseCurrency: e.target.value })}
+                  placeholder="UGX"
+                />
+              </label>
+              <label>
+                Timezone
+                <input
+                  value={orgForm.timezone}
+                  onChange={e => setOrgForm({ ...orgForm, timezone: e.target.value })}
+                  placeholder="Africa/Kampala"
+                />
+              </label>
+              <label>
+                Country
+                <input
+                  value={orgForm.country}
+                  onChange={e => setOrgForm({ ...orgForm, country: e.target.value })}
+                  placeholder="Uganda"
+                />
+              </label>
+            </FormSection>
+
+            <label style={{ display: 'block', marginTop: 16 }}>
+              Reason * (10–1000 characters, recorded in audit)
+              <textarea
+                value={orgForm.reason}
+                onChange={e => setOrgForm({ ...orgForm, reason: e.target.value })}
+                rows={3}
+                style={{ width: '100%', marginTop: 4 }}
+                placeholder="Why is this organization being created?"
+                required
+              />
+            </label>
+
+            <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
+              <button className="btn" disabled={busy || orgForm.reason.trim().length < 10}>
+                {busy ? 'Creating…' : 'Create organization'}
+              </button>
+              <button
+                className="btn"
+                type="button"
+                onClick={() => {
+                  setOrgFormOpen(false);
+                  setError('');
+                }}
+                disabled={busy}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </CollapsibleSection>
+
+        {/* Organization list */}
+        <section className="panel" style={{ marginBottom: 16 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'baseline',
+              marginBottom: 16,
+            }}
+          >
+            <h2 style={{ margin: 0 }}>Registered organizations</h2>
+            <button className="btn" onClick={() => void load()} disabled={busy}>
+              {busy ? 'Loading…' : 'Refresh'}
+            </button>
+          </div>
+
+          {items.length === 0 ? (
+            <p className="muted" style={{ padding: '24px 0', textAlign: 'center' }}>
+              No organizations registered. Click + New organization to create the first one.
+            </p>
+          ) : (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+                gap: 12,
+              }}
+            >
+              {items.map(o => {
+                const active = selected?._id === o._id;
+                return (
+                  <button
+                    key={o._id}
+                    onClick={() => void choose(o)}
+                    style={{
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      padding: 14,
+                      backgroundColor: active ? '#f3f4f6' : 'white',
+                      border: active ? '2px solid #1f2937' : '1px solid #e5e7eb',
+                      borderRadius: 8,
+                      font: 'inherit',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                      <strong style={{ fontSize: 15 }}>{o.name}</strong>
+                      <Badge label={o.status} tone={o.status === 'active' ? 'ok' : 'neutral'} />
+                    </div>
+                    <div style={{ ...mono, fontSize: 12, color: '#6b7280', marginBottom: 4 }}>
+                      {o.slug}
+                    </div>
+                    <div className="muted" style={{ fontSize: 12 }}>
+                      {o.baseCurrency} · {o.timezone} · {o.country}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* Detail for selected */}
+        {selected && (
+          <>
+            <section className="panel" style={{ marginBottom: 16 }}>
+              <h2 style={{ marginTop: 0 }}>Add membership · {selected.name}</h2>
+              <p className="muted" style={{ marginBottom: 16, fontSize: 13 }}>
+                Memberships grant access to the organization&apos;s data. The user must already
+                exist (created via <code>/api/auth/users</code>). User ID must be the 24-character
+                Mongo ObjectId, not the email.
+              </p>
+
+              <form onSubmit={addMembership}>
+                <FormSection title="Membership details">
+                  <label>
+                    User ID (Mongo ObjectId) *
+                    <input
+                      value={memberForm.userId}
+                      onChange={e => setMemberForm({ ...memberForm, userId: e.target.value })}
+                      placeholder="6aec28339b731c98872ca3c2"
+                      pattern="[a-fA-F0-9]{24}"
+                      required
+                    />
+                  </label>
+                  <label>
+                    Role *
+                    <select
+                      value={memberForm.role}
+                      onChange={e => setMemberForm({ ...memberForm, role: e.target.value })}
+                    >
+                      {ROLES.map(r => (
+                        <option key={r}>{r}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label style={{ gridColumn: 'span 2' }}>
+                    Reason * (10–1000 characters)
+                    <input
+                      value={memberForm.reason}
+                      onChange={e => setMemberForm({ ...memberForm, reason: e.target.value })}
+                      placeholder="Grant owner access to the bootstrap user"
+                      required
+                    />
+                  </label>
+                </FormSection>
+
+                <button
+                  className="btn"
+                  disabled={
+                    busy ||
+                    !memberForm.userId.trim() ||
+                    memberForm.reason.trim().length < 10 ||
+                    !OBJECT_ID_RE.test(memberForm.userId.trim())
+                  }
+                  style={{ marginTop: 12 }}
+                >
+                  {busy ? 'Adding…' : 'Add membership'}
+                </button>
+              </form>
+            </section>
+
+            <section className="panel" style={{ marginBottom: 16 }}>
+              <h2 style={{ marginTop: 0 }}>
+                Memberships ({members.length})
+              </h2>
+              {members.length === 0 ? (
+                <p className="muted">No memberships for this organization yet.</p>
+              ) : (
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={tableStyle}>
+                    <thead>
+                      <tr style={theadRow}>
+                        <th style={thLeft}>User ID</th>
+                        <th style={thLeft}>Role</th>
+                        <th style={thLeft}>Status</th>
+                        <th style={thLeft}>Added by</th>
+                        <th style={thLeft}>Added at</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {members.map(m => (
+                        <tr key={m._id} style={bodyRow}>
+                          <td style={{ ...tdLeft, ...mono }}>{m.userId}</td>
+                          <td style={tdLeft}>
+                            <Badge
+                              label={m.role}
+                              tone={
+                                m.role === 'owner'
+                                  ? 'ok'
+                                  : m.role === 'admin'
+                                  ? 'info'
+                                  : 'neutral'
+                              }
+                            />
+                          </td>
+                          <td style={tdLeft}>
+                            <Badge
+                              label={m.status}
+                              tone={m.status === 'active' ? 'ok' : 'neutral'}
+                            />
+                          </td>
+                          <td style={{ ...tdLeft, ...mono, fontSize: 12 }}>{m.addedBy ?? '—'}</td>
+                          <td style={{ ...tdLeft, fontSize: 13 }}>
+                            {m.createdAt ? new Date(m.createdAt).toLocaleString() : '—'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+
+            <section className="panel" style={{ marginBottom: 16 }}>
+              <h2 style={{ marginTop: 0 }}>Audit history ({audit.length})</h2>
+              {audit.length === 0 ? (
+                <p className="muted">No audit events for this organization yet.</p>
+              ) : (
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={tableStyle}>
+                    <thead>
+                      <tr style={theadRow}>
+                        <th style={thLeft}>When</th>
+                        <th style={thLeft}>Action</th>
+                        <th style={thLeft}>Actor</th>
+                        <th style={thLeft}>Reason</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {audit.map((a, i) => (
+                        <tr key={a._id ?? i} style={bodyRow}>
+                          <td style={{ ...tdLeft, fontSize: 13, whiteSpace: 'nowrap' }}>
+                            {a.createdAt ? new Date(a.createdAt).toLocaleString() : '—'}
+                          </td>
+                          <td style={tdLeft}>
+                            <Badge
+                              label={a.action}
+                              tone={
+                                a.action.includes('created')
+                                  ? 'ok'
+                                  : a.action.includes('added')
+                                  ? 'info'
+                                  : 'neutral'
+                              }
+                            />
+                          </td>
+                          <td style={{ ...tdLeft, fontSize: 13, color: '#6b7280' }}>
+                            {a.actor ?? '—'}
+                          </td>
+                          <td style={{ ...tdLeft, fontSize: 13 }}>{a.reason ?? '—'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+          </>
+        )}
+
+        {/* Production warning — updated to reflect current state */}
+        <Callout title="Tenant isolation status (as of this session)">
+          <ul style={{ margin: '0 0 0 20px', padding: 0 }}>
+            <li style={{ marginBottom: 6 }}>
+              <strong>Verified tenant-scoped:</strong> plantations, hives, growth samples,
+              inventory, finance, tasks — each was tested with cross-tenant and fake-org
+              requests; all returned 404 as expected.
+            </li>
+            <li style={{ marginBottom: 6 }}>
+              <strong>Uses inline fetch (unverified):</strong> photo-evidence, case-evidence,
+              recovery-*, notification-policies, field-verification, field-work. These
+              modules have not been audited for <code>X-Organization-Id</code> enforcement.
+            </li>
+            <li style={{ marginBottom: 6 }}>
+              <strong>Also unverified:</strong> inspection, sales, procurement, and the
+              financial-investigation cluster. Test before hosting independent customer
+              organizations in this registry.
+            </li>
+          </ul>
+          <p style={{ margin: '12px 0 0', fontSize: 13 }}>
+            Do not host separate customer organizations in this registry until every
+            collection above has been verified to enforce organization scope end-to-end.
+          </p>
+        </Callout>
+      </>
+  );
+}
+
+====================================================================================================
+FILE: apps\api\src\organizations\organization-access.service.ts
+====================================================================================================
+STATUS: FOUND
+SHA256: C9A6EF04370D74BC5F9E07367354D793CEBAC57FDCD895E9250718314E35488C
+LINES: 97
+
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { Organization, OrganizationDocument } from './organization.schema';
+import {
+  OrganizationMembership,
+  OrganizationMembershipDocument,
+} from './organization-membership.schema';
+import { OrganizationContext } from './organization-context';
+
+@Injectable()
+export class OrganizationAccessService {
+  constructor(
+    @InjectModel(Organization.name)
+    private readonly organizations: Model<OrganizationDocument>,
+    @InjectModel(OrganizationMembership.name)
+    private readonly memberships: Model<OrganizationMembershipDocument>,
+  ) {}
+
+  /**
+   * Resolve a verified active organization context for a user.
+   * The organization ID is only a selector: membership and organization status
+   * are checked against the database on every call.
+   */
+  async resolveContext(userId: string, requestedOrganizationId: string): Promise<OrganizationContext> {
+    if (!Types.ObjectId.isValid(userId) || !Types.ObjectId.isValid(requestedOrganizationId)) {
+      throw new NotFoundException('Organization or membership not found');
+    }
+
+    const organization = await this.organizations.findOne({
+      _id: new Types.ObjectId(requestedOrganizationId),
+      status: 'active',
+    }).lean();
+
+    if (!organization) {
+      throw new NotFoundException('Organization or membership not found');
+    }
+
+    // Membership schema stores both references as strings, so query with the
+    // canonical string IDs rather than BSON ObjectId values.
+    const membership = await this.memberships.findOne({
+      userId: String(userId),
+      organizationId: String(requestedOrganizationId),
+      status: 'active',
+    }).lean();
+
+    if (!membership) {
+      throw new ForbiddenException('No active membership for the selected organization');
+    }
+
+    return {
+      organizationId: String(organization._id),
+      userId: String(userId),
+      roles: Array.isArray((membership as any).roles)
+        ? (membership as any).roles
+        : (typeof (membership as any).role === 'string' && (membership as any).role
+            ? [(membership as any).role]
+            : []),
+    };
+  }
+
+  async listMyOrganizations(userId: string) {
+    if (!Types.ObjectId.isValid(userId)) return [];
+    const memberships = await this.memberships.find({
+      userId: String(userId),
+      status: 'active',
+    }).lean();
+
+    const organizationIds = memberships
+      .map((m: any) => String(m.organizationId))
+      .filter((id: string) => Types.ObjectId.isValid(id));
+    if (!organizationIds.length) return [];
+
+    const organizations = await this.organizations.find({
+      _id: { $in: organizationIds.map((id: string) => new Types.ObjectId(id)) },
+      status: 'active',
+    }).lean();
+
+    const byId = new Map(organizations.map((o: any) => [String(o._id), o]));
+    return memberships.flatMap((m: any) => {
+      const org = byId.get(String(m.organizationId));
+      return org ? [{
+        organizationId: String(org._id),
+        slug: org.slug,
+        name: org.name,
+        roles: Array.isArray(m.roles)
+          ? m.roles
+          : (typeof m.role === 'string' && m.role ? [m.role] : []),
+      }] : [];
+    });
+  }
+}
+
+
+====================================================================================================
+FILE: apps\api\src\organizations\organization-access.controller.ts
+====================================================================================================
+STATUS: FOUND
+SHA256: BDDD800867B440D72D95C353B2B5364C637DC6DC85C240417BBE0243D68BD7A5
+LINES: 43
+
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Headers,
+  Req,
+} from '@nestjs/common';
+import { Request } from 'express';
+
+import { OrganizationAccessService } from './organization-access.service';
+
+type AuthenticatedRequest = Request & {
+  user?: { sub?: string; userId?: string; id?: string };
+};
+
+@Controller('organization-access')
+export class OrganizationAccessController {
+  constructor(private readonly access: OrganizationAccessService) {}
+
+  @Get('mine')
+  async mine(@Req() req: AuthenticatedRequest) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    return { organizations: await this.access.listMyOrganizations(userId) };
+  }
+
+  @Get('context')
+  async context(
+    @Req() req: AuthenticatedRequest,
+    @Headers('x-organization-id') requestedOrganizationId?: string,
+  ) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!requestedOrganizationId) {
+      throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+    }
+    return {
+      context: await this.access.resolveContext(userId, requestedOrganizationId),
+      note: 'Context is verified for this response; domain endpoints must explicitly enforce it.',
+    };
+  }
+}
+
+
+====================================================================================================
+FILE: apps\api\src\organizations\organization-membership.schema.ts
+====================================================================================================
+STATUS: FOUND
+SHA256: C19185989BA59774E5C58275BADFBA3AC613A4D8D0E8E84721CFE7C7CF1FCAE5
+LINES: 36
+
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+
+export type OrganizationMembershipDocument =
+  HydratedDocument<OrganizationMembership>;
+
+@Schema({ timestamps: true, versionKey: false })
+export class OrganizationMembership {
+  @Prop({ required: true, index: true, trim: true, lowercase: true })
+  userId!: string;
+
+  @Prop({ required: true, index: true, trim: true })
+  organizationId!: string;
+
+  @Prop({
+    required: true,
+    enum: ['owner', 'admin', 'manager', 'field_worker', 'finance', 'viewer'],
+  })
+  role!: string;
+
+  @Prop({ type: String, enum: ['active', 'suspended'], default: 'active' })
+  status!: string;
+
+  @Prop({ required: true, trim: true })
+  addedBy!: string;
+}
+
+export const OrganizationMembershipSchema =
+  SchemaFactory.createForClass(OrganizationMembership);
+
+OrganizationMembershipSchema.index(
+  { userId: 1, organizationId: 1 },
+  { unique: true },
+);
+
+OrganizationMembershipSchema.index({ organizationId: 1, status: 1, role: 1 });
+
+====================================================================================================
+FILE: apps\api\src\organizations\organizations.controller.ts
+====================================================================================================
+STATUS: FOUND
+SHA256: B7BF36348D50EC32BA8D8E0E6DA00CF7CDD5064C3D8FB1F7F7F436C8B16BC4E9
+LINES: 12
+
+import {Body,Controller,Get,Param,Post,Query,Req} from '@nestjs/common';import {Roles} from '../auth/roles.decorator';import {OrganizationsService} from './organizations.service';
+@Controller('organizations') @Roles('owner')
+export class OrganizationsController{
+ constructor(private service:OrganizationsService){}
+ @Get() list(){return this.service.list()}
+ @Post() create(@Body() b:any,@Req() req:any){return this.service.create(b,this.actor(req))}
+ @Post('memberships') add(@Body() b:any,@Req() req:any){return this.service.addMembership(b,this.actor(req))}
+ @Get(':id/memberships') memberships(@Param('id') id:string){return this.service.membershipsFor(id)}
+ @Get(':id/audit') audit(@Param('id') id:string,@Query('limit') limit?:string){return this.service.history(id,limit===undefined?100:Number(limit))}
+ private actor(req:any){const u=req.user||{};return String(u.sub||u.email||u.username||'unknown').toLowerCase()}
+}
+
+
+====================================================================================================
+FILE: apps\api\src\organizations\organizations.service.ts
+====================================================================================================
+STATUS: FOUND
+SHA256: FEBEB451EE7F3E6803E0B56B22A2A79282CD89DC0C4320A0E1E307F8FBF4C5C4
+LINES: 150
+
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { Organization } from './organization.schema';
+import { OrganizationMembership } from './organization-membership.schema';
+import { OrganizationAudit } from './organization-audit.schema';
+import { User } from '../auth/user.schema';
+
+@Injectable()
+export class OrganizationsService {
+  constructor(
+    @InjectModel(Organization.name) private orgs: Model<Organization>,
+    @InjectModel(OrganizationMembership.name) private memberships: Model<OrganizationMembership>,
+    @InjectModel(OrganizationAudit.name) private audit: Model<OrganizationAudit>,
+    @InjectModel(User.name) private users: Model<User>,
+  ) {}
+
+  async list() {
+    const items = await this.orgs.find({}).sort({ createdAt: -1 }).limit(500).lean();
+    return {
+      items,
+      total: items.length,
+      limit: 500,
+      note: 'Registry view only; listing does not grant access to organization data.',
+    };
+  }
+
+  async create(b: any, actor: string) {
+    const slug = String(b?.slug || '').trim().toLowerCase();
+    const name = String(b?.name || '').trim();
+    const reason = String(b?.reason || '').trim();
+    const currency = String(b?.baseCurrency || 'UGX').trim().toUpperCase();
+    const timezone = String(b?.timezone || 'Africa/Kampala').trim();
+
+    if (!/^[a-z0-9][a-z0-9-]{2,62}$/.test(slug))
+      throw new BadRequestException('slug must be 3–63 lowercase letters, numbers, or hyphens');
+    if (!name || name.length > 160)
+      throw new BadRequestException('name is required (max 160 characters)');
+    if (reason.length < 10 || reason.length > 1000)
+      throw new BadRequestException('reason must contain 10–1000 characters');
+    if (!/^[A-Z]{3}$/.test(currency))
+      throw new BadRequestException('baseCurrency must be a 3-letter currency code');
+
+    try {
+      const d = await this.orgs.create({
+        slug,
+        name,
+        status: 'active',
+        baseCurrency: currency,
+        timezone,
+        country: String(b?.country || 'Uganda').trim().slice(0, 80),
+        createdBy: actor,
+        recordVersion: 1,
+      });
+      await this.audit.create({
+        organizationId: String(d._id),
+        actor,
+        action: 'organization_created',
+        reason,
+        details: { slug, name, currency, timezone },
+      });
+      return {
+        organization: d.toObject(),
+        note: 'No membership is granted automatically; a separate authorized membership grant is required.',
+      };
+    } catch (e: any) {
+      if (e?.code === 11000) throw new ConflictException('Organization slug already exists');
+      throw e;
+    }
+  }
+
+  async addMembership(b: any, actor: string) {
+    const organizationId = String(b?.organizationId || '').trim();
+    const userIdRaw = String(b?.userId || '').trim().toLowerCase();
+    const role = String(b?.role || '');
+    const reason = String(b?.reason || '').trim();
+
+    if (!organizationId || !userIdRaw)
+      throw new BadRequestException('organizationId and userId are required');
+
+    // NEW: validate the userId is a valid Mongo ObjectId
+    if (!Types.ObjectId.isValid(userIdRaw)) {
+      throw new BadRequestException(
+        'userId must be a valid 24-character Mongo ObjectId (not an email address)',
+      );
+    }
+
+    if (!['owner', 'admin', 'manager', 'field_worker', 'finance', 'viewer'].includes(role))
+      throw new BadRequestException('Unsupported membership role');
+    if (reason.length < 10 || reason.length > 1000)
+      throw new BadRequestException('reason must contain 10–1000 characters');
+
+    // NEW: verify the organization exists and is active
+    const org = await this.orgs.findById(organizationId).lean();
+    if (!org) throw new NotFoundException('Organization not found');
+    if (org.status !== 'active')
+      throw new ConflictException('Organization is suspended');
+
+    // NEW: verify the target user actually exists
+    const targetUser = await this.users.findById(userIdRaw).select('_id email active').lean();
+    if (!targetUser) {
+      throw new NotFoundException('User not found. Create the user account first via /api/auth/users.');
+    }
+    if (!targetUser.active) {
+      throw new ConflictException('User account is deactivated.');
+    }
+
+    try {
+      const m = await this.memberships.create({
+        organizationId,
+        userId: userIdRaw,
+        role,
+        status: 'active',
+        addedBy: actor,
+      });
+      await this.audit.create({
+        organizationId,
+        actor,
+        action: 'membership_added',
+        reason,
+        details: { userId: userIdRaw, role, membershipId: String(m._id) },
+      });
+      return m.toObject();
+    } catch (e: any) {
+      if (e?.code === 11000) throw new ConflictException('Membership already exists');
+      throw e;
+    }
+  }
+
+  async membershipsFor(id: string) {
+    if (!(await this.orgs.findById(id).lean()))
+      throw new NotFoundException('Organization not found');
+    const items = await this.memberships
+      .find({ organizationId: id })
+      .sort({ createdAt: -1 })
+      .limit(1000)
+      .lean();
+    return { organizationId: id, items, total: items.length };
+  }
+
+  async history(id: string, limit = 100) {
+    if (!(await this.orgs.findById(id).lean()))
+      throw new NotFoundException('Organization not found');
+    return this.audit
+      .find({ organizationId: id })
+      .sort({ createdAt: -1 })
+      .limit(Math.max(1, Math.min(500, Math.floor(Number(limit) || 100))))
+      .lean();
+  }
+}

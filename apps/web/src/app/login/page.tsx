@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { useSession } from '@/lib/session-context';
+import { ApiError } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
@@ -34,7 +35,17 @@ export default function Login() {
         setError('Sign in could not be completed. Please try again.');
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Sign in failed');
+      if (e instanceof ApiError) {
+        if (e.kind === 'network' || e.status >= 500) {
+          setError('ForestOS is unavailable. Check your connection and try again.');
+        } else if (e.status === 401) {
+          setError('Email or password is incorrect.');
+        } else {
+          setError(e.message);
+        }
+      } else {
+        setError(e instanceof Error ? e.message : 'Sign in failed');
+      }
     } finally {
       setBusy(false);
     }

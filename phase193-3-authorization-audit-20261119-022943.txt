@@ -1,0 +1,1009 @@
+﻿FORESTOS PHASE 193.3 — AUTHORIZATION AUDIT
+Generated: 2026-11-19 02:29:43
+READ-ONLY — NO SOURCE FILES MODIFIED
+
+========== CONTROLLER INVENTORY ==========
+
+CONTROLLER: health.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Get('ready')
+
+CONTROLLER: alert-center\alert-center.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Post('refresh')
+@Patch(':id/state')
+
+CONTROLLER: auth\auth.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Post('users')
+@Get('me')
+
+CONTROLLER: backup-continuity\backup-continuity.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('records')
+@Post('records')
+@Post('records/:id/verify')
+@Post('recovery-drill')
+
+CONTROLLER: capital-allocation\capital-allocation.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post('policy')
+@Post('proposals')
+@Patch('proposals/:id/review')
+
+CONTROLLER: capital-spend-verification\capital-spend-verification.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('reconciliation')
+@Get()
+@Post()
+@Patch(':id/review')
+@Patch(':id/evidence-reference')
+@Post(':id/correction-request')
+@Post(':id/reversal')
+
+CONTROLLER: case-evidence\case-evidence.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Post('upload')
+@Get(':id/download')
+@Get('recovery-escalations/provider-health')
+@Post('recovery-escalations/events/:id/replay')
+@Get('recovery-escalations/scheduler-status')
+@Post('recovery-escalations/run')
+@Get('recovery-escalations/events')
+@Get('recovery-escalations/audit-summary')
+@Get('recovery-escalations/delivery-status')
+@Post('recovery-escalations/deliver')
+@Post('recovery-escalations/retry-failed')
+@Get('recovery-alerts')
+@Get('recovery-incidents')
+@Post('recovery-incidents')
+@Patch('recovery-incidents/:id')
+@Post('recovery-incidents/:id/approve')
+@Post('recovery-incidents/:id/close')
+@Get('operations/health')
+@Post('operations/reconcile')
+@Get()
+@Get(':id/history')
+@Post(':id/review')
+@Post(':id/quarantine')
+
+CONTROLLER: cashflow\cashflow.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('positions')
+@Post('positions')
+@Get('plans')
+@Post('plans')
+@Get('decisions')
+@Post('decisions')
+
+CONTROLLER: command-centre\command-centre.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+
+CONTROLLER: corrective-actions\corrective-actions.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Get('analytics')
+@Post()
+@Post('from-inspection/:inspectionId')
+@Post(':id/update')
+@Post(':id/review')
+
+CONTROLLER: cost-intelligence\cost-intelligence.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('plans')
+@Post('plans')
+@Get('allocations')
+@Post('allocations')
+
+CONTROLLER: data-integrity\data-integrity.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('report')
+
+CONTROLLER: farm-map\farm-map.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post()
+@Post(':id/archive')
+
+CONTROLLER: field-inspections\field-inspections.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post()
+@Post(':id/submit')
+@Post(':id/review')
+
+CONTROLLER: field-logs\field-logs.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post()
+@Patch(':id')
+
+CONTROLLER: field-navigation\field-navigation.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post()
+@Post(':id/archive')
+
+CONTROLLER: field-verification\field-verification.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post()
+@Patch(':id/approve')
+@Patch(':id/reject')
+
+CONTROLLER: financial-action-centre\financial-action-centre.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Patch(':actionId')
+
+CONTROLLER: financial-audit-trail\financial-audit-trail.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+
+CONTROLLER: financial-control-performance\financial-control-performance.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+
+CONTROLLER: financial-control-report\financial-control-report.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+
+CONTROLLER: financial-escalations\financial-escalations.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Patch(':escalationId')
+
+CONTROLLER: financial-evidence\financial-evidence.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post()
+@Patch(':evidenceId/review')
+
+CONTROLLER: financial-exceptions\financial-exceptions.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+
+CONTROLLER: financial-governance\financial-governance.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+
+CONTROLLER: financial-investigation-cases\financial-investigation-cases.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Get(':id')
+@Post()
+@Patch(':id')
+@Post(':id/second-review')
+@Post(':id/reopen')
+
+CONTROLLER: financial-investigations\financial-investigation.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post()
+@Patch(':id')
+
+CONTROLLER: financial-reconciliation\financial-reconciliation.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post()
+@Patch(':id/review')
+
+CONTROLLER: financial-reports\financial-reports.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('monthly')
+
+CONTROLLER: harvest\harvest.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('plans')
+@Post('plans')
+@Patch('plans/:id')
+@Get('quotes')
+@Post('quotes')
+@Get('costs')
+@Post('costs')
+@Get('scenario/:planId')
+
+CONTROLLER: investment\investment.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('scenarios')
+@Post('scenarios')
+@Patch('scenarios/:id/status')
+@Post('decisions')
+
+CONTROLLER: maintenance\maintenance.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('assets')
+@Post('assets')
+@Patch('assets/:id')
+@Get('records')
+@Post('records')
+@Patch('records/:id')
+@Get('parts')
+@Post('parts')
+@Patch('parts/:id')
+
+CONTROLLER: management-intelligence\management-intelligence.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+
+CONTROLLER: monthly-financial-close\monthly-financial-close.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Get('versions/:month')
+@Post()
+@Patch(':id/review')
+@Patch(':id/reopen')
+
+CONTROLLER: notification-policies\notification-policies.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Post('evaluate')
+@Get()
+@Post()
+@Patch(':policyKey')
+@Get(':policyKey/history')
+
+CONTROLLER: nursery\nursery.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('batches')
+@Post('batches')
+@Get('movements')
+@Post('movements')
+
+CONTROLLER: organizations\organizations.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post()
+@Post('memberships')
+@Get(':id/memberships')
+@Get(':id/audit')
+
+CONTROLLER: performance-intelligence\performance-intelligence.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('catalog')
+@Post('apply')
+
+CONTROLLER: performance-strategy\performance-strategy.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Post('targets')
+@Patch('targets/:id')
+@Post('targets/:id/updates')
+@Get('targets/:id/history')
+
+CONTROLLER: photo-evidence\photo-evidence.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post('upload')
+@Get(':id/file')
+@Patch(':id/approve')
+@Patch(':id/reject')
+
+CONTROLLER: procurement\procurement.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('suppliers')
+@Post('suppliers')
+@Patch('suppliers/:id')
+@Get('requests')
+@Post('requests')
+@Patch('requests/:id')
+@Get('orders')
+@Post('orders')
+@Patch('orders/:id')
+@Get('receipts')
+@Post('receipts')
+
+CONTROLLER: regeneration\regeneration.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('plans')
+@Post('plans')
+@Patch('plans/:id')
+@Get('costs')
+@Post('costs')
+@Get('survival-checks')
+@Post('survival-checks')
+
+CONTROLLER: registry-persistence\registry-persistence.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Post('batches')
+
+CONTROLLER: reinvestment-decision-engine\reinvestment-decision-engine.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+
+CONTROLLER: risk-management\risk-management.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('risks')
+@Post('risks')
+@Patch('risks/:id')
+@Get('actions')
+@Post('actions')
+@Patch('actions/:id')
+
+CONTROLLER: standard-operating-procedures\standard-operating-procedures.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('overview')
+@Get('templates')
+@Post('seed-defaults')
+@Post('templates')
+@Patch('templates/:id/status')
+@Get('my-runs')
+@Get('runs')
+@Post('runs')
+@Patch('runs/:id')
+
+CONTROLLER: statement-matching\statement-matching.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('imports')
+@Get('imports/:importId')
+@Post('imports')
+@Get('imports/:importId/rows/:rowId/candidates')
+@Post('imports/:importId/rows/:rowId/decision')
+
+CONTROLLER: video-evidence\video-evidence.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get()
+@Post('upload')
+@Get(':id/file')
+@Patch(':id/approve')
+@Patch(':id/reject')
+
+CONTROLLER: workforce\workforce.controller.ts
+OrganizationAccessService: False
+resolveContext: False
+Routes:
+@Get('dashboard')
+@Get('workers')
+@Post('workers')
+@Get('tasks')
+@Post('tasks')
+@Patch('tasks/:id')
+@Get('entries')
+@Post('entries')
+
+============================================================
+SOURCE: auth\roles.guard.ts
+============================================================
+
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { Model } from 'mongoose';
+import { IS_PUBLIC_KEY, ROLES_KEY } from './roles.decorator';
+import { User } from './user.schema';
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(
+    private readonly jwt: JwtService,
+    private readonly reflector: Reflector,
+    @InjectModel(User.name)
+    private readonly users: Model<User>,
+  ) {}
+
+  async canActivate(ctx: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(
+      IS_PUBLIC_KEY,
+      [ctx.getHandler(), ctx.getClass()],
+    );
+
+    if (isPublic) {
+      return true;
+    }
+
+    const req = ctx.switchToHttp().getRequest();
+    const authorization = req.headers?.authorization;
+
+    if (typeof authorization !== 'string') {
+      throw new UnauthorizedException('Sign in required');
+    }
+
+    const bearerMatch = /^Bearer\s+(\S+)$/i.exec(authorization.trim());
+
+    if (!bearerMatch) {
+      throw new UnauthorizedException('Sign in required');
+    }
+
+    const token = bearerMatch[1];
+
+    let claims: Record<string, unknown>;
+
+    try {
+      claims = await this.jwt.verifyAsync<Record<string, unknown>>(token);
+    } catch {
+      throw new UnauthorizedException('Invalid or expired session');
+    }
+
+    const subject = claims.sub;
+
+    if (
+      typeof subject !== 'string' ||
+      !/^[a-fA-F0-9]{24}$/.test(subject)
+    ) {
+      throw new UnauthorizedException('Invalid or expired session');
+    }
+
+    // The database is authoritative for current account status and role.
+    // Database failures intentionally propagate rather than being
+    // incorrectly reported as invalid JWTs.
+    const account = await this.users
+      .findById(subject)
+      .select('_id email role active')
+      .exec();
+
+    if (!account || account.active !== true) {
+      throw new UnauthorizedException('Account is unavailable');
+    }
+
+    req.user = {
+      ...claims,
+      sub: String(account._id),
+      email: account.email,
+      role: account.role,
+    };
+
+    const roles = this.reflector.getAllAndOverride<string[]>(
+      ROLES_KEY,
+      [ctx.getHandler(), ctx.getClass()],
+    );
+
+    if (roles?.length && !roles.includes(account.role)) {
+      throw new ForbiddenException(
+        'Your account cannot access this action',
+      );
+    }
+
+    return true;
+  }
+}
+
+export { AuthGuard as RolesGuard };
+
+============================================================
+SOURCE: auth\roles.decorator.ts
+============================================================
+import {SetMetadata} from '@nestjs/common';
+export const IS_PUBLIC_KEY='isPublic';
+export const Public=()=>SetMetadata(IS_PUBLIC_KEY,true);
+export const ROLES_KEY='roles';
+export const Roles=(...roles:string[])=>SetMetadata(ROLES_KEY,roles);
+
+============================================================
+SOURCE: organizations\organization-access.service.ts
+============================================================
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { Organization, OrganizationDocument } from './organization.schema';
+import {
+  OrganizationMembership,
+  OrganizationMembershipDocument,
+} from './organization-membership.schema';
+import { OrganizationContext } from './organization-context';
+
+@Injectable()
+export class OrganizationAccessService {
+  constructor(
+    @InjectModel(Organization.name)
+    private readonly organizations: Model<OrganizationDocument>,
+    @InjectModel(OrganizationMembership.name)
+    private readonly memberships: Model<OrganizationMembershipDocument>,
+  ) {}
+
+  /**
+   * Resolve a verified active organization context for a user.
+   * The organization ID is only a selector: membership and organization status
+   * are checked against the database on every call.
+   */
+  async resolveContext(userId: string, requestedOrganizationId: string): Promise<OrganizationContext> {
+    if (!Types.ObjectId.isValid(userId) || !Types.ObjectId.isValid(requestedOrganizationId)) {
+      throw new NotFoundException('Organization or membership not found');
+    }
+
+    const organization = await this.organizations.findOne({
+      _id: new Types.ObjectId(requestedOrganizationId),
+      status: 'active',
+    }).lean();
+
+    if (!organization) {
+      throw new NotFoundException('Organization or membership not found');
+    }
+
+    // Membership schema stores both references as strings, so query with the
+    // canonical string IDs rather than BSON ObjectId values.
+    const membership = await this.memberships.findOne({
+      userId: String(userId),
+      organizationId: String(requestedOrganizationId),
+      status: 'active',
+    }).lean();
+
+    if (!membership) {
+      throw new ForbiddenException('No active membership for the selected organization');
+    }
+
+    return {
+      organizationId: String(organization._id),
+      userId: String(userId),
+      roles: Array.isArray((membership as any).roles)
+        ? (membership as any).roles
+        : (typeof (membership as any).role === 'string' && (membership as any).role
+            ? [(membership as any).role]
+            : []),
+    };
+  }
+
+  async listMyOrganizations(userId: string) {
+    if (!Types.ObjectId.isValid(userId)) return [];
+    const memberships = await this.memberships.find({
+      userId: String(userId),
+      status: 'active',
+    }).lean();
+
+    const organizationIds = memberships
+      .map((m: any) => String(m.organizationId))
+      .filter((id: string) => Types.ObjectId.isValid(id));
+    if (!organizationIds.length) return [];
+
+    const organizations = await this.organizations.find({
+      _id: { $in: organizationIds.map((id: string) => new Types.ObjectId(id)) },
+      status: 'active',
+    }).lean();
+
+    const byId = new Map(organizations.map((o: any) => [String(o._id), o]));
+    return memberships.flatMap((m: any) => {
+      const org = byId.get(String(m.organizationId));
+      return org ? [{
+        organizationId: String(org._id),
+        slug: org.slug,
+        name: org.name,
+        roles: Array.isArray(m.roles)
+          ? m.roles
+          : (typeof m.role === 'string' && m.role ? [m.role] : []),
+      }] : [];
+    });
+  }
+}
+
+============================================================
+SOURCE: organizations\organization-context.ts
+============================================================
+/**
+ * Phase 86 â€” request-scoped organization context primitives.
+ *
+ * Security note:
+ * These primitives do not themselves establish tenant isolation. They provide
+ * a typed, fail-closed boundary for modules to adopt. Never trust an
+ * organization ID supplied by a query string/body/header without resolving
+ * the authenticated user's active membership server-side.
+ */
+export interface OrganizationContext {
+  organizationId: string;
+  userId: string;
+  roles: string[];
+}
+
+export const ORGANIZATION_CONTEXT_KEY = 'forestOS.organizationContext';
+
+export class OrganizationContextError extends Error {
+  constructor(message = 'An active organization context is required') {
+    super(message);
+    this.name = 'OrganizationContextError';
+  }
+}
+
+export function requireOrganizationContext(
+  context: OrganizationContext | undefined | null,
+): OrganizationContext {
+  if (!context || !context.organizationId || !context.userId || !Array.isArray(context.roles)) {
+    throw new OrganizationContextError();
+  }
+  return context;
+}
+
+export function hasOrganizationRole(
+  context: OrganizationContext,
+  allowedRoles: string[],
+): boolean {
+  return context.roles.some((role) => allowedRoles.includes(role));
+}
+
+============================================================
+SOURCE: organizations\organization-membership.schema.ts
+============================================================
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+
+export type OrganizationMembershipDocument =
+  HydratedDocument<OrganizationMembership>;
+
+@Schema({ timestamps: true, versionKey: false })
+export class OrganizationMembership {
+  @Prop({ required: true, index: true, trim: true, lowercase: true })
+  userId!: string;
+
+  @Prop({ required: true, index: true, trim: true })
+  organizationId!: string;
+
+  @Prop({
+    required: true,
+    enum: ['owner', 'admin', 'manager', 'field_worker', 'finance', 'viewer'],
+  })
+  role!: string;
+
+  @Prop({ type: String, enum: ['active', 'suspended'], default: 'active' })
+  status!: string;
+
+  @Prop({ required: true, trim: true })
+  addedBy!: string;
+}
+
+export const OrganizationMembershipSchema =
+  SchemaFactory.createForClass(OrganizationMembership);
+
+OrganizationMembershipSchema.index(
+  { userId: 1, organizationId: 1 },
+  { unique: true },
+);
+
+OrganizationMembershipSchema.index({ organizationId: 1, status: 1, role: 1 });
+
+============================================================
+SOURCE: integration-workflows\integration-workflows.controller.ts
+============================================================
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
+
+import { IntegrationWorkflowsService } from './integration-workflows.service';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { OrganizationContext } from '../organizations/organization-context';
+
+@Controller('integration-workflows')
+@Roles('owner')
+export class IntegrationWorkflowsController {
+  constructor(
+    private readonly service: IntegrationWorkflowsService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(
+    req: any,
+    organizationId?: string,
+  ): Promise<OrganizationContext> {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+    if (!userId) {
+      throw new BadRequestException('Authenticated user ID is missing');
+    }
+
+    if (!organizationId) {
+      throw new BadRequestException(
+        'Set X-Organization-Id to an organization you belong to',
+      );
+    }
+
+    return this.organizationAccess.resolveContext(userId, organizationId);
+  }
+
+  @Get('dashboard')
+  dashboard() {
+    return this.service.dashboard();
+  }
+
+  @Get('events')
+  list(@Query() q: any) {
+    return this.service.list(q);
+  }
+
+  @Post('events')
+  create(@Body() b: any, @Req() req: any) {
+    return this.service.create(
+      b,
+      req.user?.sub || req.user?.email || 'owner',
+    );
+  }
+
+  @Post('events/:id/process')
+  async process(
+    @Param('id') id: string,
+    @Req() req: any,
+    @Headers('x-organization-id') orgId?: string,
+  ) {
+    const context = await this.context(req, orgId);
+
+    return this.service.process(context, id, context.userId);
+  }
+
+  @Post('events/:id/cancel')
+  cancel(@Param('id') id: string, @Req() req: any) {
+    return this.service.cancel(
+      id,
+      req.user?.sub || req.user?.email || 'owner',
+    );
+  }
+}
+
+
+
+
+
+// import {Body,Controller,Get,Param,Post,Query,Req,UseGuards} from '@nestjs/common';
+// import {IntegrationWorkflowsService} from './integration-workflows.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+// import {
+//   BadRequestException,
+//   Headers,
+// } from '@nestjs/common';
+
+// import { OrganizationAccessService } from '../organizations/organization-access.service';
+// import { OrganizationContext } from '../organizations/organization-context';
+
+// @Controller('integration-workflows')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class IntegrationWorkflowsController{
+//  constructor(
+//   private service: IntegrationWorkflowsService,
+//   private organizationAccess: OrganizationAccessService,
+// ) {}
+
+// private async context(
+//   req: any,
+//   organizationId?: string,
+// ): Promise<OrganizationContext> {
+//   const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+//   if (!userId) {
+//     throw new BadRequestException('Authenticated user ID is missing');
+//   }
+
+//   if (!organizationId) {
+//     throw new BadRequestException(
+//       'Set X-Organization-Id to an organization you belong to',
+//     );
+//   }
+
+//   return this.organizationAccess.resolveContext(userId, organizationId);
+// }
+//  @Get('dashboard') dashboard(){return this.service.dashboard();}
+//  @Get('events') list(@Query()q:any){return this.service.list(q);}
+//  @Post('events') create(@Body()b:any,@Req()req:any){return this.service.create(b,req.user?.sub||req.user?.email||'owner');}
+//  @Post('events/:id/process')
+// async process(
+//   @Param('id') id: string,
+//   @Req() req: any,
+//   @Headers('x-organization-id') orgId?: string,
+// ) {
+//   const context = await this.context(req, orgId);
+
+//   return this.service.process(
+//     context,
+//     id,
+//     context.userId,
+//   );
+// }
+// //  @Post('events/:id/process') process(@Param('id')id:string,@Req()req:any){return this.service.process(id,req.user?.sub||req.user?.email||'owner');}
+//  @Post('events/:id/cancel') cancel(@Param('id')id:string,@Req()req:any){return this.service.cancel(id,req.user?.sub||req.user?.email||'owner');}
+// }
+
+============================================================
+SOURCE: integration-workflows\integration-workflows.service.ts
+============================================================
+import {BadRequestException,Injectable,NotFoundException,ConflictException} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {WorkflowEvent,WorkflowEventDocument} from './workflow-event.schema';
+import {InventoryControlService} from '../inventory-control/inventory-control.service';
+import { OrganizationContext } from '../organizations/organization-context';    
+
+const eventTypes=['procurement_receipt','maintenance_parts_issue','nursery_stock_receipt','nursery_dispatch','manual_adjustment'];
+const allowedMovementTypes=['receipt','issue','adjustment_increase','adjustment_decrease','write_off'];
+function positive(v:any,label:string,min=0.001){const n=Number(v);if(!Number.isFinite(n)||n<min)throw new BadRequestException(`${label} must be >= ${min}`);return n;}
+function validDate(v:any){if(typeof v!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(v)||Number.isNaN(Date.parse(v)))throw new BadRequestException('movementDate must be YYYY-MM-DD');return v;}
+function eventCode(){return `WF-${Date.now()}-${Math.random().toString(36).slice(2,8).toUpperCase()}`;}
+@Injectable()
+export class IntegrationWorkflowsService{
+ constructor(@InjectModel(WorkflowEvent.name)private events:Model<WorkflowEventDocument>,private inventory:InventoryControlService){}
+ async dashboard(){
+  const [pending,processing,processed,failed,cancelled,recent]=await Promise.all([
+   this.events.countDocuments({status:'pending'}),this.events.countDocuments({status:'processing'}),
+   this.events.countDocuments({status:'processed'}),this.events.countDocuments({status:'failed'}),
+   this.events.countDocuments({status:'cancelled'}),this.events.find().sort({createdAt:-1}).limit(10).lean()
+  ]);
+  return {totals:{pending,processing,processed,failed,cancelled,total:pending+processing+processed+failed+cancelled},recent};
+ }
+ async list(q:any={}){const f:any={};if(q.status&&['pending','processing','processed','failed','cancelled'].includes(q.status))f.status=q.status;return this.events.find(f).sort({createdAt:-1}).limit(300).lean();}
+ async create(b:any,actor=''){
+  if(!eventTypes.includes(b?.eventType))throw new BadRequestException('Invalid eventType');
+  if(!b?.stockItemId)throw new BadRequestException('stockItemId is required');
+  const quantity=positive(b.quantity,'quantity');
+  const movementDate=validDate(b.movementDate);
+  let movementType:string;
+  if(b.eventType==='procurement_receipt'||b.eventType==='nursery_stock_receipt')movementType='receipt';
+  else if(b.eventType==='maintenance_parts_issue'||b.eventType==='nursery_dispatch')movementType='issue';
+  else {movementType=b.movementType;if(!allowedMovementTypes.includes(movementType))throw new BadRequestException('Choose a valid movementType for a manual adjustment');}
+  if(['receipt','adjustment_increase'].includes(movementType)) positive(b.unitCostUgx??0,'unitCostUgx',0);
+  const itemList = await this.inventory.listItems({} as any);
+  const item=itemList.find((x:any)=>String(x._id)===String(b.stockItemId));
+  if(!item)throw new NotFoundException('Stock item not found');
+  const event=await this.events.create({
+   eventCode:eventCode(),eventType:b.eventType,sourceModule:String(b.sourceModule||b.eventType).slice(0,80),
+   sourceRecordId:String(b.sourceRecordId||'').slice(0,120),sourceReference:String(b.sourceReference||'').slice(0,120),
+   stockItemId:String(b.stockItemId),quantity,movementType,unitCostUgx:positive(b.unitCostUgx??item.averageUnitCostUgx,'unitCostUgx',0),
+   movementDate,reason:String(b.reason||'').slice(0,500),status:'pending',createdBy:actor
+  });
+  return event;
+ }
+ async process(rawContext: OrganizationContext, id:string,actor=''){
+  const current=await this.events.findById(id);
+  if(!current)throw new NotFoundException('Workflow event not found');
+  if(current.status==='processed')return current;
+  if(current.status==='cancelled')throw new ConflictException('Cancelled events cannot be processed');
+  if(current.status==='processing')throw new ConflictException('This event is already being processed');
+  const claimed=await this.events.findOneAndUpdate({_id:id,status:{$in:['pending','failed']}},{$set:{status:'processing',errorMessage:''}},{new:true});
+  if(!claimed)throw new ConflictException('Event status changed; refresh and try again');
+  try{
+   // A retry after a partial failure checks for the event code before posting stock a second time.
+   const existing = await this.inventory.findMovementByCode(rawContext, claimed.eventCode);
+   if(existing){
+    claimed.status='processed';claimed.resultNote=`Existing stock movement ${claimed.eventCode} found; duplicate posting prevented.`;
+   }else{
+    const movement = await this.inventory.postMovement(
+  rawContext,
+  {
+    itemId: claimed.stockItemId,
+    movementCode: claimed.eventCode,
+    movementType: claimed.movementType,
+    movementDate: claimed.movementDate,
+    quantity: claimed.quantity,
+    unitCostUgx: claimed.unitCostUgx,
+    referenceType: claimed.sourceModule,
+    referenceCode: claimed.sourceReference || claimed.sourceRecordId || claimed.eventCode,
+    reason: claimed.reason || `Workflow event ${claimed.eventCode}`,
+  },
+  actor,
+);
+    claimed.status='processed';claimed.resultNote=`Stock movement ${movement.movementCode} posted.`;
+   }
+   claimed.processedBy=actor;claimed.processedAt=new Date();claimed.errorMessage='';await claimed.save();return claimed;
+  }catch(e:any){
+   claimed.status='failed';claimed.errorMessage=String(e?.message||'Processing failed').slice(0,1000);await claimed.save();throw e;
+  }
+ }
+ async cancel(id:string,actor=''){
+  const ev=await this.events.findById(id);if(!ev)throw new NotFoundException('Workflow event not found');
+  if(ev.status==='processed'||ev.status==='processing')throw new ConflictException('Processed or processing events cannot be cancelled');
+  if(ev.status==='cancelled')return ev;
+  ev.status='cancelled';ev.resultNote=`Cancelled by ${actor||'owner'}`;return ev.save();
+ }
+}

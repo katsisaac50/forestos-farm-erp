@@ -1,0 +1,2959 @@
+﻿FORESTOS PHASE 193.3.2 — TENANT ENFORCEMENT AUDIT
+Generated: 2026-11-19 02:33:45
+READ-ONLY — NO SOURCE FILES MODIFIED
+Project root: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity
+
+
+============================================================
+MODULE: cashflow
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\cashflow\cashflow.controller.ts
+SHA256: 173EF8B8DE7ED886318F5690A3D408B63A524DF7D7B89E54F408958C9DD7962C
+TOTAL LINES: 16
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { CashflowService } from './cashflow.service';
+[L4] 
+[L5] @Roles('owner')
+[L6] @Controller('cashflow')
+[L7] export class CashflowController {
+[L8]   constructor(private service: CashflowService) {}
+[L9]   @Get('dashboard') dashboard() { return this.service.dashboard(); }
+[L10]   @Get('positions') positions() { return this.service.listPositions(); }
+[L11]   @Post('positions') createPosition(@Body() body: any, @Req() req: any) { return this.service.createPosition(body, req.user); }
+[L12]   @Get('plans') plans() { return this.service.listPlans(); }
+[L13]   @Post('plans') createPlan(@Body() body: any, @Req() req: any) { return this.service.createPlan(body, req.user); }
+[L14]   @Get('decisions') decisions() { return this.service.listDecisions(); }
+[L15]   @Post('decisions') createDecision(@Body() body: any, @Req() req: any) { return this.service.createDecision(body, req.user); }
+[L16] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\cashflow\cashflow.schema.ts
+SHA256: 354284F2395B8C3B3C9AB1F971A3725C969ED92F5AB54BE5EFB7A2BCA106C3E2
+TOTAL LINES: 50
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] 
+[L4] @Schema({ timestamps: true })
+[L5] export class CashPosition {
+[L6]   @Prop({ required: true }) asOfDate!: string;
+[L7]   @Prop({ required: true, min: 0 }) openingCashUgx!: number;
+[L8]   @Prop({ required: true }) note!: string;
+[L9]   @Prop({ required: true }) recordedBy!: string;
+[L10] }
+[L11] export type CashPositionDocument = HydratedDocument<CashPosition>;
+[L12] export const CashPositionSchema = SchemaFactory.createForClass(CashPosition);
+[L13] CashPositionSchema.index({ asOfDate: -1 });
+[L14] 
+[L15] @Schema({ timestamps: true })
+[L16] export class CashflowPlan {
+[L17]   @Prop({ required: true, trim: true }) planCode!: string;
+[L18]   @Prop({ required: true, trim: true }) title!: string;
+[L19]   @Prop({ required: true }) periodStart!: string;
+[L20]   @Prop({ required: true }) periodEnd!: string;
+[L21]   @Prop({ required: true, enum: ['inflow','outflow','reserve','investment'] }) category!: string;
+[L22]   @Prop({ required: true, min: 0 }) plannedAmountUgx!: number;
+[L23]   @Prop({ required: true }) confidence!: string;
+[L24]   @Prop() relatedBusinessLine?: string;
+[L25]   @Prop() note?: string;
+[L26]   @Prop({ enum: ['planned','committed','completed','cancelled'], default: 'planned' }) status!: string;
+[L27]   @Prop({ required: true }) createdBy!: string;
+[L28] }
+[L29] export type CashflowPlanDocument = HydratedDocument<CashflowPlan>;
+[L30] export const CashflowPlanSchema = SchemaFactory.createForClass(CashflowPlan);
+[L31] CashflowPlanSchema.index({ planCode: 1 }, { unique: true });
+[L32] CashflowPlanSchema.index({ periodStart: 1, periodEnd: 1, status: 1 });
+[L33] 
+[L34] @Schema({ timestamps: true })
+[L35] export class CapitalDecision {
+[L36]   @Prop({ required: true, trim: true }) decisionCode!: string;
+[L37]   @Prop({ required: true }) decisionDate!: string;
+[L38]   @Prop({ required: true }) purpose!: string;
+[L39]   @Prop({ required: true, enum: ['eucalyptus','beekeeping','infrastructure','working_capital','reserve','other'] }) destination!: string;
+[L40]   @Prop({ required: true, min: 0 }) proposedAmountUgx!: number;
+[L41]   @Prop({ required: true, min: 0 }) protectedReserveUgx!: number;
+[L42]   @Prop({ required: true, min: 0 }) cashAvailableUgx!: number;
+[L43]   @Prop({ required: true, min: 0 }) otherCommittedUgx!: number;
+[L44]   @Prop({ required: true }) rationale!: string;
+[L45]   @Prop({ enum: ['draft','approved','rejected','executed'], default: 'draft' }) status!: string;
+[L46]   @Prop({ required: true }) recordedBy!: string;
+[L47] }
+[L48] export type CapitalDecisionDocument = HydratedDocument<CapitalDecision>;
+[L49] export const CapitalDecisionSchema = SchemaFactory.createForClass(CapitalDecision);
+[L50] CapitalDecisionSchema.index({ decisionCode: 1 }, { unique: true });
+
+------------------------------------------------------------
+SOURCE: apps\api\src\cashflow\cashflow.service.ts
+SHA256: B3BFAAEFA883CB0B5D1FF0E4C119FDAD267D3E548EE9584CCF8AADE3B108752D
+TOTAL LINES: 78
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { AuditService } from '../audit/audit.service';
+[L5] import { CashPosition, CashflowPlan, CapitalDecision } from './cashflow.schema';
+[L6] 
+[L7] @Injectable()
+[L8] export class CashflowService {
+[L9]   constructor(
+[L10]     @InjectModel(CashPosition.name) private positions: Model<CashPosition>,
+[L11]     @InjectModel(CashflowPlan.name) private plans: Model<CashflowPlan>,
+[L12]     @InjectModel(CapitalDecision.name) private decisions: Model<CapitalDecision>,
+[L13]     private audit: AuditService,
+[L14]   ) {}
+[L15] 
+[L16]   async dashboard() {
+[L17]     const [positions, plans, decisions] = await Promise.all([
+[L18]       this.positions.find().sort({ asOfDate: -1, createdAt: -1 }).limit(1).lean(),
+[L19]       this.plans.find().sort({ periodStart: 1 }).lean(),
+[L20]       this.decisions.find().sort({ decisionDate: -1 }).lean(),
+[L21]     ]);
+[L22]     const latest = positions[0] as any;
+[L23]     const plannedInflowsUgx = (plans as any[]).filter(p => p.category === 'inflow' && !['cancelled','completed'].includes(p.status)).reduce((s,p)=>s+Number(p.plannedAmountUgx||0),0);
+[L24]     const plannedOutflowsUgx = (plans as any[]).filter(p => p.category === 'outflow' && !['cancelled','completed'].includes(p.status)).reduce((s,p)=>s+Number(p.plannedAmountUgx||0),0);
+[L25]     const plannedReservesUgx = (plans as any[]).filter(p => p.category === 'reserve' && !['cancelled','completed'].includes(p.status)).reduce((s,p)=>s+Number(p.plannedAmountUgx||0),0);
+[L26]     const plannedInvestmentsUgx = (plans as any[]).filter(p => p.category === 'investment' && !['cancelled','completed'].includes(p.status)).reduce((s,p)=>s+Number(p.plannedAmountUgx||0),0);
+[L27]     const netPlannedMovementUgx = plannedInflowsUgx - plannedOutflowsUgx - plannedReservesUgx - plannedInvestmentsUgx;
+[L28]     const draftDecisions = (decisions as any[]).filter(d => ['draft','approved'].includes(d.status));
+[L29]     return {
+[L30]       latestCashPosition: latest || null,
+[L31]       plans,
+[L32]       decisions,
+[L33]       totals: { plannedInflowsUgx, plannedOutflowsUgx, plannedReservesUgx, plannedInvestmentsUgx, netPlannedMovementUgx },
+[L34]       capitalDecisionSummary: {
+[L35]         draftOrApprovedCount: draftDecisions.length,
+[L36]         proposedAmountUgx: draftDecisions.reduce((s,d)=>s+Number(d.proposedAmountUgx||0),0),
+[L37]       },
+[L38]       warning: latest ? 'The cash position is a manually entered snapshot, not a live bank balance. Reconcile all accounts and pending transactions before relying on it.' : 'No opening cash position recorded. Forecasts are planning scenarios only and must not be treated as available cash.',
+[L39]     };
+[L40]   }
+[L41] 
+[L42]   async listPositions() { return this.positions.find().sort({ asOfDate: -1, createdAt: -1 }).lean(); }
+[L43]   async createPosition(dto: any, user: any) {
+[L44]     if (!dto.asOfDate || !dto.note?.trim()) throw new BadRequestException('As-of date and reconciliation note are required.');
+[L45]     const amount = Number(dto.openingCashUgx);
+[L46]     if (!Number.isFinite(amount) || amount < 0) throw new BadRequestException('Cash position must be a valid non-negative amount.');
+[L47]     const row: any = await this.positions.create({ ...dto, openingCashUgx: amount, recordedBy: user.email });
+[L48]     await this.audit.record(user.email, 'created', 'cash_position', String(row._id), `Recorded cash position as of ${row.asOfDate}: UGX ${amount}`);
+[L49]     return row;
+[L50]   }
+[L51]   async listPlans() { return this.plans.find().sort({ periodStart: 1 }).lean(); }
+[L52]   async createPlan(dto: any, user: any) {
+[L53]     if (!dto.planCode?.trim() || !dto.title?.trim() || !dto.periodStart || !dto.periodEnd || !dto.category) throw new BadRequestException('Plan code, title, dates and category are required.');
+[L54]     if (dto.periodEnd < dto.periodStart) throw new BadRequestException('Period end must be on or after period start.');
+[L55]     const amount = Number(dto.plannedAmountUgx);
+[L56]     if (!Number.isFinite(amount) || amount < 0) throw new BadRequestException('Planned amount must be a valid non-negative UGX amount.');
+[L57]     if (await this.plans.findOne({ planCode: dto.planCode.trim() }).lean()) throw new BadRequestException('Plan code already exists.');
+[L58]     const row: any = await this.plans.create({ ...dto, planCode: dto.planCode.trim(), plannedAmountUgx: amount, createdBy: user.email });
+[L59]     await this.audit.record(user.email, 'created', 'cashflow_plan', String(row._id), `Created cash flow plan ${row.planCode}`);
+[L60]     return row;
+[L61]   }
+[L62]   async listDecisions() { return this.decisions.find().sort({ decisionDate: -1 }).lean(); }
+[L63]   async createDecision(dto: any, user: any) {
+[L64]     if (!dto.decisionCode?.trim() || !dto.decisionDate || !dto.purpose?.trim() || !dto.destination || !dto.rationale?.trim()) throw new BadRequestException('Decision code, date, purpose, destination and rationale are required.');
+[L65]     const fields = ['proposedAmountUgx','protectedReserveUgx','cashAvailableUgx','otherCommittedUgx'];
+[L66]     const amounts: any = {};
+[L67]     for (const f of fields) {
+[L68]       const n = Number(dto[f]);
+[L69]       if (!Number.isFinite(n) || n < 0) throw new BadRequestException(`${f} must be a valid non-negative amount.`);
+[L70]       amounts[f] = n;
+[L71]     }
+[L72]     if (await this.decisions.findOne({ decisionCode: dto.decisionCode.trim() }).lean()) throw new BadRequestException('Decision code already exists.');
+[L73]     const investable = Math.max(0, amounts.cashAvailableUgx - amounts.protectedReserveUgx - amounts.otherCommittedUgx);
+[L74]     const row: any = await this.decisions.create({ ...dto, ...amounts, decisionCode: dto.decisionCode.trim(), status: dto.status || 'draft', recordedBy: user.email });
+[L75]     await this.audit.record(user.email, 'created', 'capital_decision', String(row._id), `Created capital allocation decision ${row.decisionCode}`, { investableCashAtEntryUgx: investable, proposedAmountUgx: amounts.proposedAmountUgx });
+[L76]     return { ...row.toObject(), investableCashAtEntryUgx: investable, withinEnteredCashLimit: amounts.proposedAmountUgx <= investable };
+[L77]   }
+[L78] }
+
+============================================================
+MODULE: capital-allocation
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\capital-allocation\capital-allocation.controller.ts
+SHA256: E46E9B01EEF1A0BEC18FC0C257C0960D615B00DBABFC86488F1776D876569F3C
+TOTAL LINES: 12
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Patch, Post, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { CapitalAllocationService } from './capital-allocation.service';
+[L4] @Controller('capital-allocation')
+[L5] @Roles('owner')
+[L6] export class CapitalAllocationController {
+[L7]  constructor(private service:CapitalAllocationService){}
+[L8]  @Get() dashboard(){return this.service.dashboard();}
+[L9]  @Post('policy') savePolicy(@Body() body:any,@Req() req:any){return this.service.savePolicy(body,req.user);}
+[L10]  @Post('proposals') createProposal(@Body() body:any,@Req() req:any){return this.service.createProposal(body,req.user);}
+[L11]  @Patch('proposals/:id/review') review(@Param('id') id:string,@Body() body:any,@Req() req:any){return this.service.review(id,body,req.user);}
+[L12] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\capital-allocation\capital-allocation.schema.ts
+SHA256: 1A25A6394F87953ED271B774ED27A5D6DABFE66C4337570DD27ABAD2F9ADDB5E
+TOTAL LINES: 32
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] @Schema({timestamps:true})
+[L4] export class CapitalAllocationPolicy {
+[L5]  @Prop({required:true,unique:true,default:'default'}) policyKey!:string;
+[L6]  @Prop({required:true,min:0}) minimumOperatingReserveUgx!:number;
+[L7]  @Prop({required:true,min:0}) eucalyptusBudgetUgx!:number;
+[L8]  @Prop({required:true,min:0}) beekeepingBudgetUgx!:number;
+[L9]  @Prop({required:true,min:0}) infrastructureBudgetUgx!:number;
+[L10]  @Prop({required:true,min:0}) otherBudgetUgx!:number;
+[L11]  @Prop({required:true}) updatedBy!:string;
+[L12] }
+[L13] export type CapitalAllocationPolicyDocument=HydratedDocument<CapitalAllocationPolicy>;
+[L14] export const CapitalAllocationPolicySchema=SchemaFactory.createForClass(CapitalAllocationPolicy);
+[L15] @Schema({timestamps:true})
+[L16] export class CapitalAllocationProposal {
+[L17]  @Prop({required:true,unique:true,trim:true}) proposalCode!:string;
+[L18]  @Prop({required:true,trim:true}) title!:string;
+[L19]  @Prop({required:true,enum:['eucalyptus','beekeeping','infrastructure','other']}) businessLine!:string;
+[L20]  @Prop({required:true,min:0}) amountUgx!:number;
+[L21]  @Prop({required:true}) purpose!:string;
+[L22]  @Prop({required:true}) evidenceReference!:string;
+[L23]  @Prop({required:true,min:0,default:0}) verifiedSpendUgx!:number;
+[L24]  @Prop({required:true,enum:['proposed','approved','rejected','deferred','executed'],default:'proposed'}) status!:string;
+[L25]  @Prop({required:true}) createdBy!:string;
+[L26]  @Prop() reviewedBy?:string;
+[L27]  @Prop() reviewNote?:string;
+[L28]  @Prop() reviewedAt?:Date;
+[L29] }
+[L30] export type CapitalAllocationProposalDocument=HydratedDocument<CapitalAllocationProposal>;
+[L31] export const CapitalAllocationProposalSchema=SchemaFactory.createForClass(CapitalAllocationProposal);
+[L32] CapitalAllocationProposalSchema.index({businessLine:1,status:1});
+
+------------------------------------------------------------
+SOURCE: apps\api\src\capital-allocation\capital-allocation.service.ts
+SHA256: 0AEFEE929682DA2B96C2262069BC33B1597077C08057EE03E030D20019255960
+TOTAL LINES: 77
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { AuditService } from '../audit/audit.service';
+[L5] import { CashPosition, CashflowPlan, CapitalDecision } from '../cashflow/cashflow.schema';
+[L6] import { CapitalAllocationPolicy, CapitalAllocationProposal } from './capital-allocation.schema';
+[L7] import { FinancialEscalation } from '../financial-escalations/financial-escalations.schema';
+[L8] @Injectable()
+[L9] export class CapitalAllocationService {
+[L10]  constructor(
+[L11]   @InjectModel(CapitalAllocationPolicy.name) private policies:Model<CapitalAllocationPolicy>,
+[L12]   @InjectModel(CapitalAllocationProposal.name) private proposals:Model<CapitalAllocationProposal>,
+[L13]   @InjectModel(CashPosition.name) private positions:Model<CashPosition>,
+[L14]   @InjectModel(CashflowPlan.name) private plans:Model<CashflowPlan>,
+[L15]   @InjectModel(CapitalDecision.name) private decisions:Model<CapitalDecision>,
+[L16]   @InjectModel(FinancialEscalation.name) private escalations:Model<FinancialEscalation>,
+[L17]   private audit:AuditService,
+[L18]  ){}
+[L19]  async dashboard(){
+[L20]   const [policy,rows,positions,plans,decisions,escalations]=await Promise.all([
+[L21]    this.policies.findOne({policyKey:'default'}).lean(),
+[L22]    this.proposals.find().sort({createdAt:-1}).limit(500).lean(),
+[L23]    this.positions.find().sort({asOfDate:-1,createdAt:-1}).limit(1).lean(),
+[L24]    this.plans.find().sort({periodStart:1}).limit(1000).lean(),
+[L25]    this.decisions.find().sort({decisionDate:-1}).limit(1000).lean(),
+[L26]    this.escalations.find({status:{$ne:'Resolved'}}).limit(1000).lean(),
+[L27]   ]);
+[L28]   const p:any=policy||{minimumOperatingReserveUgx:0,eucalyptusBudgetUgx:0,beekeepingBudgetUgx:0,infrastructureBudgetUgx:0,otherBudgetUgx:0};
+[L29]   const cash:any=positions[0]||null;
+[L30]   const now=new Date().toISOString().slice(0,10);
+[L31]   const activePlans=(plans as any[]).filter(x=>!['cancelled','completed'].includes(x.status)&&(!x.periodEnd||x.periodEnd>=now));
+[L32]   const sum=(category:string)=>activePlans.filter(x=>x.category===category).reduce((s,x)=>s+Math.max(0,Number(x.plannedAmountUgx)||0),0);
+[L33]   const committed=(decisions as any[]).filter(x=>['approved','executed'].includes(x.status)).reduce((s,x)=>s+Math.max(0,Number(x.proposedAmountUgx)||0),0);
+[L34]   const plannedIn=sum('inflow'),plannedOut=sum('outflow'),plannedReserve=sum('reserve'),plannedInvest=sum('investment');
+[L35]   const currentCash=cash?Math.max(0,Number(cash.openingCashUgx)||0):null;
+[L36]   const indicative=Math.max(0,(currentCash??0)+plannedIn-plannedOut-Math.max(Number(p.minimumOperatingReserveUgx)||0,plannedReserve)-committed-plannedInvest);
+[L37]   const open=(escalations as any[]);
+[L38]   const approvedByLine:Record<string,number>={eucalyptus:0,beekeeping:0,infrastructure:0,other:0};
+[L39]   for(const x of rows as any[]) if(['approved','executed'].includes(x.status)) approvedByLine[x.businessLine]=(approvedByLine[x.businessLine]||0)+Number(x.amountUgx||0);
+[L40]   const budgetByLine:Record<string,number>={eucalyptus:Number(p.eucalyptusBudgetUgx)||0,beekeeping:Number(p.beekeepingBudgetUgx)||0,infrastructure:Number(p.infrastructureBudgetUgx)||0,other:Number(p.otherBudgetUgx)||0};
+[L41]   const budgets=Object.keys(budgetByLine).map(k=>({businessLine:k,budgetUgx:budgetByLine[k],approvedOrExecutedUgx:approvedByLine[k]||0,remainingUgx:Math.max(0,budgetByLine[k]-(approvedByLine[k]||0)),overBudget:(approvedByLine[k]||0)>budgetByLine[k]}));
+[L42]   return {policy:p,cashSnapshot:cash?{asOfDate:cash.asOfDate,amountUgx:currentCash,note:cash.note}:null,summary:{plannedInflowsUgx:plannedIn,plannedOutflowsUgx:plannedOut,plannedReservesUgx:plannedReserve,plannedInvestmentsUgx:plannedInvest,approvedCapitalCommitmentsUgx:committed,openEscalations:open.length,criticalEscalations:open.filter(x=>x.priority==='Critical').length,overdueEscalations:open.filter(x=>x.dueDate&&new Date(x.dueDate)<new Date()).length,indicativeUnallocatedCashUgx:cash?indicative:null},budgets,proposals:rows,warnings:[!policy?'No reserve or business-line budget policy has been saved. Configure one before using budget checks.':null,!cash?'No cash snapshot exists; capital proposals cannot be checked against recorded cash.':null,open.some(x=>x.priority==='Critical')?'Critical financial escalations remain open. Review before approving discretionary capital.':null,plans.length>=1000||decisions.length>=1000||escalations.length>=1000||rows.length>=500?'At least one source query reached its record limit; totals may be incomplete.':null].filter(Boolean)};
+[L43]  }
+[L44]  async savePolicy(dto:any,user:any){
+[L45]   const fields=['minimumOperatingReserveUgx','eucalyptusBudgetUgx','beekeepingBudgetUgx','infrastructureBudgetUgx','otherBudgetUgx'];
+[L46]   const values:any={policyKey:'default',updatedBy:user.email};
+[L47]   for(const f of fields){const n=Number(dto[f]);if(!Number.isFinite(n)||n<0)throw new BadRequestException(`${f} must be a non-negative amount.`);values[f]=n;}
+[L48]   const row=await this.policies.findOneAndUpdate({policyKey:'default'},{$set:values},{new:true,upsert:true,runValidators:true});
+[L49]   await this.audit.record(user.email,'updated','capital_allocation_policy',String(row._id),'Updated reserve and capital allocation budgets');
+[L50]   return row;
+[L51]  }
+[L52]  async createProposal(dto:any,user:any){
+[L53]   if(!dto.proposalCode?.trim()||!dto.title?.trim()||!dto.purpose?.trim()||!dto.evidenceReference?.trim())throw new BadRequestException('Proposal code, title, purpose and evidence reference are required.');
+[L54]   const amount=Number(dto.amountUgx);if(!Number.isFinite(amount)||amount<=0)throw new BadRequestException('Proposal amount must be greater than zero.');
+[L55]   if(!['eucalyptus','beekeeping','infrastructure','other'].includes(dto.businessLine))throw new BadRequestException('Select a valid business line.');
+[L56]   if(await this.proposals.findOne({proposalCode:dto.proposalCode.trim()}).lean())throw new BadRequestException('Proposal code already exists.');
+[L57]   const row=await this.proposals.create({...dto,proposalCode:dto.proposalCode.trim(),amountUgx:amount,status:'proposed',createdBy:user.email});
+[L58]   await this.audit.record(user.email,'created','capital_allocation_proposal',String(row._id),`Created capital proposal ${row.proposalCode}`);
+[L59]   return row;
+[L60]  }
+[L61]  async review(id:string,dto:any,user:any){
+[L62]   const row:any=await this.proposals.findById(id);if(!row)throw new NotFoundException('Capital proposal not found.');
+[L63]   if(!['approved','rejected','deferred','executed'].includes(dto.status))throw new BadRequestException('Invalid review status.');
+[L64]   if(!dto.reviewNote?.trim())throw new BadRequestException('A review note is required.');
+[L65]   if(dto.status==='approved'||dto.status==='executed'){
+[L66]    const d=await this.dashboard();
+[L67]    if(!d.cashSnapshot)throw new BadRequestException('Cannot approve without a recorded cash snapshot.');
+[L68]    if(d.summary.criticalEscalations>0||d.summary.overdueEscalations>0)throw new BadRequestException('Resolve or formally review critical/overdue financial escalations before approving.');
+[L69]    const budget=d.budgets.find((x:any)=>x.businessLine===row.businessLine);
+[L70]    if(!budget||Number(row.amountUgx)>budget.remainingUgx)throw new BadRequestException('Proposal exceeds the remaining business-line budget.');
+[L71]    if(Number(row.amountUgx)>Number(d.summary.indicativeUnallocatedCashUgx||0))throw new BadRequestException('Proposal exceeds indicative unallocated cash after reserves and commitments.');
+[L72]   }
+[L73]   row.status=dto.status;row.reviewedBy=user.email;row.reviewNote=dto.reviewNote.trim();row.reviewedAt=new Date();await row.save();
+[L74]   await this.audit.record(user.email,'updated','capital_allocation_proposal',String(row._id),`Capital proposal ${row.proposalCode} status set to ${row.status}`);
+[L75]   return row;
+[L76]  }
+[L77] }
+
+============================================================
+MODULE: financial-investigation-cases
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-investigation-cases\financial-investigation-case.schema.ts
+SHA256: 94B78C68B0A1DAFB0DF1EB917002B232FF8A35CFAD28A751D4D1E174B53F99B7
+TOTAL LINES: 26
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] export type FinancialInvestigationCaseDocument = HydratedDocument<FinancialInvestigationCase>;
+[L4] @Schema({ timestamps: true, versionKey: false })
+[L5] export class FinancialInvestigationCase {
+[L6]  @Prop({ required: true, unique: true, trim: true }) caseCode!: string;
+[L7]  @Prop({ required: true, trim: true }) title!: string;
+[L8]  @Prop({ required: true, enum: ['critical','high','review','medium','low'], default: 'review' }) severity!: string;
+[L9]  @Prop({ required: true, enum: ['open','under_investigation','awaiting_evidence','resolved','closed'], default: 'open', index: true }) status!: string;
+[L10]  @Prop({ required: true, trim: true }) description!: string;
+[L11]  @Prop({ required: true, trim: true }) sourceType!: string;
+[L12]  @Prop({ required: true, trim: true }) sourceReference!: string;
+[L13]  @Prop({ required: true, trim: true }) createdBy!: string;
+[L14]  @Prop({ trim: true }) assignedTo?: string;
+[L15]  @Prop({ trim: true }) evidenceReference?: string;
+[L16]  @Prop({ trim: true }) resolutionSummary?: string;
+[L17]  @Prop({ trim: true }) closeReason?: string;
+[L18]  @Prop({ required: true, default: 1, min: 1 }) recordVersion!: number;
+[L19]  @Prop({ required: true, default: false }) secondReviewRequired!: boolean;
+[L20]  @Prop({ trim: true }) secondReviewedBy?: string;
+[L21]  @Prop() secondReviewedAt?: Date;
+[L22]  @Prop({ trim: true }) lastUpdatedBy?: string;
+[L23] }
+[L24] export const FinancialInvestigationCaseSchema = SchemaFactory.createForClass(FinancialInvestigationCase);
+[L25] FinancialInvestigationCaseSchema.index({ status: 1, severity: 1, updatedAt: -1 });
+[L26] FinancialInvestigationCaseSchema.index({ sourceType: 1, sourceReference: 1 });
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-investigation-cases\financial-investigation-case-event.schema.ts
+SHA256: 95A706D6085FD6D46C4D81C42C340C446BCF3AEC67A14C0FEEAB38F8A5D6FC5E
+TOTAL LINES: 14
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] @Schema({ timestamps: true, versionKey: false })
+[L3] export class FinancialInvestigationCaseEvent {
+[L4]  @Prop({ required: true, index: true }) caseId!: string;
+[L5]  @Prop({ required: true, trim: true }) caseCode!: string;
+[L6]  @Prop({ required: true, enum: ['created','assigned','status_changed','note_added','evidence_added','resolution_proposed','second_reviewed','closed','reopened'] }) eventType!: string;
+[L7]  @Prop({ required: true, trim: true }) actor!: string;
+[L8]  @Prop({ required: true, trim: true }) reason!: string;
+[L9]  @Prop() previousValue?: string;
+[L10]  @Prop() newValue?: string;
+[L11]  @Prop() evidenceReference?: string;
+[L12] }
+[L13] export const FinancialInvestigationCaseEventSchema = SchemaFactory.createForClass(FinancialInvestigationCaseEvent);
+[L14] FinancialInvestigationCaseEventSchema.index({ caseId: 1, createdAt: 1 });
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-investigation-cases\financial-investigation-cases.controller.ts
+SHA256: B9904EB37DC61E074B65E4E2D26BC26359DDC3B0891CFEBE112603C746F60053
+TOTAL LINES: 16
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Post, Patch, Query, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { CreateInvestigationCaseDto, UpdateInvestigationCaseDto } from './dto';
+[L4] import { FinancialInvestigationCasesService } from './financial-investigation-cases.service';
+[L5] @Controller('financial-investigation-cases')
+[L6] @Roles('owner')
+[L7] export class FinancialInvestigationCasesController {
+[L8]  constructor(private service: FinancialInvestigationCasesService) {}
+[L9]  @Get() list(@Query('status') status?: string, @Query('severity') severity?: string) { return this.service.list(status, severity); }
+[L10]  @Get(':id') get(@Param('id') id: string) { return this.service.get(id); }
+[L11]  @Post() create(@Body() dto: CreateInvestigationCaseDto, @Req() req: any) { return this.service.create(dto, this.actor(req)); }
+[L12]  @Patch(':id') update(@Param('id') id: string, @Body() dto: UpdateInvestigationCaseDto, @Req() req: any) { return this.service.update(id, dto, this.actor(req)); }
+[L13]  @Post(':id/second-review') secondReview(@Param('id') id: string, @Body('reason') reason: string, @Req() req: any) { return this.service.secondReview(id, this.actor(req), reason); }
+[L14]  @Post(':id/reopen') reopen(@Param('id') id: string, @Body('reason') reason: string, @Req() req: any) { return this.service.reopen(id, this.actor(req), reason); }
+[L15]  private actor(req: any): string { const u = req.user || {}; return String(u.email || u.username || u.sub || 'unknown').toLowerCase(); }
+[L16] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-investigation-cases\financial-investigation-cases.service.ts
+SHA256: EEBB14A1BDE7FA22D6007494573D64DF052B1D11FE62F06A5ECEBD07F53A3A12
+TOTAL LINES: 63
+------------------------------------------------------------
+[L1] import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { FinancialInvestigationCase } from './financial-investigation-case.schema';
+[L5] import { FinancialInvestigationCaseEvent } from './financial-investigation-case-event.schema';
+[L6] import { CreateInvestigationCaseDto, UpdateInvestigationCaseDto } from './dto';
+[L7] @Injectable()
+[L8] export class FinancialInvestigationCasesService {
+[L9]  constructor(@InjectModel(FinancialInvestigationCase.name) private cases: Model<FinancialInvestigationCase>,
+[L10]  @InjectModel(FinancialInvestigationCaseEvent.name) private events: Model<FinancialInvestigationCaseEvent>) {}
+[L11]  async list(status?: string, severity?: string) {
+[L12]   if (status && !['open','under_investigation','awaiting_evidence','resolved','closed'].includes(status)) throw new BadRequestException('Invalid status filter');
+[L13]   if (severity && !['critical','high','review','medium','low'].includes(severity)) throw new BadRequestException('Invalid severity filter');
+[L14]   const filter: Record<string,string> = {}; if (status) filter.status=status; if (severity) filter.severity=severity;
+[L15]   return this.cases.find(filter).sort({updatedAt:-1}).limit(500).lean();
+[L16]  }
+[L17]  async get(id: string) {
+[L18]   const record = await this.cases.findById(id).lean(); if (!record) throw new NotFoundException('Case not found');
+[L19]   const events = await this.events.find({caseId:id}).sort({createdAt:1}).limit(1000).lean(); return {...record,events};
+[L20]  }
+[L21]  async create(dto: CreateInvestigationCaseDto, actor: string) {
+[L22]   const needsReview = dto.severity === 'critical' || dto.severity === 'high';
+[L23]   const r = await this.cases.create({...dto,status:'open',createdBy:actor,lastUpdatedBy:actor,recordVersion:1,secondReviewRequired:needsReview});
+[L24]   await this.events.create({caseId:String(r._id),caseCode:r.caseCode,eventType:'created',actor,reason:'Investigation case created',newValue:'open'});
+[L25]   if (r.assignedTo) await this.events.create({caseId:String(r._id),caseCode:r.caseCode,eventType:'assigned',actor,reason:'Initial assignment',newValue:r.assignedTo});
+[L26]   return r.toObject();
+[L27]  }
+[L28]  async update(id: string, dto: UpdateInvestigationCaseDto, actor: string) {
+[L29]   const r = await this.cases.findById(id); if (!r) throw new NotFoundException('Case not found');
+[L30]   if (dto.expectedVersion !== undefined && dto.expectedVersion !== r.recordVersion) throw new ConflictException('Case changed. Refresh and retry.');
+[L31]   if (r.status === 'closed' && dto.status && dto.status !== 'closed') throw new ConflictException('Use reopen action for closed cases.');
+[L32]   if (dto.status === 'closed' && r.secondReviewRequired && !r.secondReviewedBy) throw new BadRequestException('Independent second review required before closure.');
+[L33]   const events: any[] = [];
+[L34]   if (dto.assignedTo !== undefined && dto.assignedTo !== r.assignedTo) { events.push({eventType:'assigned',reason:'Assignment updated',previousValue:r.assignedTo||'',newValue:dto.assignedTo}); r.assignedTo=dto.assignedTo; }
+[L35]   if (dto.status && dto.status !== r.status) { events.push({eventType:dto.status==='closed'?'closed':'status_changed',reason:dto.note||'Status updated',previousValue:r.status,newValue:dto.status}); r.status=dto.status; }
+[L36]   if (dto.evidenceReference?.trim()) { events.push({eventType:'evidence_added',reason:dto.note||'Evidence reference added',evidenceReference:dto.evidenceReference.trim()}); r.evidenceReference=dto.evidenceReference.trim(); }
+[L37]   if (dto.resolutionSummary?.trim()) {
+[L38]    if (!['resolved','closed'].includes(dto.status||r.status)) throw new BadRequestException('Set status to resolved or closed before adding resolution summary.');
+[L39]    events.push({eventType:'resolution_proposed',reason:dto.note||'Resolution summary added',newValue:dto.resolutionSummary.trim()}); r.resolutionSummary=dto.resolutionSummary.trim();
+[L40]   }
+[L41]   if (dto.closeReason?.trim()) r.closeReason=dto.closeReason.trim();
+[L42]   if (dto.note?.trim()) events.push({eventType:'note_added',reason:dto.note.trim()});
+[L43]   if (!events.length && dto.closeReason === undefined) throw new BadRequestException('No case changes supplied.');
+[L44]   r.recordVersion += 1; r.lastUpdatedBy=actor; await r.save();
+[L45]   for (const e of events) await this.events.create({caseId:String(r._id),caseCode:r.caseCode,actor,...e});
+[L46]   return this.get(id);
+[L47]  }
+[L48]  async secondReview(id: string, actor: string, reason: string) {
+[L49]   if (!reason?.trim()) throw new BadRequestException('Second-review reason required.');
+[L50]   const r=await this.cases.findById(id); if (!r) throw new NotFoundException('Case not found');
+[L51]   if (!r.secondReviewRequired) throw new BadRequestException('Second review not required.');
+[L52]   if (r.createdBy===actor) throw new BadRequestException('Creator cannot independently review own case.');
+[L53]   r.secondReviewedBy=actor; r.secondReviewedAt=new Date(); r.recordVersion+=1; r.lastUpdatedBy=actor; await r.save();
+[L54]   await this.events.create({caseId:String(r._id),caseCode:r.caseCode,eventType:'second_reviewed',actor,reason:reason.trim()}); return this.get(id);
+[L55]  }
+[L56]  async reopen(id: string, actor: string, reason: string) {
+[L57]   if (!reason?.trim()) throw new BadRequestException('Reopen reason required.');
+[L58]   const r=await this.cases.findById(id); if (!r) throw new NotFoundException('Case not found');
+[L59]   if (!['resolved','closed'].includes(r.status)) throw new BadRequestException('Only resolved/closed cases can be reopened.');
+[L60]   const previous=r.status; r.status='open'; r.secondReviewedBy=undefined; r.secondReviewedAt=undefined; r.recordVersion+=1; r.lastUpdatedBy=actor; await r.save();
+[L61]   await this.events.create({caseId:String(r._id),caseCode:r.caseCode,eventType:'reopened',actor,reason:reason.trim(),previousValue:previous,newValue:'open'}); return this.get(id);
+[L62]  }
+[L63] }
+
+============================================================
+MODULE: financial-investigations
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-investigations\financial-investigation.controller.ts
+SHA256: A60ED36FB93A68E4D4352E10E9057E4D4C36DB63CB1C171DBE802C7FCCEE0D39
+TOTAL LINES: 13
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { FinancialInvestigationService } from './financial-investigation.service';
+[L4] import { CreateFinancialInvestigationDto, UpdateFinancialInvestigationDto } from './dto';
+[L5] @Controller('financial-investigations')
+[L6] @Roles('owner')
+[L7] export class FinancialInvestigationController {
+[L8]  constructor(private readonly service:FinancialInvestigationService){}
+[L9]  @Get() list(@Query('month') month?:string,@Query('status') status?:string){return this.service.list(month,status);}
+[L10]  @Post() create(@Body() dto:CreateFinancialInvestigationDto,@Req() req:any){return this.service.create(dto,this.actor(req));}
+[L11]  @Patch(':id') update(@Param('id') id:string,@Body() dto:UpdateFinancialInvestigationDto,@Req() req:any){return this.service.update(id,dto,this.actor(req));}
+[L12]  private actor(req:any){const u=req.user||{};return String(u.email||u.username||u.sub||'unknown').toLowerCase();}
+[L13] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-investigations\financial-investigation.schema.ts
+SHA256: 64417B57F0A83C051913877E6351205CA32135D645ECCD1EFB4C293C7F41EBAB
+TOTAL LINES: 24
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] @Schema({ timestamps: true })
+[L3] export class FinancialInvestigation {
+[L4]   @Prop({ required: true, unique: true, index: true }) investigationId!: string;
+[L5]   @Prop({ required: true, index: true }) month!: string;
+[L6]   @Prop({ required: true, enum: ['Missing receipt', 'Possible duplicate', 'Unmatched statement row', 'Reconciliation difference', 'Other'] }) exceptionType!: string;
+[L7]   @Prop({ required: true }) sourceReference!: string;
+[L8]   @Prop({ required: true }) title!: string;
+[L9]   @Prop({ required: true }) description!: string;
+[L10]   @Prop({ required: true, enum: ['Low', 'Medium', 'High'] }) priority!: string;
+[L11]   @Prop({ required: true, enum: ['Open', 'Under investigation', 'Awaiting evidence', 'Resolved', 'Closed - reviewed'] }) status!: string;
+[L12]   @Prop({ required: true }) assignedTo!: string;
+[L13]   @Prop({ required: true }) dueDate!: Date;
+[L14]   @Prop() evidenceReference?: string;
+[L15]   @Prop() resolutionNote?: string;
+[L16]   @Prop() resolvedBy?: string;
+[L17]   @Prop() resolvedAt?: Date;
+[L18]   @Prop() reviewedBy?: string;
+[L19]   @Prop() reviewedAt?: Date;
+[L20]   @Prop({ type: [Object], default: [] }) history!: Record<string, unknown>[];
+[L21] }
+[L22] export const FinancialInvestigationSchema = SchemaFactory.createForClass(FinancialInvestigation);
+[L23] FinancialInvestigationSchema.index({ status: 1, dueDate: 1 });
+[L24] FinancialInvestigationSchema.index({ month: 1, createdAt: -1 });
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-investigations\financial-investigation.service.ts
+SHA256: C0F707228E69A3FE7BD28B7FF10387474E4388735A13C91CB4996092CECBF319
+TOTAL LINES: 39
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { randomUUID } from 'crypto';
+[L5] import { FinancialInvestigation } from './financial-investigation.schema';
+[L6] import { CreateFinancialInvestigationDto, UpdateFinancialInvestigationDto } from './dto';
+[L7] import { AuditService } from '../audit/audit.service';
+[L8] 
+[L9] @Injectable()
+[L10] export class FinancialInvestigationService {
+[L11]  constructor(@InjectModel(FinancialInvestigation.name) private model:Model<FinancialInvestigation>, private audit:AuditService){}
+[L12]  list(month?:string,status?:string){
+[L13]   if(month&&!/^\\d{4}-(0[1-9]|1[0-2])$/.test(month))throw new BadRequestException('month must use YYYY-MM format');
+[L14]   const filter:any={}; if(month)filter.month=month; if(status)filter.status=status;
+[L15]   return this.model.find(filter).sort({dueDate:1,createdAt:-1}).limit(500).lean();
+[L16]  }
+[L17]  async create(dto:CreateFinancialInvestigationDto,actor:string){
+[L18]   const due=new Date(dto.dueDate); if(!Number.isFinite(due.getTime()))throw new BadRequestException('Invalid due date');
+[L19]   const item=await this.model.create({...dto,investigationId:randomUUID(),dueDate:due,status:'Open',history:[{at:new Date(),actor,action:'CREATED',details:'Investigation opened'}]});
+[L20]   await this.audit.record(actor,'FINANCIAL_INVESTIGATION_CREATED','FinancialInvestigation',item.investigationId,`Opened investigation: ${item.title}`,{month:item.month,exceptionType:item.exceptionType,priority:item.priority});
+[L21]   return item.toObject();
+[L22]  }
+[L23]  async update(id:string,dto:UpdateFinancialInvestigationDto,actor:string){
+[L24]   const item=await this.model.findOne({investigationId:id}); if(!item)throw new NotFoundException('Investigation not found');
+[L25]   if(dto.status==='Resolved'&&!String(dto.resolutionNote||item.resolutionNote||'').trim())throw new BadRequestException('A resolution note is required before marking resolved');
+[L26]   if(dto.status==='Closed - reviewed'&&!String(dto.reviewNote||'').trim())throw new BadRequestException('A review note is required before closing');
+[L27]   const before={status:item.status,priority:item.priority,assignedTo:item.assignedTo,dueDate:item.dueDate};
+[L28]   const allowed:any={};
+[L29]   for(const key of ['priority','status','assignedTo','evidenceReference','resolutionNote'] as const)if(dto[key]!==undefined)allowed[key]=dto[key];
+[L30]   if(dto.dueDate)allowed.dueDate=new Date(dto.dueDate);
+[L31]   if(dto.status==='Resolved'){allowed.resolvedBy=actor;allowed.resolvedAt=new Date();}
+[L32]   if(dto.status==='Closed - reviewed'){allowed.reviewedBy=actor;allowed.reviewedAt=new Date();}
+[L33]   Object.assign(item,allowed);
+[L34]   item.history=[...(item.history||[]),{at:new Date(),actor,action:'UPDATED',before,changes:allowed,reviewNote:dto.reviewNote||''}];
+[L35]   await item.save();
+[L36]   await this.audit.record(actor,'FINANCIAL_INVESTIGATION_UPDATED','FinancialInvestigation',item.investigationId,`Updated investigation: ${item.title}`,{before,changes:allowed,reviewNote:dto.reviewNote||''});
+[L37]   return item.toObject();
+[L38]  }
+[L39] }
+
+============================================================
+MODULE: financial-reconciliation
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-reconciliation\financial-reconciliation.controller.ts
+SHA256: DC5476F3B5A7F9132F8D8A51607D90C10780374B14ACCA37265A8D094B79E0DF
+TOTAL LINES: 28
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Post, Query, Param, Patch, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { FinancialReconciliationService } from './financial-reconciliation.service';
+[L4] import { CreateReconciliationDto } from './dto';
+[L5] 
+[L6] @Controller('financial-reconciliation')
+[L7] @Roles('owner')
+[L8] export class FinancialReconciliationController {
+[L9]   constructor(private readonly service: FinancialReconciliationService) {}
+[L10] 
+[L11]   @Get()
+[L12]   list(@Query('month') month?: string) { return this.service.list(month); }
+[L13] 
+[L14]   @Post()
+[L15]   create(@Body() dto: CreateReconciliationDto, @Req() req: any) {
+[L16]     return this.service.create(dto, this.actor(req));
+[L17]   }
+[L18] 
+[L19]   @Patch(':id/review')
+[L20]   review(@Param('id') id: string, @Body('notes') notes: string, @Req() req: any) {
+[L21]     return this.service.review(id, this.actor(req), notes);
+[L22]   }
+[L23] 
+[L24]   private actor(req: any): string {
+[L25]     const user = req.user || {};
+[L26]     return String(user.email || user.username || user.sub || 'unknown').toLowerCase();
+[L27]   }
+[L28] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-reconciliation\financial-reconciliation.schema.ts
+SHA256: 20191E04A4692CA34822AB65C98FC80D3B20D286D5386B8E9303F473517B288C
+TOTAL LINES: 25
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] 
+[L3] @Schema({ timestamps: true })
+[L4] export class FinancialReconciliation {
+[L5]   @Prop({ required: true, trim: true }) accountName!: string;
+[L6]   @Prop({ required: true, enum: ['Cash', 'Bank', 'Mobile money', 'Other'] }) accountType!: string;
+[L7]   @Prop({ required: true, match: /^\\d{4}-(0[1-9]|1[0-2])$/ }) month!: string;
+[L8]   @Prop({ required: true, min: 0 }) openingBalanceUgx!: number;
+[L9]   @Prop({ required: true, min: 0 }) statementClosingBalanceUgx!: number;
+[L10]   @Prop({ required: true, min: 0 }) statementIncomeUgx!: number;
+[L11]   @Prop({ required: true, min: 0 }) statementExpenseUgx!: number;
+[L12]   @Prop({ required: true, min: 0 }) ledgerIncomeUgx!: number;
+[L13]   @Prop({ required: true, min: 0 }) ledgerExpenseUgx!: number;
+[L14]   @Prop({ required: true }) expectedClosingBalanceUgx!: number;
+[L15]   @Prop({ required: true }) closingDifferenceUgx!: number;
+[L16]   @Prop({ required: true, enum: ['Matched', 'Difference found', 'Needs review'] }) status!: string;
+[L17]   @Prop({ required: true }) preparedBy!: string;
+[L18]   @Prop() notes?: string;
+[L19]   @Prop({ default: false }) reviewed!: boolean;
+[L20]   @Prop() reviewedBy?: string;
+[L21]   @Prop() reviewedAt?: Date;
+[L22] }
+[L23] export const FinancialReconciliationSchema = SchemaFactory.createForClass(FinancialReconciliation);
+[L24] FinancialReconciliationSchema.index({ accountName: 1, month: 1 }, { unique: true });
+[L25] FinancialReconciliationSchema.index({ month: -1, createdAt: -1 });
+
+------------------------------------------------------------
+SOURCE: apps\api\src\financial-reconciliation\financial-reconciliation.service.ts
+SHA256: A3AB8CE9CE2E66C822DE6D39FFCB94F84C6A7B6BD7CA24CD0716750F7D214692
+TOTAL LINES: 53
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { FinancialReconciliation } from './financial-reconciliation.schema';
+[L5] import { CreateReconciliationDto } from './dto';
+[L6] import { FinanceTransaction } from '../finance/finance.schema';
+[L7] 
+[L8] @Injectable()
+[L9] export class FinancialReconciliationService {
+[L10]   constructor(
+[L11]     @InjectModel(FinancialReconciliation.name) private reconciliations: Model<FinancialReconciliation>,
+[L12]     @InjectModel(FinanceTransaction.name) private transactions: Model<FinanceTransaction>,
+[L13]   ) {}
+[L14] 
+[L15]   list(month?: string) {
+[L16]     if (month && !/^\\d{4}-(0[1-9]|1[0-2])$/.test(month)) throw new BadRequestException('month must use YYYY-MM format');
+[L17]     return this.reconciliations.find(month ? { month } : {}).sort({ month: -1, accountName: 1 }).limit(300).lean();
+[L18]   }
+[L19] 
+[L20]   async create(dto: CreateReconciliationDto, actor: string) {
+[L21]     const [year, monthNumber] = dto.month.split('-').map(Number);
+[L22]     const start = new Date(Date.UTC(year, monthNumber - 1, 1));
+[L23]     const end = new Date(Date.UTC(year, monthNumber, 1));
+[L24]     const rows = await this.transactions.find({ date: { $gte: start, $lt: end } }).lean();
+[L25]     const ledgerIncomeUgx = rows.filter((r: any) => r.direction === 'Income').reduce((s: number, r: any) => s + (Number(r.amountUgx) || 0), 0);
+[L26]     const ledgerExpenseUgx = rows.filter((r: any) => r.direction === 'Expense').reduce((s: number, r: any) => s + (Number(r.amountUgx) || 0), 0);
+[L27]     const expectedClosingBalanceUgx = dto.openingBalanceUgx + dto.statementIncomeUgx - dto.statementExpenseUgx;
+[L28]     const closingDifferenceUgx = dto.statementClosingBalanceUgx - expectedClosingBalanceUgx;
+[L29]     const difference = Math.abs(closingDifferenceUgx) > 1;
+[L30]     return this.reconciliations.create({
+[L31]       ...dto,
+[L32]       ledgerIncomeUgx,
+[L33]       ledgerExpenseUgx,
+[L34]       expectedClosingBalanceUgx,
+[L35]       closingDifferenceUgx,
+[L36]       status: difference ? 'Difference found' : 'Matched',
+[L37]       preparedBy: actor,
+[L38]       reviewed: false,
+[L39]     });
+[L40]   }
+[L41] 
+[L42]   async review(id: string, actor: string, notes?: string) {
+[L43]     const record = await this.reconciliations.findById(id);
+[L44]     if (!record) throw new NotFoundException('Reconciliation record not found');
+[L45]     record.reviewed = true;
+[L46]     record.reviewedBy = actor;
+[L47]     record.reviewedAt = new Date();
+[L48]     if (notes?.trim()) record.notes = [record.notes, `Review: ${notes.trim()}`].filter(Boolean).join(' | ');
+[L49]     if (record.status === 'Difference found') record.status = 'Needs review';
+[L50]     await record.save();
+[L51]     return record.toObject();
+[L52]   }
+[L53] }
+
+============================================================
+MODULE: harvest
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\harvest\harvest.controller.ts
+SHA256: 21DC0C41F94447FA2D5929F0B1A1F2E536EC309E95A361CE12325375835782BD
+TOTAL LINES: 17
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { HarvestService } from './harvest.service';
+[L4] 
+[L5] @Roles('owner')
+[L6] @Controller('harvest')
+[L7] export class HarvestController {
+[L8]   constructor(private service: HarvestService) {}
+[L9]   @Get('plans') plans() { return this.service.listPlans(); }
+[L10]   @Post('plans') createPlan(@Body() body: any, @Req() req: any) { return this.service.createPlan(body, req.user); }
+[L11]   @Patch('plans/:id') updatePlan(@Param('id') id: string, @Body() body: any, @Req() req: any) { return this.service.updatePlan(id, body, req.user); }
+[L12]   @Get('quotes') quotes() { return this.service.listQuotes(); }
+[L13]   @Post('quotes') createQuote(@Body() body: any, @Req() req: any) { return this.service.createQuote(body, req.user); }
+[L14]   @Get('costs') costs(@Query('planId') planId?: string) { return this.service.listCosts(planId); }
+[L15]   @Post('costs') createCost(@Body() body: any, @Req() req: any) { return this.service.createCost(body, req.user); }
+[L16]   @Get('scenario/:planId') scenario(@Param('planId') planId: string, @Query('quoteId') quoteId?: string) { return this.service.scenario(planId, quoteId); }
+[L17] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\harvest\harvest.schema.ts
+SHA256: 0B5336795CD98AB7E2EAC9CB2635165B085CFEC24036A10B5C45C15E11D3D95B
+TOTAL LINES: 58
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] 
+[L4] @Schema({ timestamps: true })
+[L5] export class HarvestPlan {
+[L6]   @Prop({ required: true, trim: true }) planName!: string;
+[L7]   @Prop({ required: true, trim: true }) blockId!: string;
+[L8]   @Prop({ required: true }) proposedStartDate!: string;
+[L9]   @Prop() proposedEndDate?: string;
+[L10]   @Prop({ enum: ['draft','assessment','ready_for_review','approved','in_progress','completed','deferred','cancelled'], default: 'draft' }) status!: string;
+[L11]   @Prop({ enum: ['not_assessed','not_ready','needs_review','ready_subject_to_approval'], default: 'not_assessed' }) readinessStatus!: string;
+[L12]   @Prop() readinessNotes?: string;
+[L13]   @Prop() assessmentDate?: string;
+[L14]   @Prop() assessor?: string;
+[L15]   @Prop() expectedVolume?: number;
+[L16]   @Prop({ enum: ['m3','tonne','piece','cord','other'] }) volumeUnit?: string;
+[L17]   @Prop() volumeSource?: string;
+[L18]   @Prop() productSpecification?: string;
+[L19]   @Prop() replantingPlan?: string;
+[L20]   @Prop() notes?: string;
+[L21]   @Prop({ required: true }) createdBy!: string;
+[L22] }
+[L23] export type HarvestPlanDocument = HydratedDocument<HarvestPlan>;
+[L24] export const HarvestPlanSchema = SchemaFactory.createForClass(HarvestPlan);
+[L25] HarvestPlanSchema.index({ blockId: 1, proposedStartDate: 1 });
+[L26] 
+[L27] @Schema({ timestamps: true })
+[L28] export class TimberQuote {
+[L29]   @Prop({ required: true, trim: true }) buyerName!: string;
+[L30]   @Prop() contactName?: string;
+[L31]   @Prop() contactDetails?: string;
+[L32]   @Prop({ required: true, trim: true }) productSpecification!: string;
+[L33]   @Prop({ required: true, enum: ['m3','tonne','piece','cord','other'] }) unit!: string;
+[L34]   @Prop({ required: true, min: 0 }) pricePerUnit!: number;
+[L35]   @Prop({ required: true }) quoteDate!: string;
+[L36]   @Prop() expiryDate?: string;
+[L37]   @Prop() transportIncluded?: boolean;
+[L38]   @Prop() paymentTerms?: string;
+[L39]   @Prop() sourceNotes?: string;
+[L40]   @Prop() createdBy!: string;
+[L41] }
+[L42] export type TimberQuoteDocument = HydratedDocument<TimberQuote>;
+[L43] export const TimberQuoteSchema = SchemaFactory.createForClass(TimberQuote);
+[L44] TimberQuoteSchema.index({ buyerName: 1, quoteDate: -1 });
+[L45] 
+[L46] @Schema({ timestamps: true })
+[L47] export class HarvestCost {
+[L48]   @Prop({ required: true, trim: true }) planId!: string;
+[L49]   @Prop({ required: true, trim: true }) category!: string;
+[L50]   @Prop({ required: true, min: 0 }) amountUgx!: number;
+[L51]   @Prop({ required: true }) date!: string;
+[L52]   @Prop() description?: string;
+[L53]   @Prop() quoteOrReceiptReference?: string;
+[L54]   @Prop({ required: true }) createdBy!: string;
+[L55] }
+[L56] export type HarvestCostDocument = HydratedDocument<HarvestCost>;
+[L57] export const HarvestCostSchema = SchemaFactory.createForClass(HarvestCost);
+[L58] HarvestCostSchema.index({ planId: 1, date: -1 });
+
+------------------------------------------------------------
+SOURCE: apps\api\src\harvest\harvest.service.ts
+SHA256: 1B5EC3FB33E85DCCAD9BBFE0866ECB2D94B6F2F923168847193AEB66694246E4
+TOTAL LINES: 80
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { AuditService } from '../audit/audit.service';
+[L5] import { HarvestPlan, TimberQuote, HarvestCost } from './harvest.schema';
+[L6] 
+[L7] const volumeUnits = ['m3','tonne','piece','cord','other'];
+[L8] @Injectable()
+[L9] export class HarvestService {
+[L10]   constructor(
+[L11]     @InjectModel(HarvestPlan.name) private plans: Model<HarvestPlan>,
+[L12]     @InjectModel(TimberQuote.name) private quotes: Model<TimberQuote>,
+[L13]     @InjectModel(HarvestCost.name) private costs: Model<HarvestCost>,
+[L14]     private audit: AuditService,
+[L15]   ) {}
+[L16] 
+[L17]   listPlans() { return this.plans.find().sort({ proposedStartDate: 1 }).lean(); }
+[L18]   async createPlan(dto: any, user: any) {
+[L19]     if (!dto.planName || !dto.blockId || !dto.proposedStartDate) throw new BadRequestException('planName, blockId and proposedStartDate are required');
+[L20]     if (dto.expectedVolume !== undefined && Number(dto.expectedVolume) < 0) throw new BadRequestException('expectedVolume cannot be negative');
+[L21]     if (dto.expectedVolume !== undefined && (!dto.volumeUnit || !dto.volumeSource)) throw new BadRequestException('If volume is entered, provide its unit and measurement/source method.');
+[L22]     const row: any = await this.plans.create({ ...dto, expectedVolume: dto.expectedVolume === '' || dto.expectedVolume == null ? undefined : Number(dto.expectedVolume), createdBy: user.email });
+[L23]     await this.audit.record(user.email, 'created', 'harvest_plan', String(row._id), `Created harvest plan ${row.planName}`);
+[L24]     return row;
+[L25]   }
+[L26]   async updatePlan(id: string, dto: any, user: any) {
+[L27]     if (dto.expectedVolume !== undefined && dto.expectedVolume !== null && Number(dto.expectedVolume) < 0) throw new BadRequestException('expectedVolume cannot be negative');
+[L28]     if (dto.expectedVolume !== undefined && dto.expectedVolume !== null && dto.expectedVolume !== '' && (!dto.volumeUnit || !dto.volumeSource)) throw new BadRequestException('If volume is entered, provide its unit and measurement/source method.');
+[L29]     const row: any = await this.plans.findByIdAndUpdate(id, { ...dto, ...(dto.expectedVolume === '' ? { expectedVolume: undefined } : {}) }, { new: true, runValidators: true }).lean();
+[L30]     if (!row) throw new NotFoundException('Harvest plan not found');
+[L31]     await this.audit.record(user.email, 'updated', 'harvest_plan', String(row._id), `Updated harvest plan ${row.planName}`, { fields: Object.keys(dto) });
+[L32]     return row;
+[L33]   }
+[L34]   listQuotes() { return this.quotes.find().sort({ quoteDate: -1 }).lean(); }
+[L35]   async createQuote(dto: any, user: any) {
+[L36]     if (!dto.buyerName || !dto.productSpecification || !dto.unit || !dto.quoteDate || dto.pricePerUnit === undefined) throw new BadRequestException('Buyer, product specification, unit, quote date and price are required');
+[L37]     if (!volumeUnits.includes(dto.unit) || Number(dto.pricePerUnit) < 0) throw new BadRequestException('Check quote unit and non-negative price.');
+[L38]     const row: any = await this.quotes.create({ ...dto, pricePerUnit: Number(dto.pricePerUnit), transportIncluded: Boolean(dto.transportIncluded), createdBy: user.email });
+[L39]     await this.audit.record(user.email, 'created', 'timber_quote', String(row._id), `Recorded buyer quote from ${row.buyerName}`);
+[L40]     return row;
+[L41]   }
+[L42]   listCosts(planId?: string) { return this.costs.find(planId ? { planId } : {}).sort({ date: -1 }).lean(); }
+[L43]   async createCost(dto: any, user: any) {
+[L44]     if (!dto.planId || !dto.category || dto.amountUgx === undefined || !dto.date) throw new BadRequestException('planId, category, amountUgx and date are required');
+[L45]     const plan = await this.plans.findById(dto.planId).lean();
+[L46]     if (!plan) throw new NotFoundException('Harvest plan not found');
+[L47]     if (Number(dto.amountUgx) < 0) throw new BadRequestException('Cost cannot be negative');
+[L48]     const row: any = await this.costs.create({ ...dto, amountUgx: Number(dto.amountUgx), createdBy: user.email });
+[L49]     await this.audit.record(user.email, 'created', 'harvest_cost', String(row._id), `Recorded ${dto.category} planning cost`, { planId: dto.planId, amountUgx: Number(dto.amountUgx) });
+[L50]     return row;
+[L51]   }
+[L52]   async scenario(planId: string, quoteId?: string) {
+[L53]     const plan: any = await this.plans.findById(planId).lean();
+[L54]     if (!plan) throw new NotFoundException('Harvest plan not found');
+[L55]     const costs: any[] = await this.costs.find({ planId }).lean();
+[L56]     const totalCosts = costs.reduce((sum, c) => sum + Number(c.amountUgx || 0), 0);
+[L57]     let quote: any = null;
+[L58]     if (quoteId) {
+[L59]       quote = await this.quotes.findById(quoteId).lean();
+[L60]       if (!quote) throw new NotFoundException('Timber quote not found');
+[L61]     }
+[L62]     const compatible = Boolean(quote && plan.expectedVolume !== undefined && plan.volumeUnit === quote.unit);
+[L63]     const gross = compatible ? Number(plan.expectedVolume) * Number(quote.pricePerUnit) : null;
+[L64]     return {
+[L65]       plan: { id: String(plan._id), planName: plan.planName, blockId: plan.blockId, status: plan.status, readinessStatus: plan.readinessStatus },
+[L66]       quote: quote ? { id: String(quote._id), buyerName: quote.buyerName, unit: quote.unit, pricePerUnit: quote.pricePerUnit, quoteDate: quote.quoteDate, expiryDate: quote.expiryDate, transportIncluded: quote.transportIncluded } : null,
+[L67]       expectedVolume: plan.expectedVolume ?? null, volumeUnit: plan.volumeUnit ?? null,
+[L68]       grossProceedsUgx: gross, plannedCostsUgx: totalCosts,
+[L69]       estimatedMarginUgx: gross === null ? null : gross - totalCosts,
+[L70]       costs: costs.map(c => ({ category: c.category, amountUgx: c.amountUgx, date: c.date, description: c.description })),
+[L71]       assumptions: [
+[L72]         'Volume is user-entered; ForestOS does not infer saleable volume from height or DBH.',
+[L73]         'Scenario is arithmetic, not a forecast or guaranteed sale price.',
+[L74]         'Costs are planning records and are not automatically posted to the finance ledger.',
+[L75]         'Only compare matching volume units and product specifications. Verify quote validity, quality, measurement, transport, taxes, permits and fees.',
+[L76]       ],
+[L77]       compatibleUnits: compatible,
+[L78]     };
+[L79]   }
+[L80] }
+
+============================================================
+MODULE: maintenance
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\maintenance\maintenance.controller.ts
+SHA256: A6130BC0DF137C466D05C10C0F9D3F918CBCAC96EBAFBA8872E015C47DDD0614
+TOTAL LINES: 18
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { MaintenanceService } from './maintenance.service';
+[L4] @Controller('maintenance')
+[L5] @Roles('owner')
+[L6] export class MaintenanceController {
+[L7]  constructor(private readonly service:MaintenanceService){}
+[L8]  @Get('dashboard') dashboard(){return this.service.dashboard();}
+[L9]  @Get('assets') assets(@Query() q:any){return this.service.listAssets(q);}
+[L10]  @Post('assets') createAsset(@Body() b:any,@Req() req:any){return this.service.createAsset(b,req.user?.sub||req.user?.email||'owner');}
+[L11]  @Patch('assets/:id') updateAsset(@Param('id') id:string,@Body() b:any){return this.service.updateAsset(id,b);}
+[L12]  @Get('records') records(@Query('assetId') id?:string){return this.service.listRecords(id);}
+[L13]  @Post('records') createRecord(@Body() b:any,@Req() req:any){return this.service.createRecord(b,req.user?.sub||req.user?.email||'owner');}
+[L14]  @Patch('records/:id') updateRecord(@Param('id') id:string,@Body() b:any){return this.service.updateRecord(id,b);}
+[L15]  @Get('parts') parts(){return this.service.listParts();}
+[L16]  @Post('parts') createPart(@Body() b:any,@Req() req:any){return this.service.createPart(b,req.user?.sub||req.user?.email||'owner');}
+[L17]  @Patch('parts/:id') adjustPart(@Param('id') id:string,@Body() b:any){return this.service.adjustPart(id,b);}
+[L18] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\maintenance\maintenance.schema.ts
+SHA256: 8A9B01D41B5C8F8CEF5B8CC3C72FFEAE505CC5AFA2150B05BFB508ECAD44B556
+TOTAL LINES: 67
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] export type FarmAssetDocument = HydratedDocument<FarmAsset>;
+[L4] export type MaintenanceRecordDocument = HydratedDocument<MaintenanceRecord>;
+[L5] export type SparePartDocument = HydratedDocument<SparePart>;
+[L6] export const ASSET_TYPES = ['hand_tool','power_tool','vehicle','water_system','apiary_equipment','safety_equipment','building','other'] as const;
+[L7] export const ASSET_STATUSES = ['active','needs_repair','under_maintenance','retired','lost'] as const;
+[L8] export const MAINTENANCE_TYPES = ['preventive','repair','inspection','calibration','cleaning','other'] as const;
+[L9] export const MAINTENANCE_STATUSES = ['planned','in_progress','completed','cancelled'] as const;
+[L10] 
+[L11] @Schema({timestamps:true})
+[L12] export class FarmAsset {
+[L13]  @Prop({required:true,unique:true,trim:true}) assetCode:string;
+[L14]  @Prop({required:true,trim:true}) name:string;
+[L15]  @Prop({required:true,enum:ASSET_TYPES}) assetType:string;
+[L16]  @Prop({default:''}) description:string;
+[L17]  @Prop({default:''}) location:string;
+[L18]  @Prop({default:''}) serialNumber:string;
+[L19]  @Prop({default:''}) makeModel:string;
+[L20]  @Prop({default:null}) purchaseDate?:string;
+[L21]  @Prop({min:0,default:0}) purchaseCostUgx:number;
+[L22]  @Prop({default:''}) supplier:string;
+[L23]  @Prop({default:''}) assignedTo:string;
+[L24]  @Prop({required:true,enum:ASSET_STATUSES,default:'active'}) status:string;
+[L25]  @Prop({default:null}) lastServiceDate?:string;
+[L26]  @Prop({default:null}) nextServiceDate?:string;
+[L27]  @Prop({default:0,min:0}) serviceIntervalDays:number;
+[L28]  @Prop({default:''}) notes:string;
+[L29]  @Prop({default:''}) createdBy:string;
+[L30] }
+[L31] export const FarmAssetSchema=SchemaFactory.createForClass(FarmAsset);
+[L32] 
+[L33] @Schema({timestamps:true})
+[L34] export class MaintenanceRecord {
+[L35]  @Prop({required:true,index:true}) assetId:string;
+[L36]  @Prop({required:true,trim:true}) maintenanceCode:string;
+[L37]  @Prop({required:true,enum:MAINTENANCE_TYPES}) maintenanceType:string;
+[L38]  @Prop({required:true,trim:true}) title:string;
+[L39]  @Prop({default:''}) description:string;
+[L40]  @Prop({required:true}) plannedDate:string;
+[L41]  @Prop({default:null}) completedDate?:string;
+[L42]  @Prop({required:true,enum:MAINTENANCE_STATUSES,default:'planned'}) status:string;
+[L43]  @Prop({default:''}) assignedTo:string;
+[L44]  @Prop({default:0,min:0}) labourCostUgx:number;
+[L45]  @Prop({default:0,min:0}) partsCostUgx:number;
+[L46]  @Prop({default:0,min:0}) otherCostUgx:number;
+[L47]  @Prop({default:''}) partsUsed:string;
+[L48]  @Prop({default:''}) notes:string;
+[L49]  @Prop({default:''}) createdBy:string;
+[L50] }
+[L51] export const MaintenanceRecordSchema=SchemaFactory.createForClass(MaintenanceRecord);
+[L52] 
+[L53] @Schema({timestamps:true})
+[L54] export class SparePart {
+[L55]  @Prop({required:true,unique:true,trim:true}) partCode:string;
+[L56]  @Prop({required:true,trim:true}) name:string;
+[L57]  @Prop({default:''}) category:string;
+[L58]  @Prop({default:'piece'}) unit:string;
+[L59]  @Prop({required:true,min:0,default:0}) quantityOnHand:number;
+[L60]  @Prop({required:true,min:0,default:0}) reorderLevel:number;
+[L61]  @Prop({required:true,min:0,default:0}) unitCostUgx:number;
+[L62]  @Prop({default:''}) storageLocation:string;
+[L63]  @Prop({default:''}) supplier:string;
+[L64]  @Prop({default:''}) notes:string;
+[L65]  @Prop({default:''}) createdBy:string;
+[L66] }
+[L67] export const SparePartSchema=SchemaFactory.createForClass(SparePart);
+
+------------------------------------------------------------
+SOURCE: apps\api\src\maintenance\maintenance.service.ts
+SHA256: F644A68350F2464BC3761DC97FD867B03D95DA167C29953F1BC166FCB0CA08FD
+TOTAL LINES: 215
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { FarmAsset,FarmAssetDocument,MaintenanceRecord,MaintenanceRecordDocument,SparePart,SparePartDocument } from './maintenance.schema';
+[L5] const assetTypes=['hand_tool','power_tool','vehicle','water_system','apiary_equipment','safety_equipment','building','other'];
+[L6] const assetStatuses=['active','needs_repair','under_maintenance','retired','lost'];
+[L7] const maintenanceTypes=['preventive','repair','inspection','calibration','cleaning','other'];
+[L8] const maintenanceStatuses=['planned','in_progress','completed','cancelled'];
+[L9] function num(v:any,name:string,min=0){const n=Number(v);if(!Number.isFinite(n)||n<min)throw new BadRequestException(`${name} must be a number >= ${min}`);return n;}
+[L10] function date(v: any, name: string): string | null;
+[L11] function date(v: any, name: string, required: true): string;
+[L12] function date(v: any, name: string, required: false): string | null;
+[L13] 
+[L14] function date(
+[L15]   v: any,
+[L16]   name: string,
+[L17]   required = false,
+[L18] ): string | null {
+[L19]   if (v === undefined || v === null || v === '') {
+[L20]     if (required) {
+[L21]       throw new BadRequestException(`${name} is required`);
+[L22]     }
+[L23]     return null;
+[L24]   }
+[L25] 
+[L26]   if (
+[L27]     typeof v !== 'string' ||
+[L28]     !/^\d{4}-\d{2}-\d{2}$/.test(v)
+[L29]   ) {
+[L30]     throw new BadRequestException(`${name} must be YYYY-MM-DD`);
+[L31]   }
+[L32] 
+[L33]   const [year, month, day] = v.split('-').map(Number);
+[L34]   const parsed = new Date(Date.UTC(year, month - 1, day));
+[L35] 
+[L36]   if (
+[L37]     Number.isNaN(parsed.getTime()) ||
+[L38]     parsed.getUTCFullYear() !== year ||
+[L39]     parsed.getUTCMonth() !== month - 1 ||
+[L40]     parsed.getUTCDate() !== day
+[L41]   ) {
+[L42]     throw new BadRequestException(`${name} must be a valid calendar date`);
+[L43]   }
+[L44] 
+[L45]   return v;
+[L46] }
+[L47] @Injectable()
+[L48] export class MaintenanceService {
+[L49]  constructor(@InjectModel(FarmAsset.name)private assets:Model<FarmAssetDocument>,@InjectModel(MaintenanceRecord.name)private records:Model<MaintenanceRecordDocument>,@InjectModel(SparePart.name)private parts:Model<SparePartDocument>){}
+[L50]  async dashboard(){
+[L51]   const assets=await this.assets.find().lean(), records=await this.records.find().lean(), parts=await this.parts.find().lean(), today=new Date().toISOString().slice(0,10);
+[L52]   const upcoming=records.filter(r=>['planned','in_progress'].includes(r.status)).sort((a,b)=>String(a.plannedDate).localeCompare(String(b.plannedDate)));
+[L53]   const overdue=upcoming.filter(r=>r.plannedDate<today);
+[L54]   const dueAssets=assets.filter(a=>a.status!=='retired'&&a.status!=='lost'&&a.nextServiceDate&&a.nextServiceDate<today);
+[L55]   const lowStock=parts.filter(p=>p.quantityOnHand<=p.reorderLevel);
+[L56]   const totalMaintenanceCost=records.filter(r=>r.status==='completed').reduce((s,r)=>s+(r.labourCostUgx||0)+(r.partsCostUgx||0)+(r.otherCostUgx||0),0);
+[L57]   return {totals:{assets:assets.length,activeAssets:assets.filter(a=>a.status==='active').length,needsRepair:assets.filter(a=>a.status==='needs_repair').length,scheduled:upcoming.length,overdue:overdue.length,serviceOverdue:dueAssets.length,lowStock:lowStock.length,completedMaintenanceCostUgx:totalMaintenanceCost},overdue:overdue.slice(0,10),dueAssets:dueAssets.slice(0,10),lowStock:lowStock.slice(0,10),upcoming:upcoming.slice(0,10)};
+[L58]  }
+[L59]  async listAssets(query:any={}){const f:any={};if(query.status&&assetStatuses.includes(query.status))f.status=query.status;if(query.assetType&&assetTypes.includes(query.assetType))f.assetType=query.assetType;return this.assets.find(f).sort({name:1}).lean();}
+[L60]  async createAsset(b:any,actor=''){if(!b?.assetCode?.trim()||!b?.name?.trim())throw new BadRequestException('assetCode and name are required');if(!assetTypes.includes(b.assetType))throw new BadRequestException('Invalid assetType');const status=b.status||'active';if(!assetStatuses.includes(status))throw new BadRequestException('Invalid asset status');return this.assets.create({assetCode:b.assetCode.trim(),name:b.name.trim(),assetType:b.assetType,description:b.description||'',location:b.location||'',serialNumber:b.serialNumber||'',makeModel:b.makeModel||'',purchaseDate:date(b.purchaseDate,'purchaseDate'),purchaseCostUgx:num(b.purchaseCostUgx??0,'purchaseCostUgx'),supplier:b.supplier||'',assignedTo:b.assignedTo||'',status,lastServiceDate:date(b.lastServiceDate,'lastServiceDate'),nextServiceDate:date(b.nextServiceDate,'nextServiceDate'),serviceIntervalDays:num(b.serviceIntervalDays??0,'serviceIntervalDays'),notes:b.notes||'',createdBy:actor});}
+[L61]  async updateAsset(id:string,b:any){const r=await this.assets.findById(id);if(!r)throw new NotFoundException('Asset not found');for(const k of ['name','description','location','serialNumber','makeModel','supplier','assignedTo','notes'] as const)if(b[k]!==undefined)(r as any)[k]=b[k];if(b.assetType!==undefined){if(!assetTypes.includes(b.assetType))throw new BadRequestException('Invalid assetType');r.assetType=b.assetType;}if(b.status!==undefined){if(!assetStatuses.includes(b.status))throw new BadRequestException('Invalid status');r.status=b.status;}for(const k of ['purchaseDate','lastServiceDate','nextServiceDate'] as const)if(b[k]!==undefined)(r as any)[k]=date(b[k],k);if(b.purchaseCostUgx!==undefined)r.purchaseCostUgx=num(b.purchaseCostUgx,'purchaseCostUgx');if(b.serviceIntervalDays!==undefined)r.serviceIntervalDays=num(b.serviceIntervalDays,'serviceIntervalDays');await r.save();return r;}
+[L62]  async listRecords(assetId?:string){return this.records.find(assetId?{assetId}:{}).sort({plannedDate:-1}).lean();}
+[L63]  async createRecord(b: any, actor = '') {
+[L64]   if (!b?.assetId || !b?.maintenanceCode?.trim() || !b?.title?.trim()) {
+[L65]     throw new BadRequestException(
+[L66]       'assetId, maintenanceCode and title are required',
+[L67]     );
+[L68]   }
+[L69] 
+[L70]   const asset = await this.assets.findById(b.assetId);
+[L71] 
+[L72]   if (!asset) {
+[L73]     throw new NotFoundException('Asset not found');
+[L74]   }
+[L75] 
+[L76]   if (!maintenanceTypes.includes(b.maintenanceType)) {
+[L77]     throw new BadRequestException('Invalid maintenanceType');
+[L78]   }
+[L79] 
+[L80]   const status = b.status || 'planned';
+[L81] 
+[L82]   if (!maintenanceStatuses.includes(status)) {
+[L83]     throw new BadRequestException('Invalid maintenance status');
+[L84]   }
+[L85] 
+[L86]   const plannedDate = date(b.plannedDate, 'plannedDate', true);
+[L87]   const suppliedCompletedDate = date(b.completedDate, 'completedDate');
+[L88] 
+[L89]   const completedDate =
+[L90]     status === 'completed'
+[L91]       ? suppliedCompletedDate || new Date().toISOString().slice(0, 10)
+[L92]       : suppliedCompletedDate;
+[L93] 
+[L94]   const rec = await this.records.create({
+[L95]     assetId: b.assetId,
+[L96]     maintenanceCode: b.maintenanceCode.trim(),
+[L97]     maintenanceType: b.maintenanceType,
+[L98]     title: b.title.trim(),
+[L99]     description: b.description || '',
+[L100]     plannedDate,
+[L101]     completedDate,
+[L102]     status,
+[L103]     assignedTo: b.assignedTo || '',
+[L104]     labourCostUgx: num(b.labourCostUgx ?? 0, 'labourCostUgx'),
+[L105]     partsCostUgx: num(b.partsCostUgx ?? 0, 'partsCostUgx'),
+[L106]     otherCostUgx: num(b.otherCostUgx ?? 0, 'otherCostUgx'),
+[L107]     partsUsed: b.partsUsed || '',
+[L108]     notes: b.notes || '',
+[L109]     createdBy: actor,
+[L110]   });
+[L111] 
+[L112]   if (status === 'completed' && completedDate) {
+[L113]     const nextServiceDate = this.nextDate(
+[L114]       completedDate,
+[L115]       Number(asset.serviceIntervalDays || 0),
+[L116]     );
+[L117] 
+[L118]     asset.lastServiceDate = completedDate;
+[L119]     asset.nextServiceDate = nextServiceDate ?? undefined;
+[L120]     asset.status = 'active';
+[L121] 
+[L122]     await asset.save();
+[L123]   }
+[L124] 
+[L125]   return rec;
+[L126] }
+[L127]  async updateRecord(id: string, b: any) {
+[L128]   const r = await this.records.findById(id);
+[L129] 
+[L130]   if (!r) {
+[L131]     throw new NotFoundException('Maintenance record not found');
+[L132]   }
+[L133] 
+[L134]   for (const k of [
+[L135]     'title',
+[L136]     'description',
+[L137]     'assignedTo',
+[L138]     'partsUsed',
+[L139]     'notes',
+[L140]   ] as const) {
+[L141]     if (b[k] !== undefined) {
+[L142]       (r as any)[k] = b[k];
+[L143]     }
+[L144]   }
+[L145] 
+[L146]   if (b.maintenanceType !== undefined) {
+[L147]     if (!maintenanceTypes.includes(b.maintenanceType)) {
+[L148]       throw new BadRequestException('Invalid maintenanceType');
+[L149]     }
+[L150] 
+[L151]     r.maintenanceType = b.maintenanceType;
+[L152]   }
+[L153] 
+[L154]   if (b.status !== undefined) {
+[L155]     if (!maintenanceStatuses.includes(b.status)) {
+[L156]       throw new BadRequestException('Invalid status');
+[L157]     }
+[L158] 
+[L159]     r.status = b.status;
+[L160] 
+[L161]     if (b.status === 'completed') {
+[L162]       r.completedDate =
+[L163]         date(b.completedDate, 'completedDate') ??
+[L164]         new Date().toISOString().slice(0, 10);
+[L165]     }
+[L166]   }
+[L167] 
+[L168]   if (b.plannedDate !== undefined) {
+[L169]     r.plannedDate = date(b.plannedDate, 'plannedDate', true);
+[L170]   }
+[L171] 
+[L172]   if (b.completedDate !== undefined) {
+[L173]     r.completedDate = date(b.completedDate, 'completedDate') ?? undefined;
+[L174]   }
+[L175] 
+[L176]   for (const k of [
+[L177]     'labourCostUgx',
+[L178]     'partsCostUgx',
+[L179]     'otherCostUgx',
+[L180]   ] as const) {
+[L181]     if (b[k] !== undefined) {
+[L182]       (r as any)[k] = num(b[k], k);
+[L183]     }
+[L184]   }
+[L185] 
+[L186]   await r.save();
+[L187] 
+[L188]   if (r.status === 'completed') {
+[L189]     const a = await this.assets.findById(r.assetId);
+[L190] 
+[L191]     if (a) {
+[L192]       const completedDate =
+[L193]         r.completedDate || new Date().toISOString().slice(0, 10);
+[L194] 
+[L195]       a.lastServiceDate = completedDate;
+[L196] 
+[L197]       a.nextServiceDate =
+[L198]         this.nextDate(
+[L199]           completedDate,
+[L200]           Number(a.serviceIntervalDays || 0),
+[L201]         ) ?? undefined;
+[L202] 
+[L203]       a.status = 'active';
+[L204] 
+[L205]       await a.save();
+[L206]     }
+[L207]   }
+[L208] 
+[L209]   return r;
+[L210] }
+[L211]  async listParts(){return this.parts.find().sort({name:1}).lean();}
+[L212]  async createPart(b:any,actor=''){if(!b?.partCode?.trim()||!b?.name?.trim())throw new BadRequestException('partCode and name are required');return this.parts.create({partCode:b.partCode.trim(),name:b.name.trim(),category:b.category||'',unit:b.unit||'piece',quantityOnHand:num(b.quantityOnHand??0,'quantityOnHand'),reorderLevel:num(b.reorderLevel??0,'reorderLevel'),unitCostUgx:num(b.unitCostUgx??0,'unitCostUgx'),storageLocation:b.storageLocation||'',supplier:b.supplier||'',notes:b.notes||'',createdBy:actor});}
+[L213]  async adjustPart(id:string,b:any){const p=await this.parts.findById(id);if(!p)throw new NotFoundException('Spare part not found');if(b.quantityOnHand!==undefined)p.quantityOnHand=num(b.quantityOnHand,'quantityOnHand');if(b.reorderLevel!==undefined)p.reorderLevel=num(b.reorderLevel,'reorderLevel');if(b.unitCostUgx!==undefined)p.unitCostUgx=num(b.unitCostUgx,'unitCostUgx');for(const k of ['name','category','unit','storageLocation','supplier','notes'] as const)if(b[k]!==undefined)(p as any)[k]=b[k];await p.save();return p;}
+[L214]  private nextDate(last:string,interval:number){if(!last||!interval)return null;const d=new Date(last+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+interval);return d.toISOString().slice(0,10);}
+[L215] }
+
+============================================================
+MODULE: procurement
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\procurement\procurement.controller.ts
+SHA256: 56B46A104206D305C9596AEA875D1FD6874D394B7AE28696EFC283773EBED0A5
+TOTAL LINES: 73
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { ProcurementService } from './procurement.service';
+[L4] 
+[L5] @Controller('procurement')
+[L6] @Roles('owner')
+[L7] export class ProcurementController {
+[L8]   constructor(private readonly service: ProcurementService) {}
+[L9] 
+[L10]   @Get('dashboard')
+[L11]   dashboard(): Promise<any> {
+[L12]     return this.service.dashboard();
+[L13]   }
+[L14] 
+[L15]   @Get('suppliers')
+[L16]   suppliers(@Query() q: any): Promise<any[]> {
+[L17]     return this.service.listSuppliers(q);
+[L18]   }
+[L19] 
+[L20]   @Post('suppliers')
+[L21]   createSupplier(@Body() b: any, @Req() req: any): Promise<any> {
+[L22]     return this.service.createSupplier(b, req.user?.sub || req.user?.email || 'owner');
+[L23]   }
+[L24] 
+[L25]   @Patch('suppliers/:id')
+[L26]   updateSupplier(@Param('id') id: string, @Body() b: any): Promise<any> {
+[L27]     return this.service.updateSupplier(id, b);
+[L28]   }
+[L29] 
+[L30]   @Get('requests')
+[L31]   requests(): Promise<any[]> {
+[L32]     return this.service.listRequests();
+[L33]   }
+[L34] 
+[L35]   @Post('requests')
+[L36]   createRequest(@Body() b: any, @Req() req: any): Promise<any> {
+[L37]     return this.service.createRequest(b, req.user?.sub || req.user?.email || 'owner');
+[L38]   }
+[L39] 
+[L40]   @Patch('requests/:id')
+[L41]   updateRequest(@Param('id') id: string, @Body() b: any): Promise<any> {
+[L42]     return this.service.updateRequest(id, b);
+[L43]   }
+[L44] 
+[L45]   // ---- TS7056 fix ----
+[L46]   @Get('orders')
+[L47]   orders(): Promise<any[]> {
+[L48]     return this.service.listOrders();
+[L49]   }
+[L50] 
+[L51]   // ---- TS7056 fix ----
+[L52]   @Post('orders')
+[L53]   createOrder(@Body() b: any, @Req() req: any): Promise<any> {
+[L54]     return this.service.createOrder(b, req.user?.sub || req.user?.email || 'owner');
+[L55]   }
+[L56] 
+[L57]   @Patch('orders/:id')
+[L58]   updateOrder(@Param('id') id: string, @Body() b: any): Promise<any> {
+[L59]     return this.service.updateOrder(id, b);
+[L60]   }
+[L61] 
+[L62]   // ---- TS7056 fix ----
+[L63]   @Get('receipts')
+[L64]   receipts(@Query('orderId') id?: string): Promise<any[]> {
+[L65]     return this.service.listReceipts(id);
+[L66]   }
+[L67] 
+[L68]   // ---- TS7056 fix ----
+[L69]   @Post('receipts')
+[L70]   createReceipt(@Body() b: any, @Req() req: any): Promise<any> {
+[L71]     return this.service.createReceipt(b, req.user?.sub || req.user?.email || 'owner');
+[L72]   }
+[L73] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\procurement\procurement.schema.ts
+SHA256: 65A91F3C2FB57D13D7B4B697F4F5FA9BD29937D8EDE2F8E721F425E9318DB87A
+TOTAL LINES: 98
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] export type SupplierDocument=HydratedDocument<Supplier>;
+[L4] export type PurchaseRequestDocument=HydratedDocument<PurchaseRequest>;
+[L5] export type PurchaseOrderDocument=HydratedDocument<PurchaseOrder>;
+[L6] export type PurchaseOrderLineDocument = HydratedDocument<PurchaseOrderLine>;
+[L7] export type GoodsReceiptDocument=HydratedDocument<GoodsReceipt>;
+[L8] export type GoodsReceiptLineDocument = HydratedDocument<GoodsReceiptLine>;
+[L9] export const SUPPLIER_STATUSES=['active','on_hold','inactive'] as const;
+[L10] export const REQUEST_STATUSES=['draft','submitted','approved','rejected','converted','cancelled'] as const;
+[L11] export const ORDER_STATUSES=['draft','approved','part_received','received','cancelled'] as const;
+[L12] export const RECEIPT_STATUSES=['received','partial','rejected'] as const;
+[L13] 
+[L14] @Schema({timestamps:true})
+[L15] export class Supplier{
+[L16]  @Prop({required:true,unique:true,trim:true}) supplierCode:string;
+[L17]  @Prop({required:true,trim:true}) name:string;
+[L18]  @Prop({default:''}) contactPerson:string;
+[L19]  @Prop({default:''}) phone:string;
+[L20]  @Prop({default:''}) email:string;
+[L21]  @Prop({default:''}) address:string;
+[L22]  @Prop({default:''}) taxOrRegistrationRef:string;
+[L23]  @Prop({default:''}) categories:string;
+[L24]  @Prop({default:''}) paymentTerms:string;
+[L25]  @Prop({default:0,min:0,max:5}) performanceRating:number;
+[L26]  @Prop({required:true,enum:SUPPLIER_STATUSES,default:'active'}) status:string;
+[L27]  @Prop({default:''}) notes:string;
+[L28]  @Prop({default:''}) createdBy:string;
+[L29] }
+[L30] export const SupplierSchema=SchemaFactory.createForClass(Supplier);
+[L31] 
+[L32] @Schema({timestamps:true})
+[L33] export class PurchaseRequest{
+[L34]  @Prop({required:true,unique:true,trim:true}) requestCode:string;
+[L35]  @Prop({required:true,trim:true}) title:string;
+[L36]  @Prop({required:true}) requestedBy:string;
+[L37]  @Prop({required:true}) neededBy:string;
+[L38]  @Prop({default:''}) businessLine:string;
+[L39]  @Prop({default:''}) justification:string;
+[L40]  @Prop({required:true,min:0,default:0}) estimatedTotalUgx:number;
+[L41]  @Prop({required:true,enum:REQUEST_STATUSES,default:'draft'}) status:string;
+[L42]  @Prop({default:''}) decisionNote:string;
+[L43]  @Prop({default:''}) createdBy:string;
+[L44] }
+[L45] export const PurchaseRequestSchema=SchemaFactory.createForClass(PurchaseRequest);
+[L46] 
+[L47] @Schema({timestamps:true})
+[L48] export class PurchaseOrder{
+[L49]  @Prop({required:true,unique:true,trim:true}) orderCode:string;
+[L50]  @Prop({required:true,index:true}) supplierId:string;
+[L51]  @Prop({default:null,index:true}) requestId?:string;
+[L52]  @Prop({required:true}) orderDate:string;
+[L53]  @Prop({required:true}) expectedDate:string;
+[L54]  @Prop({required:true,enum:ORDER_STATUSES,default:'draft'}) status:string;
+[L55]  @Prop({default:'UGX'}) currency:string;
+[L56]  @Prop({default:0,min:0}) transportCostUgx:number;
+[L57]  @Prop({default:0,min:0}) otherCostUgx:number;
+[L58]  @Prop({default:''}) terms:string;
+[L59]  @Prop({default:''}) notes:string;
+[L60]  @Prop({default:''}) createdBy:string;
+[L61] }
+[L62] export const PurchaseOrderSchema=SchemaFactory.createForClass(PurchaseOrder);
+[L63] 
+[L64] @Schema({timestamps:true})
+[L65] export class PurchaseOrderLine{
+[L66]  @Prop({required:true,index:true}) orderId:string;
+[L67]  @Prop({required:true,trim:true}) itemName:string;
+[L68]  @Prop({default:''}) itemCode:string;
+[L69]  @Prop({required:true,min:0.001}) quantityOrdered:number;
+[L70]  @Prop({default:0,min:0}) quantityReceived:number;
+[L71]  @Prop({required:true,min:0}) unitPriceUgx:number;
+[L72]  @Prop({default:'piece'}) unit:string;
+[L73]  @Prop({default:''}) notes:string;
+[L74] }
+[L75] export const PurchaseOrderLineSchema=SchemaFactory.createForClass(PurchaseOrderLine);
+[L76] 
+[L77] @Schema({timestamps:true})
+[L78] export class GoodsReceipt{
+[L79]  @Prop({required:true,index:true}) orderId:string;
+[L80]  @Prop({required:true,trim:true}) receiptCode:string;
+[L81]  @Prop({required:true}) receivedDate:string;
+[L82]  @Prop({required:true,enum:RECEIPT_STATUSES,default:'received'}) status:string;
+[L83]  @Prop({default:''}) receivedBy:string;
+[L84]  @Prop({default:''}) deliveryNoteReference:string;
+[L85]  @Prop({default:''}) notes:string;
+[L86]  @Prop({default:''}) createdBy:string;
+[L87] }
+[L88] export const GoodsReceiptSchema=SchemaFactory.createForClass(GoodsReceipt);
+[L89] 
+[L90] @Schema({timestamps:true})
+[L91] export class GoodsReceiptLine{
+[L92]  @Prop({required:true,index:true}) receiptId:string;
+[L93]  @Prop({required:true,index:true}) orderLineId:string;
+[L94]  @Prop({required:true,min:0.001}) quantityReceived:number;
+[L95]  @Prop({default:''}) condition:string;
+[L96]  @Prop({default:''}) notes:string;
+[L97] }
+[L98] export const GoodsReceiptLineSchema=SchemaFactory.createForClass(GoodsReceiptLine);
+
+------------------------------------------------------------
+SOURCE: apps\api\src\procurement\procurement.service.ts
+SHA256: B2F172F57D9FE7FFD8C7935AE81F811C728051BC34B39B589BD173BB6C9BA291
+TOTAL LINES: 381
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import {
+[L5]   Supplier,
+[L6]   SupplierDocument,
+[L7]   PurchaseRequest,
+[L8]   PurchaseRequestDocument,
+[L9]   PurchaseOrder,
+[L10]   PurchaseOrderDocument,
+[L11]   PurchaseOrderLine,
+[L12]   PurchaseOrderLineDocument,
+[L13]   GoodsReceipt,
+[L14]   GoodsReceiptDocument,
+[L15]   GoodsReceiptLine,
+[L16]   GoodsReceiptLineDocument,
+[L17] } from './procurement.schema';
+[L18] 
+[L19] const supplierStatuses = ['active', 'on_hold', 'inactive'];
+[L20] const requestStatuses = ['draft', 'submitted', 'approved', 'rejected', 'converted', 'cancelled'];
+[L21] const orderStatuses = ['draft', 'approved', 'part_received', 'received', 'cancelled'];
+[L22] const receiptStatuses = ['received', 'partial', 'rejected'];
+[L23] 
+[L24] function num(v: any, n: string, min = 0) {
+[L25]   const x = Number(v);
+[L26]   if (!Number.isFinite(x) || x < min)
+[L27]     throw new BadRequestException(`${n} must be a number >= ${min}`);
+[L28]   return x;
+[L29] }
+[L30] 
+[L31] function date(v: any, n: string): string;
+[L32] function date(v: any, n: string, required: true): string;
+[L33] function date(v: any, n: string, required: false): string | null;
+[L34] 
+[L35] function date(
+[L36]   v: any,
+[L37]   n: string,
+[L38]   required = true,
+[L39] ): string | null {
+[L40]   if (v === '' || v === undefined || v === null) {
+[L41]     if (!required) return null;
+[L42]     throw new BadRequestException(`${n} is required`);
+[L43]   }
+[L44] 
+[L45]   if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v)) {
+[L46]     throw new BadRequestException(`${n} must be YYYY-MM-DD`);
+[L47]   }
+[L48] 
+[L49]   const [year, month, day] = v.split('-').map(Number);
+[L50]   const parsed = new Date(Date.UTC(year, month - 1, day));
+[L51] 
+[L52]   if (
+[L53]     Number.isNaN(parsed.getTime()) ||
+[L54]     parsed.getUTCFullYear() !== year ||
+[L55]     parsed.getUTCMonth() !== month - 1 ||
+[L56]     parsed.getUTCDate() !== day
+[L57]   ) {
+[L58]     throw new BadRequestException(`${n} must be a valid calendar date`);
+[L59]   }
+[L60] 
+[L61]   return v;
+[L62] }
+[L63] 
+[L64] @Injectable()
+[L65] export class ProcurementService {
+[L66]   constructor(
+[L67]     @InjectModel(Supplier.name) private suppliers: Model<SupplierDocument>,
+[L68]     @InjectModel(PurchaseRequest.name) private requests: Model<PurchaseRequestDocument>,
+[L69]     @InjectModel(PurchaseOrder.name) private orders: Model<PurchaseOrderDocument>,
+[L70]     @InjectModel(PurchaseOrderLine.name) private lines: Model<PurchaseOrderLineDocument>,
+[L71]     @InjectModel(GoodsReceipt.name) private receipts: Model<GoodsReceiptDocument>,
+[L72]     @InjectModel(GoodsReceiptLine.name) private receiptLines: Model<GoodsReceiptLineDocument>,
+[L73]   ) {}
+[L74] 
+[L75]   async dashboard() {
+[L76]     const [suppliers, requests, orders, lines, receipts] = await Promise.all([
+[L77]       this.suppliers.find().lean(),
+[L78]       this.requests.find().lean(),
+[L79]       this.orders.find().lean(),
+[L80]       this.lines.find().lean(),
+[L81]       this.receipts.find().lean(),
+[L82]     ]);
+[L83]     const today = new Date().toISOString().slice(0, 10);
+[L84]     const activeOrders = orders.filter((o) => !['received', 'cancelled'].includes(o.status));
+[L85]     const orderValue = orders
+[L86]       .filter((o) => !['cancelled'].includes(o.status))
+[L87]       .reduce(
+[L88]         (sum, o) =>
+[L89]           sum +
+[L90]           lines
+[L91]             .filter((l) => l.orderId === String(o._id))
+[L92]             .reduce((s, l) => s + l.quantityOrdered * l.unitPriceUgx, 0) +
+[L93]           (o.transportCostUgx || 0) +
+[L94]           (o.otherCostUgx || 0),
+[L95]         0,
+[L96]       );
+[L97]     const overdue = activeOrders.filter((o) => o.expectedDate < today);
+[L98]     return {
+[L99]       totals: {
+[L100]         suppliers: suppliers.filter((s) => s.status === 'active').length,
+[L101]         pendingRequests: requests.filter((r) => ['submitted', 'approved'].includes(r.status)).length,
+[L102]         openOrders: activeOrders.length,
+[L103]         overdueOrders: overdue.length,
+[L104]         receipts: receipts.length,
+[L105]         committedOrderValueUgx: orderValue,
+[L106]       },
+[L107]       overdueOrders: overdue.slice(0, 10),
+[L108]       recentOrders: orders
+[L109]         .sort((a, b) => String(b.orderDate).localeCompare(String(a.orderDate)))
+[L110]         .slice(0, 10),
+[L111]     };
+[L112]   }
+[L113] 
+[L114]   async listSuppliers(q: any = {}) {
+[L115]     const f: any = {};
+[L116]     if (q.status && supplierStatuses.includes(q.status)) f.status = q.status;
+[L117]     return this.suppliers.find(f).sort({ name: 1 }).lean();
+[L118]   }
+[L119] 
+[L120]   async createSupplier(b: any, actor = '') {
+[L121]     if (!b?.supplierCode?.trim() || !b?.name?.trim())
+[L122]       throw new BadRequestException('supplierCode and name are required');
+[L123]     const status = b.status || 'active';
+[L124]     if (!supplierStatuses.includes(status)) throw new BadRequestException('Invalid supplier status');
+[L125]     const rating =
+[L126]       b.performanceRating === undefined || b.performanceRating === ''
+[L127]         ? 0
+[L128]         : num(b.performanceRating, 'performanceRating');
+[L129]     if (rating > 5) throw new BadRequestException('performanceRating must be 0â€“5');
+[L130]     return this.suppliers.create({
+[L131]       supplierCode: b.supplierCode.trim(),
+[L132]       name: b.name.trim(),
+[L133]       contactPerson: b.contactPerson || '',
+[L134]       phone: b.phone || '',
+[L135]       email: b.email || '',
+[L136]       address: b.address || '',
+[L137]       taxOrRegistrationRef: b.taxOrRegistrationRef || '',
+[L138]       categories: b.categories || '',
+[L139]       paymentTerms: b.paymentTerms || '',
+[L140]       performanceRating: rating,
+[L141]       status,
+[L142]       notes: b.notes || '',
+[L143]       createdBy: actor,
+[L144]     });
+[L145]   }
+[L146] 
+[L147]   async updateSupplier(id: string, b: any) {
+[L148]     const s = await this.suppliers.findById(id);
+[L149]     if (!s) throw new NotFoundException('Supplier not found');
+[L150]     for (const k of [
+[L151]       'name',
+[L152]       'contactPerson',
+[L153]       'phone',
+[L154]       'email',
+[L155]       'address',
+[L156]       'taxOrRegistrationRef',
+[L157]       'categories',
+[L158]       'paymentTerms',
+[L159]       'notes',
+[L160]     ] as const)
+[L161]       if (b[k] !== undefined) (s as any)[k] = b[k];
+[L162]     if (b.status !== undefined) {
+[L163]       if (!supplierStatuses.includes(b.status))
+[L164]         throw new BadRequestException('Invalid supplier status');
+[L165]       s.status = b.status;
+[L166]     }
+[L167]     if (b.performanceRating !== undefined) {
+[L168]       const n = num(b.performanceRating, 'performanceRating');
+[L169]       if (n > 5) throw new BadRequestException('performanceRating must be 0â€“5');
+[L170]       s.performanceRating = n;
+[L171]     }
+[L172]     await s.save();
+[L173]     return s;
+[L174]   }
+[L175] 
+[L176]   async listRequests() {
+[L177]     return this.requests.find().sort({ createdAt: -1 }).lean();
+[L178]   }
+[L179] 
+[L180]   async createRequest(b: any, actor = '') {
+[L181]     if (!b?.requestCode?.trim() || !b?.title?.trim() || !b?.requestedBy?.trim())
+[L182]       throw new BadRequestException('requestCode, title and requestedBy are required');
+[L183]     const status = b.status || 'draft';
+[L184]     if (!requestStatuses.includes(status)) throw new BadRequestException('Invalid request status');
+[L185]     return this.requests.create({
+[L186]       requestCode: b.requestCode.trim(),
+[L187]       title: b.title.trim(),
+[L188]       requestedBy: b.requestedBy.trim(),
+[L189]       neededBy: date(b.neededBy, 'neededBy'),
+[L190]       businessLine: b.businessLine || '',
+[L191]       justification: b.justification || '',
+[L192]       estimatedTotalUgx: num(b.estimatedTotalUgx ?? 0, 'estimatedTotalUgx'),
+[L193]       status,
+[L194]       decisionNote: b.decisionNote || '',
+[L195]       createdBy: actor,
+[L196]     });
+[L197]   }
+[L198] 
+[L199]   async updateRequest(id: string, b: any) {
+[L200]     const r = await this.requests.findById(id);
+[L201]     if (!r) throw new NotFoundException('Purchase request not found');
+[L202]     if (b.status !== undefined) {
+[L203]       if (!requestStatuses.includes(b.status))
+[L204]         throw new BadRequestException('Invalid request status');
+[L205]       r.status = b.status;
+[L206]     }
+[L207]     if (b.decisionNote !== undefined) r.decisionNote = b.decisionNote;
+[L208]     await r.save();
+[L209]     return r;
+[L210]   }
+[L211] 
+[L212]   // ---- TS7056 fix #1: explicit return type ----
+[L213]   async listOrders(): Promise<any[]> {
+[L214]     const [orders, lines, receipts] = await Promise.all([
+[L215]       this.orders.find().sort({ orderDate: -1 }).lean(),
+[L216]       this.lines.find().lean(),
+[L217]       this.receipts.find().lean(),
+[L218]     ]);
+[L219]     return orders.map((o) => ({
+[L220]       ...o,
+[L221]       lines: lines.filter((l) => l.orderId === String(o._id)),
+[L222]       receipts: receipts.filter((r) => r.orderId === String(o._id)),
+[L223]       subtotalUgx: lines
+[L224]         .filter((l) => l.orderId === String(o._id))
+[L225]         .reduce((s, l) => s + l.quantityOrdered * l.unitPriceUgx, 0),
+[L226]     }));
+[L227]   }
+[L228] 
+[L229]   // ---- TS7056 fix #2: explicit return type ----
+[L230]   async createOrder(b: any, actor = ''): Promise<any> {
+[L231]     if (!b?.orderCode?.trim() || !b?.supplierId)
+[L232]       throw new BadRequestException('orderCode and supplierId are required');
+[L233]     const supplier = await this.suppliers.findById(b.supplierId);
+[L234]     if (!supplier) throw new NotFoundException('Supplier not found');
+[L235]     if (supplier.status !== 'active') throw new BadRequestException('Supplier is not active');
+[L236]     const orderDate = date(b.orderDate, 'orderDate');
+[L237]     const expectedDate = date(b.expectedDate, 'expectedDate');
+[L238]     if (expectedDate < orderDate)
+[L239]       throw new BadRequestException('Expected date cannot be before order date');
+[L240]     const items = Array.isArray(b.lines) ? b.lines : [];
+[L241]     if (!items.length) throw new BadRequestException('At least one order line is required');
+[L242]     if (b.requestId) {
+[L243]       const req = await this.requests.findById(b.requestId);
+[L244]       if (!req) throw new NotFoundException('Purchase request not found');
+[L245]       if (!['approved', 'submitted'].includes(req.status))
+[L246]         throw new BadRequestException(
+[L247]           'Request must be submitted or approved before conversion',
+[L248]         );
+[L249]     }
+[L250]     const order = await this.orders.create({
+[L251]       orderCode: b.orderCode.trim(),
+[L252]       supplierId: b.supplierId,
+[L253]       requestId: b.requestId || null,
+[L254]       orderDate,
+[L255]       expectedDate,
+[L256]       status: b.status || 'draft',
+[L257]       currency: 'UGX',
+[L258]       transportCostUgx: num(b.transportCostUgx ?? 0, 'transportCostUgx'),
+[L259]       otherCostUgx: num(b.otherCostUgx ?? 0, 'otherCostUgx'),
+[L260]       terms: b.terms || '',
+[L261]       notes: b.notes || '',
+[L262]       createdBy: actor,
+[L263]     });
+[L264]     try {
+[L265]       for (const l of items) {
+[L266]         if (!l?.itemName?.trim())
+[L267]           throw new BadRequestException('Every line needs an itemName');
+[L268]         await this.lines.create({
+[L269]           orderId: String(order._id),
+[L270]           itemName: l.itemName.trim(),
+[L271]           itemCode: l.itemCode || '',
+[L272]           quantityOrdered: num(l.quantityOrdered, 'quantityOrdered', 0.001),
+[L273]           quantityReceived: 0,
+[L274]           unitPriceUgx: num(l.unitPriceUgx, 'unitPriceUgx'),
+[L275]           unit: l.unit || 'piece',
+[L276]           notes: l.notes || '',
+[L277]         });
+[L278]       }
+[L279]       if (b.requestId) await this.requests.findByIdAndUpdate(b.requestId, { $set: { status: 'converted' } });
+[L280]     } catch (e) {
+[L281]       await this.orders.findByIdAndDelete(order._id);
+[L282]       await this.lines.deleteMany({ orderId: String(order._id) });
+[L283]       throw e;
+[L284]     }
+[L285]     return (await this.listOrders()).find((o) => String(o._id) === String(order._id));
+[L286]   }
+[L287] 
+[L288]   async updateOrder(id: string, b: any) {
+[L289]     const o = await this.orders.findById(id);
+[L290]     if (!o) throw new NotFoundException('Purchase order not found');
+[L291]     if (b.status !== undefined) {
+[L292]       if (!orderStatuses.includes(b.status))
+[L293]         throw new BadRequestException('Invalid order status');
+[L294]       if (b.status === 'received') {
+[L295]         const ls = await this.lines.find({ orderId: id }).lean();
+[L296]         if (ls.some((l) => l.quantityReceived < l.quantityOrdered))
+[L297]           throw new BadRequestException(
+[L298]             'Cannot mark received while ordered quantities remain outstanding',
+[L299]           );
+[L300]       }
+[L301]       o.status = b.status;
+[L302]     }
+[L303]     if (b.expectedDate !== undefined) o.expectedDate = date(b.expectedDate, 'expectedDate');
+[L304]     if (b.notes !== undefined) o.notes = b.notes;
+[L305]     await o.save();
+[L306]     return o;
+[L307]   }
+[L308] 
+[L309]   // ---- TS7056 fix #3: explicit return type ----
+[L310]   async listReceipts(orderId?: string): Promise<any[]> {
+[L311]     const f = orderId ? { orderId } : {};
+[L312]     const [r, ls] = await Promise.all([
+[L313]       this.receipts.find(f).sort({ receivedDate: -1 }).lean(),
+[L314]       this.receiptLines.find().lean(),
+[L315]     ]);
+[L316]     return r.map((x) => ({
+[L317]       ...x,
+[L318]       lines: ls.filter((l) => l.receiptId === String(x._id)),
+[L319]     }));
+[L320]   }
+[L321] 
+[L322]   // ---- TS7056 fix #4: explicit return type ----
+[L323]   async createReceipt(b: any, actor = ''): Promise<any> {
+[L324]     if (!b?.orderId || !b?.receiptCode?.trim())
+[L325]       throw new BadRequestException('orderId and receiptCode are required');
+[L326]     const order = await this.orders.findById(b.orderId);
+[L327]     if (!order) throw new NotFoundException('Purchase order not found');
+[L328]     if (['cancelled', 'received'].includes(order.status))
+[L329]       throw new BadRequestException(
+[L330]         'Cannot receive against a cancelled or fully received order',
+[L331]       );
+[L332]     const receivedDate = date(b.receivedDate, 'receivedDate');
+[L333]     const items = Array.isArray(b.lines) ? b.lines : [];
+[L334]     if (!items.length) throw new BadRequestException('At least one receipt line is required');
+[L335]     const receipt = await this.receipts.create({
+[L336]       orderId: b.orderId,
+[L337]       receiptCode: b.receiptCode.trim(),
+[L338]       receivedDate,
+[L339]       status: b.status || 'received',
+[L340]       receivedBy: b.receivedBy || '',
+[L341]       deliveryNoteReference: b.deliveryNoteReference || '',
+[L342]       notes: b.notes || '',
+[L343]       createdBy: actor,
+[L344]     });
+[L345]     try {
+[L346]       for (const item of items) {
+[L347]         const line = await this.lines.findOne({ _id: item.orderLineId, orderId: b.orderId });
+[L348]         if (!line)
+[L349]           throw new BadRequestException(
+[L350]             'Receipt line must reference a line on this purchase order',
+[L351]           );
+[L352]         const qty = num(item.quantityReceived, 'quantityReceived', 0.001);
+[L353]         if (line.quantityReceived + qty > line.quantityOrdered)
+[L354]           throw new BadRequestException(
+[L355]             `Receipt exceeds outstanding quantity for ${line.itemName}`,
+[L356]           );
+[L357]         await this.receiptLines.create({
+[L358]           receiptId: String(receipt._id),
+[L359]           orderLineId: String(line._id),
+[L360]           quantityReceived: qty,
+[L361]           condition: item.condition || '',
+[L362]           notes: item.notes || '',
+[L363]         });
+[L364]         line.quantityReceived += qty;
+[L365]         await line.save();
+[L366]       }
+[L367]       const ls = await this.lines.find({ orderId: b.orderId }).lean();
+[L368]       const allReceived = ls.every((l) => l.quantityReceived >= l.quantityOrdered);
+[L369]       const anyReceived = ls.some((l) => l.quantityReceived > 0);
+[L370]       order.status = allReceived ? 'received' : anyReceived ? 'part_received' : 'approved';
+[L371]       await order.save();
+[L372]     } catch (e) {
+[L373]       await this.receipts.findByIdAndDelete(receipt._id);
+[L374]       await this.receiptLines.deleteMany({ receiptId: String(receipt._id) });
+[L375]       throw e;
+[L376]     }
+[L377]     return (await this.listReceipts(b.orderId)).find(
+[L378]       (x) => String(x._id) === String(receipt._id),
+[L379]     );
+[L380]   }
+[L381] }
+
+============================================================
+MODULE: workforce
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\workforce\workforce.controller.ts
+SHA256: CA9CE6EE6ADD7C918291E7EC44E983AE401E22295CCCA7E5F92FA4AF49B026C7
+TOTAL LINES: 16
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { WorkforceService } from './workforce.service';
+[L4] @Roles('owner')
+[L5] @Controller('workforce')
+[L6] export class WorkforceController {
+[L7]   constructor(private service: WorkforceService) {}
+[L8]   @Get('dashboard') dashboard() { return this.service.dashboard(); }
+[L9]   @Get('workers') workers() { return this.service.listWorkers(); }
+[L10]   @Post('workers') createWorker(@Body() body: any, @Req() req: any) { return this.service.createWorker(body, req.user); }
+[L11]   @Get('tasks') tasks() { return this.service.listTasks(); }
+[L12]   @Post('tasks') createTask(@Body() body: any, @Req() req: any) { return this.service.createTask(body, req.user); }
+[L13]   @Patch('tasks/:id') updateTask(@Param('id') id: string, @Body() body: any, @Req() req: any) { return this.service.updateTask(id, body, req.user); }
+[L14]   @Get('entries') entries(@Query('taskId') taskId?: string) { return this.service.listEntries(taskId); }
+[L15]   @Post('entries') createEntry(@Body() body: any, @Req() req: any) { return this.service.createEntry(body, req.user); }
+[L16] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\workforce\workforce.schema.ts
+SHA256: 774B671E4654EDC42D5DED44C3BE221A4B45DCA8EBE773972C68130CB62D84D2
+TOTAL LINES: 56
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] 
+[L4] @Schema({ timestamps: true })
+[L5] export class FarmWorker {
+[L6]   @Prop({ required: true, trim: true }) workerCode!: string;
+[L7]   @Prop({ required: true, trim: true }) displayName!: string;
+[L8]   @Prop() contactDetails?: string;
+[L9]   @Prop({ required: true, enum: ['field_worker','supervisor','contractor','seasonal','other'] }) workerType!: string;
+[L10]   @Prop({ enum: ['active','inactive','seasonal','on_leave'], default: 'active' }) status!: string;
+[L11]   @Prop({ min: 0 }) defaultDailyRateUgx?: number;
+[L12]   @Prop() skillsOrNotes?: string;
+[L13]   @Prop({ required: true }) createdBy!: string;
+[L14] }
+[L15] export type FarmWorkerDocument = HydratedDocument<FarmWorker>;
+[L16] export const FarmWorkerSchema = SchemaFactory.createForClass(FarmWorker);
+[L17] FarmWorkerSchema.index({ workerCode: 1 }, { unique: true });
+[L18] 
+[L19] @Schema({ timestamps: true })
+[L20] export class LabourTask {
+[L21]   @Prop({ required: true, trim: true }) taskCode!: string;
+[L22]   @Prop({ required: true, trim: true }) title!: string;
+[L23]   @Prop({ required: true }) activity!: string;
+[L24]   @Prop() plantationBlockId?: string;
+[L25]   @Prop() assignedWorkerCode?: string;
+[L26]   @Prop({ required: true }) plannedDate!: string;
+[L27]   @Prop({ enum: ['low','normal','high','urgent'], default: 'normal' }) priority!: string;
+[L28]   @Prop({ enum: ['assigned','in_progress','submitted','verified','rejected','cancelled'], default: 'assigned' }) status!: string;
+[L29]   @Prop({ min: 0 }) targetQuantity?: number;
+[L30]   @Prop() unit?: string;
+[L31]   @Prop() instructions?: string;
+[L32]   @Prop() completionNotes?: string;
+[L33]   @Prop() verifiedBy?: string;
+[L34]   @Prop() verifiedAt?: string;
+[L35]   @Prop({ required: true }) createdBy!: string;
+[L36] }
+[L37] export type LabourTaskDocument = HydratedDocument<LabourTask>;
+[L38] export const LabourTaskSchema = SchemaFactory.createForClass(LabourTask);
+[L39] LabourTaskSchema.index({ taskCode: 1 }, { unique: true });
+[L40] LabourTaskSchema.index({ plannedDate: 1, status: 1 });
+[L41] 
+[L42] @Schema({ timestamps: true })
+[L43] export class LabourEntry {
+[L44]   @Prop({ required: true }) taskId!: string;
+[L45]   @Prop({ required: true }) workerCode!: string;
+[L46]   @Prop({ required: true }) workDate!: string;
+[L47]   @Prop({ required: true, min: 0 }) hoursWorked!: number;
+[L48]   @Prop({ required: true, min: 0 }) outputQuantity!: number;
+[L49]   @Prop() outputUnit?: string;
+[L50]   @Prop({ required: true, min: 0 }) labourCostUgx!: number;
+[L51]   @Prop() notes?: string;
+[L52]   @Prop({ required: true }) recordedBy!: string;
+[L53] }
+[L54] export type LabourEntryDocument = HydratedDocument<LabourEntry>;
+[L55] export const LabourEntrySchema = SchemaFactory.createForClass(LabourEntry);
+[L56] LabourEntrySchema.index({ taskId: 1, workDate: 1 });
+
+------------------------------------------------------------
+SOURCE: apps\api\src\workforce\workforce.service.ts
+SHA256: 743D9D53DE712E9B9131AFE944E30061F74D6EBE8FB7E4C4AD97DB81544FAA1E
+TOTAL LINES: 71
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { AuditService } from '../audit/audit.service';
+[L5] import { FarmWorker, LabourTask, LabourEntry } from './workforce.schema';
+[L6] 
+[L7] @Injectable()
+[L8] export class WorkforceService {
+[L9]   constructor(
+[L10]     @InjectModel(FarmWorker.name) private workers: Model<FarmWorker>,
+[L11]     @InjectModel(LabourTask.name) private tasks: Model<LabourTask>,
+[L12]     @InjectModel(LabourEntry.name) private entries: Model<LabourEntry>,
+[L13]     private audit: AuditService,
+[L14]   ) {}
+[L15] 
+[L16]   listWorkers() { return this.workers.find().sort({ displayName: 1 }).lean(); }
+[L17]   async createWorker(dto: any, user: any) {
+[L18]     if (!dto.workerCode || !dto.displayName || !dto.workerType) throw new BadRequestException('Worker code, display name and worker type are required.');
+[L19]     if (dto.defaultDailyRateUgx !== undefined && Number(dto.defaultDailyRateUgx) < 0) throw new BadRequestException('Daily rate cannot be negative.');
+[L20]     if (await this.workers.findOne({ workerCode: dto.workerCode }).lean()) throw new BadRequestException('Worker code already exists.');
+[L21]     const row: any = await this.workers.create({ ...dto, defaultDailyRateUgx: dto.defaultDailyRateUgx === '' || dto.defaultDailyRateUgx == null ? undefined : Number(dto.defaultDailyRateUgx), createdBy: user.email });
+[L22]     await this.audit.record(user.email, 'created', 'farm_worker', String(row._id), `Created worker record ${row.workerCode}`);
+[L23]     return row;
+[L24]   }
+[L25]   listTasks() { return this.tasks.find().sort({ plannedDate: -1 }).lean(); }
+[L26]   async createTask(dto: any, user: any) {
+[L27]     if (!dto.taskCode || !dto.title || !dto.activity || !dto.plannedDate) throw new BadRequestException('Task code, title, activity and planned date are required.');
+[L28]     if (await this.tasks.findOne({ taskCode: dto.taskCode }).lean()) throw new BadRequestException('Task code already exists.');
+[L29]     const row: any = await this.tasks.create({ ...dto, targetQuantity: dto.targetQuantity === '' || dto.targetQuantity == null ? undefined : Number(dto.targetQuantity), createdBy: user.email });
+[L30]     await this.audit.record(user.email, 'created', 'labour_task', String(row._id), `Created labour task ${row.taskCode}`);
+[L31]     return row;
+[L32]   }
+[L33]   async updateTask(id: string, dto: any, user: any) {
+[L34]     const row: any = await this.tasks.findByIdAndUpdate(id, dto, { new: true, runValidators: true }).lean();
+[L35]     if (!row) throw new NotFoundException('Labour task not found.');
+[L36]     await this.audit.record(user.email, 'updated', 'labour_task', String(row._id), `Updated labour task ${row.taskCode}`, { fields: Object.keys(dto) });
+[L37]     return row;
+[L38]   }
+[L39]   listEntries(taskId?: string) { return this.entries.find(taskId ? { taskId } : {}).sort({ workDate: -1 }).lean(); }
+[L40]   async createEntry(dto: any, user: any) {
+[L41]     if (!dto.taskId || !dto.workerCode || !dto.workDate || dto.hoursWorked === undefined || dto.outputQuantity === undefined || dto.labourCostUgx === undefined) throw new BadRequestException('Task, worker, date, hours, output and labour cost are required.');
+[L42]     const task: any = await this.tasks.findById(dto.taskId).lean();
+[L43]     if (!task) throw new NotFoundException('Labour task not found.');
+[L44]     if (!await this.workers.findOne({ workerCode: dto.workerCode }).lean()) throw new NotFoundException('Worker code not found.');
+[L45]     const hours = Number(dto.hoursWorked), output = Number(dto.outputQuantity), cost = Number(dto.labourCostUgx);
+[L46]     if (![hours, output, cost].every(Number.isFinite) || hours < 0 || output < 0 || cost < 0) throw new BadRequestException('Hours, output and labour cost must be non-negative numbers.');
+[L47]     const row: any = await this.entries.create({ ...dto, hoursWorked: hours, outputQuantity: output, labourCostUgx: cost, recordedBy: user.email });
+[L48]     await this.audit.record(user.email, 'created', 'labour_entry', String(row._id), `Recorded labour output for ${dto.workerCode}`, { taskId: dto.taskId, hoursWorked: hours, outputQuantity: output, labourCostUgx: cost });
+[L49]     return row;
+[L50]   }
+[L51]   async dashboard() {
+[L52]     const [workers, tasks, entries]: any = await Promise.all([this.workers.find().lean(), this.tasks.find().lean(), this.entries.find().lean()]);
+[L53]     const byTask = tasks.map((t: any) => {
+[L54]       const te = entries.filter((e: any) => String(e.taskId) === String(t._id));
+[L55]       const hours = te.reduce((s: number, e: any) => s + Number(e.hoursWorked || 0), 0);
+[L56]       const output = te.reduce((s: number, e: any) => s + Number(e.outputQuantity || 0), 0);
+[L57]       const costs = te.reduce((s: number, e: any) => s + Number(e.labourCostUgx || 0), 0);
+[L58]       const units = [...new Set(te.map((e: any) => e.outputUnit).filter(Boolean))];
+[L59]       return { ...t, recordedHours: hours, recordedOutput: output, recordedLabourCostUgx: costs, outputUnits: units, costPerOutputUnit: output > 0 && units.length <= 1 ? costs / output : null, entryCount: te.length };
+[L60]     });
+[L61]     const totalHours = entries.reduce((s: number, e: any) => s + Number(e.hoursWorked || 0), 0);
+[L62]     const totalOutput = entries.reduce((s: number, e: any) => s + Number(e.outputQuantity || 0), 0);
+[L63]     const totalCost = entries.reduce((s: number, e: any) => s + Number(e.labourCostUgx || 0), 0);
+[L64]     return {
+[L65]       generatedAt: new Date().toISOString(),
+[L66]       totals: { workers: workers.length, activeWorkers: workers.filter((w: any) => w.status === 'active').length, tasks: tasks.length, openTasks: tasks.filter((t: any) => !['verified','cancelled'].includes(t.status)).length, submittedTasks: tasks.filter((t: any) => t.status === 'submitted').length, verifiedTasks: tasks.filter((t: any) => t.status === 'verified').length, recordedHours: totalHours, recordedOutput: totalOutput, recordedLabourCostUgx: totalCost, averageCostPerOutputUnit: totalOutput > 0 ? totalCost / totalOutput : null },
+[L67]       tasks: byTask,
+[L68]       notes: ['Output quantities should only be compared when activity, unit, quality standard and conditions are comparable.', 'Cost per output unit uses recorded labour cost and recorded output; it is not a full farm production cost.', 'Labour records are not automatically posted to the finance ledger.', 'Worker records contain personal contact information; restrict access and collect only what is necessary.'],
+[L69]     };
+[L70]   }
+[L71] }
+
+============================================================
+MODULE: nursery
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\nursery\nursery.controller.ts
+SHA256: 91AEC073D18109F375D5F78D6FC9DA6AAE2E43FB36DD4DEDC988F41E925D47A2
+TOTAL LINES: 13
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { NurseryService } from './nursery.service';
+[L4] @Roles('owner')
+[L5] @Controller('nursery')
+[L6] export class NurseryController {
+[L7]   constructor(private service: NurseryService) {}
+[L8]   @Get('dashboard') dashboard() { return this.service.dashboard(); }
+[L9]   @Get('batches') batches() { return this.service.listBatches(); }
+[L10]   @Post('batches') createBatch(@Body() body: any, @Req() req: any) { return this.service.createBatch(body, req.user); }
+[L11]   @Get('movements') movements(@Query('batchId') batchId?: string) { return this.service.listMovements(batchId); }
+[L12]   @Post('movements') movement(@Body() body: any, @Req() req: any) { return this.service.addMovement(body, req.user); }
+[L13] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\nursery\nursery.schema.ts
+SHA256: 78C636C1B01F41EBD2F196813724F5B37739F941C4B112776A3A4FABB5BE2D36
+TOTAL LINES: 38
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] 
+[L4] @Schema({ timestamps: true })
+[L5] export class NurseryBatch {
+[L6]   @Prop({ required: true, trim: true}) batchCode!: string;
+[L7]   @Prop({ required: true, trim: true }) speciesOrClone!: string;
+[L8]   @Prop({ required: true }) startDate!: string;
+[L9]   @Prop({ required: true, min: 0 }) initialQuantity!: number;
+[L10]   @Prop({ required: true, min: 0, default: 0 }) currentQuantity!: number;
+[L11]   @Prop({ required: true, enum: ['seed','cutting','seedling','other'] }) propagationType!: string;
+[L12]   @Prop({ enum: ['planned','germinating','growing','ready','partially_dispatched','dispatched','lost','closed'], default: 'planned' }) status!: string;
+[L13]   @Prop() supplierOrSource?: string;
+[L14]   @Prop() unitCostUgx?: number;
+[L15]   @Prop() expectedReadyDate?: string;
+[L16]   @Prop() notes?: string;
+[L17]   @Prop({ required: true }) createdBy!: string;
+[L18] }
+[L19] export type NurseryBatchDocument = HydratedDocument<NurseryBatch>;
+[L20] export const NurseryBatchSchema = SchemaFactory.createForClass(NurseryBatch);
+[L21] NurseryBatchSchema.index({ batchCode: 1 }, { unique: true });
+[L22] NurseryBatchSchema.index({ status: 1, expectedReadyDate: 1 });
+[L23] 
+[L24] @Schema({ timestamps: true })
+[L25] export class NurseryMovement {
+[L26]   @Prop({ required: true }) batchId!: string;
+[L27]   @Prop({ required: true, enum: ['production_added','loss','dispatch','adjustment_in','adjustment_out'] }) movementType!: string;
+[L28]   @Prop({ required: true, min: 1 }) quantity!: number;
+[L29]   @Prop({ required: true }) movementDate!: string;
+[L30]   @Prop() reason?: string;
+[L31]   @Prop() regenerationPlanId?: string;
+[L32]   @Prop() plantationBlockId?: string;
+[L33]   @Prop() reference?: string;
+[L34]   @Prop({ required: true }) recordedBy!: string;
+[L35] }
+[L36] export type NurseryMovementDocument = HydratedDocument<NurseryMovement>;
+[L37] export const NurseryMovementSchema = SchemaFactory.createForClass(NurseryMovement);
+[L38] NurseryMovementSchema.index({ batchId: 1, movementDate: -1 });
+
+------------------------------------------------------------
+SOURCE: apps\api\src\nursery\nursery.service.ts
+SHA256: 4A4834C24B5C9EF31C7A6304C472E5E4D156750F6D43B9818D6F59D751C3854A
+TOTAL LINES: 71
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { AuditService } from '../audit/audit.service';
+[L5] import { NurseryBatch, NurseryMovement } from './nursery.schema';
+[L6] 
+[L7] @Injectable()
+[L8] export class NurseryService {
+[L9]   constructor(
+[L10]     @InjectModel(NurseryBatch.name) private batches: Model<NurseryBatch>,
+[L11]     @InjectModel(NurseryMovement.name) private movements: Model<NurseryMovement>,
+[L12]     private audit: AuditService,
+[L13]   ) {}
+[L14] 
+[L15]   async listBatches() {
+[L16]     const batches: any[] = await this.batches.find().sort({ startDate: -1 }).lean();
+[L17]     return batches.map(b => ({ ...b, estimatedStockValueUgx: b.unitCostUgx == null ? null : Number(b.currentQuantity || 0) * Number(b.unitCostUgx) }));
+[L18]   }
+[L19] 
+[L20]   async createBatch(dto: any, user: any) {
+[L21]     if (!dto.batchCode || !dto.speciesOrClone || !dto.startDate || dto.initialQuantity === undefined || !dto.propagationType) throw new BadRequestException('Batch code, species/clone, start date, initial quantity and propagation type are required.');
+[L22]     const initial = Number(dto.initialQuantity);
+[L23]     if (!Number.isInteger(initial) || initial < 0) throw new BadRequestException('Initial quantity must be a non-negative whole number.');
+[L24]     const unitCost = dto.unitCostUgx === '' || dto.unitCostUgx == null ? undefined : Number(dto.unitCostUgx);
+[L25]     if (unitCost !== undefined && (!Number.isFinite(unitCost) || unitCost < 0)) throw new BadRequestException('Unit cost must be non-negative.');
+[L26]     const existing = await this.batches.findOne({ batchCode: dto.batchCode }).lean();
+[L27]     if (existing) throw new BadRequestException('Batch code already exists.');
+[L28]     const row: any = await this.batches.create({ ...dto, initialQuantity: initial, currentQuantity: initial, unitCostUgx: unitCost, createdBy: user.email });
+[L29]     await this.movements.create({ batchId: String(row._id), movementType: 'production_added', quantity: initial, movementDate: dto.startDate, reason: 'Opening batch quantity', recordedBy: user.email });
+[L30]     await this.audit.record(user.email, 'created', 'nursery_batch', String(row._id), `Created nursery batch ${row.batchCode}`, { initialQuantity: initial });
+[L31]     return row;
+[L32]   }
+[L33] 
+[L34]   async addMovement(dto: any, user: any) {
+[L35]     const allowed = ['production_added','loss','dispatch','adjustment_in','adjustment_out'];
+[L36]     if (!dto.batchId || !allowed.includes(dto.movementType) || dto.quantity === undefined || !dto.movementDate) throw new BadRequestException('Batch, movement type, quantity and date are required.');
+[L37]     const quantity = Number(dto.quantity);
+[L38]     if (!Number.isInteger(quantity) || quantity <= 0) throw new BadRequestException('Movement quantity must be a positive whole number.');
+[L39]     const batch: any = await this.batches.findById(dto.batchId).lean();
+[L40]     if (!batch) throw new NotFoundException('Nursery batch not found.');
+[L41]     const increases = ['production_added','adjustment_in'].includes(dto.movementType);
+[L42]     const nextQuantity = Number(batch.currentQuantity || 0) + (increases ? quantity : -quantity);
+[L43]     if (nextQuantity < 0) throw new BadRequestException('Movement would make nursery stock negative.');
+[L44]     if (dto.movementType === 'dispatch' && !dto.plantationBlockId) throw new BadRequestException('Dispatch must name the destination plantation block.');
+[L45]     const movement: any = await this.movements.create({ ...dto, quantity, recordedBy: user.email });
+[L46]     await this.batches.findByIdAndUpdate(dto.batchId, { currentQuantity: nextQuantity, status: nextQuantity === 0 ? (dto.movementType === 'dispatch' ? 'dispatched' : 'closed') : (dto.movementType === 'dispatch' ? 'partially_dispatched' : batch.status) });
+[L47]     await this.audit.record(user.email, 'created', 'nursery_movement', String(movement._id), `Recorded nursery ${dto.movementType} movement`, { batchId: dto.batchId, quantity, resultingStock: nextQuantity });
+[L48]     return { movement, resultingStock: nextQuantity };
+[L49]   }
+[L50] 
+[L51]   async listMovements(batchId?: string) {
+[L52]     return this.movements.find(batchId ? { batchId } : {}).sort({ movementDate: -1 }).lean();
+[L53]   }
+[L54] 
+[L55]   async dashboard() {
+[L56]     const batches: any[] = await this.batches.find().lean();
+[L57]     const movements: any[] = await this.movements.find().sort({ movementDate: -1 }).lean();
+[L58]     const stock = batches.reduce((sum, b) => sum + Number(b.currentQuantity || 0), 0);
+[L59]     const batchesWithCost = batches.filter(b => b.unitCostUgx != null);
+[L60]     const stockValue = batchesWithCost.reduce((sum, b) => sum + Number(b.currentQuantity || 0) * Number(b.unitCostUgx || 0), 0);
+[L61]     const dispatched = movements.filter(m => m.movementType === 'dispatch').reduce((sum,m) => sum + Number(m.quantity || 0),0);
+[L62]     const losses = movements.filter(m => m.movementType === 'loss').reduce((sum,m) => sum + Number(m.quantity || 0),0);
+[L63]     return {
+[L64]       generatedAt: new Date().toISOString(),
+[L65]       totals: { batchCount: batches.length, currentSeedlingStock: stock, batchesWithUnitCost: batchesWithCost.length, estimatedStockValueUgx: batchesWithCost.length ? stockValue : null, dispatchedQuantityRecorded: dispatched, lossesRecorded: losses },
+[L66]       batches: batches.map(b => ({ ...b, estimatedStockValueUgx: b.unitCostUgx == null ? null : Number(b.currentQuantity || 0) * Number(b.unitCostUgx) })),
+[L67]       recentMovements: movements.slice(0, 30),
+[L68]       warnings: ['Stock depends on correctly recorded movements and is not a physical count.', 'Estimated stock value uses the entered unit cost, not a verified accounting valuation.', 'Dispatch quantity is a movement total, not proof of seedling survival after planting.'],
+[L69]     };
+[L70]   }
+[L71] }
+
+============================================================
+MODULE: risk-management
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\risk-management\risk.schema.ts
+SHA256: 2419635AD27DE1E0F6B342E9F118984DC40857ED083947263AE7D29EE7BC21AC
+TOTAL LINES: 48
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] 
+[L4] export type FarmRiskDocument = HydratedDocument<FarmRisk>;
+[L5] export type RiskActionDocument = HydratedDocument<RiskAction>;
+[L6] 
+[L7] export const RISK_CATEGORIES = [
+[L8]   'fire', 'drought', 'pests_disease', 'tree_mortality', 'weather',
+[L9]   'market_buyer', 'cashflow', 'workforce', 'apiary_colony',
+[L10]   'operations', 'compliance', 'security', 'other',
+[L11] ] as const;
+[L12] export const RISK_STATUSES = ['open', 'monitoring', 'mitigating', 'accepted', 'closed'] as const;
+[L13] export const RISK_ACTION_STATUSES = ['open', 'in_progress', 'completed', 'blocked'] as const;
+[L14] 
+[L15] @Schema({ timestamps: true })
+[L16] export class FarmRisk {
+[L17]   @Prop({ required: true, unique: true, trim: true }) riskCode: string;
+[L18]   @Prop({ required: true, trim: true }) title: string;
+[L19]   @Prop({ required: true, enum: RISK_CATEGORIES }) category: string;
+[L20]   @Prop({ required: true, enum: ['eucalyptus', 'beekeeping', 'infrastructure', 'finance', 'workforce', 'whole_farm', 'other'], default: 'whole_farm' }) businessLine: string;
+[L21]   @Prop({ required: true, trim: true }) description: string;
+[L22]   @Prop({ required: true, min: 1, max: 5 }) likelihood: number;
+[L23]   @Prop({ required: true, min: 1, max: 5 }) impact: number;
+[L24]   @Prop({ default: '' }) existingControls: string;
+[L25]   @Prop({ default: '' }) mitigationPlan: string;
+[L26]   @Prop({ default: '' }) ownerResponsible: string;
+[L27]   @Prop({ default: null }) reviewDate?: string;
+[L28]   @Prop({ default: null }) dueDate?: string;
+[L29]   @Prop({ required: true, enum: RISK_STATUSES, default: 'open' }) status: string;
+[L30]   @Prop({ min: 1, max: 5, default: null }) residualLikelihood?: number;
+[L31]   @Prop({ min: 1, max: 5, default: null }) residualImpact?: number;
+[L32]   @Prop({ default: '' }) evidenceReference: string;
+[L33]   @Prop({ default: '' }) createdBy: string;
+[L34] }
+[L35] export const FarmRiskSchema = SchemaFactory.createForClass(FarmRisk);
+[L36] 
+[L37] @Schema({ timestamps: true })
+[L38] export class RiskAction {
+[L39]   @Prop({ required: true, index: true }) riskId: string;
+[L40]   @Prop({ required: true, trim: true }) title: string;
+[L41]   @Prop({ default: '' }) actionOwner: string;
+[L42]   @Prop({ default: null }) dueDate?: string;
+[L43]   @Prop({ required: true, enum: RISK_ACTION_STATUSES, default: 'open' }) status: string;
+[L44]   @Prop({ default: '' }) note: string;
+[L45]   @Prop({ default: null }) completedAt?: Date;
+[L46]   @Prop({ default: '' }) createdBy: string;
+[L47] }
+[L48] export const RiskActionSchema = SchemaFactory.createForClass(RiskAction);
+
+------------------------------------------------------------
+SOURCE: apps\api\src\risk-management\risk-management.controller.ts
+SHA256: 9A0C9FD4E0973DDCD9C6146732E3FBEA4FEFDBB1A8DAFDFB327B3CB7AE12FEE6
+TOTAL LINES: 16
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { RiskManagementService } from './risk-management.service';
+[L4] 
+[L5] @Controller('risk-management')
+[L6] @Roles('owner')
+[L7] export class RiskManagementController {
+[L8]   constructor(private readonly service: RiskManagementService) {}
+[L9]   @Get('dashboard') dashboard() { return this.service.dashboard(); }
+[L10]   @Get('risks') listRisks(@Query() query: any) { return this.service.listRisks(query); }
+[L11]   @Post('risks') createRisk(@Body() body: any, @Req() req: any) { return this.service.createRisk(body, req.user?.sub || req.user?.email || 'owner'); }
+[L12]   @Patch('risks/:id') updateRisk(@Param('id') id: string, @Body() body: any) { return this.service.updateRisk(id, body); }
+[L13]   @Get('actions') listActions(@Query('riskId') riskId?: string) { return this.service.listActions(riskId); }
+[L14]   @Post('actions') createAction(@Body() body: any, @Req() req: any) { return this.service.createAction(body, req.user?.sub || req.user?.email || 'owner'); }
+[L15]   @Patch('actions/:id') updateAction(@Param('id') id: string, @Body() body: any) { return this.service.updateAction(id, body); }
+[L16] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\risk-management\risk-management.service.ts
+SHA256: 60B89629D418631BBBF15DAE404D009DCDCE83591C170C7AE6E0D803F07BA3A2
+TOTAL LINES: 139
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { FarmRisk, FarmRiskDocument, RiskAction, RiskActionDocument } from './risk.schema';
+[L5] 
+[L6] const riskStatuses = ['open', 'monitoring', 'mitigating', 'accepted', 'closed'];
+[L7] const actionStatuses = ['open', 'in_progress', 'completed', 'blocked'];
+[L8] const categories = ['fire','drought','pests_disease','tree_mortality','weather','market_buyer','cashflow','workforce','apiary_colony','operations','compliance','security','other'];
+[L9] const lines = ['eucalyptus','beekeeping','infrastructure','finance','workforce','whole_farm','other'];
+[L10] const scoreBand = (score: number) => score >= 16 ? 'critical' : score >= 10 ? 'high' : score >= 5 ? 'medium' : 'low';
+[L11] const numberInRange = (v: any, name: string, min = 1, max = 5) => {
+[L12]   const n = Number(v);
+[L13]   if (!Number.isInteger(n) || n < min || n > max) throw new BadRequestException(`${name} must be an integer from ${min} to ${max}`);
+[L14]   return n;
+[L15] };
+[L16] const cleanDate = (v: any, name: string) => {
+[L17]   if (v === '' || v === undefined || v === null) return null;
+[L18]   if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v) || Number.isNaN(Date.parse(v))) throw new BadRequestException(`${name} must be YYYY-MM-DD or blank`);
+[L19]   return v;
+[L20] };
+[L21] const publicRisk = (r: any) => {
+[L22]   const o = r?.toObject ? r.toObject() : r;
+[L23]   const inherentScore = Number(o.likelihood) * Number(o.impact);
+[L24]   const hasResidual = Number.isInteger(o.residualLikelihood) && Number.isInteger(o.residualImpact);
+[L25]   const residualScore = hasResidual ? o.residualLikelihood * o.residualImpact : null;
+[L26]   return { ...o, inherentScore, inherentBand: scoreBand(inherentScore), residualScore, residualBand: residualScore === null ? null : scoreBand(residualScore) };
+[L27] };
+[L28] 
+[L29] @Injectable()
+[L30] export class RiskManagementService {
+[L31]   constructor(
+[L32]     @InjectModel(FarmRisk.name) private risks: Model<FarmRiskDocument>,
+[L33]     @InjectModel(RiskAction.name) private actions: Model<RiskActionDocument>,
+[L34]   ) {}
+[L35] 
+[L36]   async dashboard() {
+[L37]     const risks = (await this.risks.find().sort({ updatedAt: -1 }).lean()).map(publicRisk);
+[L38]     const actions = await this.actions.find().lean();
+[L39]     const today = new Date().toISOString().slice(0, 10);
+[L40]     const active = risks.filter(r => r.status !== 'closed');
+[L41]     const openActions = actions.filter(a => a.status !== 'completed');
+[L42]     const overdueActions = openActions.filter(a => a.dueDate && a.dueDate < today);
+[L43]     const overdueReviews = active.filter(r => r.reviewDate && r.reviewDate < today);
+[L44]     const topRisks = active.sort((a, b) => b.inherentScore - a.inherentScore).slice(0, 8);
+[L45]     const count = (band: string) => active.filter(r => r.inherentBand === band).length;
+[L46]     return {
+[L47]       totals: { activeRisks: active.length, critical: count('critical'), high: count('high'), openActions: openActions.length, overdueActions: overdueActions.length, overdueReviews: overdueReviews.length },
+[L48]       topRisks, overdueActions: overdueActions.slice(0, 10), overdueReviews: overdueReviews.slice(0, 10),
+[L49]     };
+[L50]   }
+[L51] 
+[L52]   async listRisks(query: any = {}) {
+[L53]     const filter: any = {};
+[L54]     if (query.status && riskStatuses.includes(query.status)) filter.status = query.status;
+[L55]     if (query.category && categories.includes(query.category)) filter.category = query.category;
+[L56]     if (query.businessLine && lines.includes(query.businessLine)) filter.businessLine = query.businessLine;
+[L57]     const risks = await this.risks.find(filter).sort({ updatedAt: -1 }).lean();
+[L58]     return risks.map(publicRisk).sort((a, b) => b.inherentScore - a.inherentScore);
+[L59]   }
+[L60] 
+[L61]   async createRisk(body: any, actor = '') {
+[L62]     if (!body?.riskCode?.trim() || !body?.title?.trim() || !body?.description?.trim()) throw new BadRequestException('riskCode, title and description are required');
+[L63]     if (!categories.includes(body.category)) throw new BadRequestException('Invalid category');
+[L64]     if (!lines.includes(body.businessLine || 'whole_farm')) throw new BadRequestException('Invalid businessLine');
+[L65]     const likelihood = numberInRange(body.likelihood, 'likelihood');
+[L66]     const impact = numberInRange(body.impact, 'impact');
+[L67]     const residualLikelihood = body.residualLikelihood === '' || body.residualLikelihood === null || body.residualLikelihood === undefined ? null : numberInRange(body.residualLikelihood, 'residualLikelihood');
+[L68]     const residualImpact = body.residualImpact === '' || body.residualImpact === null || body.residualImpact === undefined ? null : numberInRange(body.residualImpact, 'residualImpact');
+[L69]     if ((residualLikelihood === null) !== (residualImpact === null)) throw new BadRequestException('Enter both residual likelihood and residual impact, or leave both blank');
+[L70]     const status = body.status || 'open';
+[L71]     if (!riskStatuses.includes(status)) throw new BadRequestException('Invalid status');
+[L72]     const record = await this.risks.create({
+[L73]       riskCode: body.riskCode.trim(), title: body.title.trim(), category: body.category,
+[L74]       businessLine: body.businessLine || 'whole_farm', description: body.description.trim(),
+[L75]       likelihood, impact, existingControls: body.existingControls || '', mitigationPlan: body.mitigationPlan || '',
+[L76]       ownerResponsible: body.ownerResponsible || '', reviewDate: cleanDate(body.reviewDate, 'reviewDate'),
+[L77]       dueDate: cleanDate(body.dueDate, 'dueDate'), status, residualLikelihood, residualImpact,
+[L78]       evidenceReference: body.evidenceReference || '', createdBy: actor,
+[L79]     });
+[L80]     return publicRisk(record);
+[L81]   }
+[L82] 
+[L83]   async updateRisk(id: string, body: any) {
+[L84]     const record = await this.risks.findById(id);
+[L85]     if (!record) throw new NotFoundException('Risk not found');
+[L86]     if (body.likelihood !== undefined) record.likelihood = numberInRange(body.likelihood, 'likelihood');
+[L87]     if (body.impact !== undefined) record.impact = numberInRange(body.impact, 'impact');
+[L88]     if (body.residualLikelihood !== undefined) {
+[L89]   record.residualLikelihood =
+[L90]     body.residualLikelihood === '' || body.residualLikelihood === null
+[L91]       ? undefined
+[L92]       : numberInRange(body.residualLikelihood, 'residualLikelihood');
+[L93] }
+[L94] 
+[L95] if (body.residualImpact !== undefined) {
+[L96]   record.residualImpact =
+[L97]     body.residualImpact === '' || body.residualImpact === null
+[L98]       ? undefined
+[L99]       : numberInRange(body.residualImpact, 'residualImpact');
+[L100] }
+[L101]     if ((record.residualLikelihood == null) !== (record.residualImpact == null)) throw new BadRequestException('Enter both residual likelihood and residual impact, or leave both blank');
+[L102]     for (const key of ['title','description','existingControls','mitigationPlan','ownerResponsible','evidenceReference'] as const) if (body[key] !== undefined) (record as any)[key] = body[key];
+[L103]     if (body.category !== undefined) { if (!categories.includes(body.category)) throw new BadRequestException('Invalid category'); record.category = body.category; }
+[L104]     if (body.businessLine !== undefined) { if (!lines.includes(body.businessLine)) throw new BadRequestException('Invalid businessLine'); record.businessLine = body.businessLine; }
+[L105]     if (body.status !== undefined) { if (!riskStatuses.includes(body.status)) throw new BadRequestException('Invalid status'); record.status = body.status; }
+[L106]     if (body.reviewDate !== undefined) record.reviewDate = cleanDate(body.reviewDate, 'reviewDate') as any;
+[L107]     if (body.dueDate !== undefined) record.dueDate = cleanDate(body.dueDate, 'dueDate') as any;
+[L108]     await record.save();
+[L109]     return publicRisk(record);
+[L110]   }
+[L111] 
+[L112]   async listActions(riskId?: string) {
+[L113]     const filter = riskId ? { riskId } : {};
+[L114]     return this.actions.find(filter).sort({ dueDate: 1, updatedAt: -1 }).lean();
+[L115]   }
+[L116]   async createAction(body: any, actor = '') {
+[L117]     if (!body?.riskId || !body?.title?.trim()) throw new BadRequestException('riskId and title are required');
+[L118]     if (!(await this.risks.exists({ _id: body.riskId }))) throw new NotFoundException('Risk not found');
+[L119]     const status = body.status || 'open';
+[L120]     if (!actionStatuses.includes(status)) throw new BadRequestException('Invalid action status');
+[L121]     return this.actions.create({ riskId: body.riskId, title: body.title.trim(), actionOwner: body.actionOwner || '', dueDate: cleanDate(body.dueDate, 'dueDate'), status, note: body.note || '', completedAt: status === 'completed' ? new Date() :  undefined, createdBy: actor });
+[L122]   }
+[L123]   async updateAction(id: string, body: any) {
+[L124]     const record = await this.actions.findById(id);
+[L125]     if (!record) throw new NotFoundException('Risk action not found');
+[L126]     if (body.title !== undefined) record.title = body.title;
+[L127]     if (body.actionOwner !== undefined) record.actionOwner = body.actionOwner;
+[L128]     if (body.note !== undefined) record.note = body.note;
+[L129]     if (body.dueDate !== undefined) record.dueDate = cleanDate(body.dueDate, 'dueDate') as any;
+[L130]     if (body.status !== undefined) {
+[L131]       if (!actionStatuses.includes(body.status)) throw new BadRequestException('Invalid action status');
+[L132]       record.status = body.status;
+[L133]       record.completedAt =
+[L134]   body.status === 'completed' ? new Date() : undefined;
+[L135]     }
+[L136]     await record.save();
+[L137]     return record;
+[L138]   }
+[L139] }
+
+============================================================
+MODULE: standard-operating-procedures
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\standard-operating-procedures\sop.schema.ts
+SHA256: B1F5A36F03CB4A7AC8DF53C3879658B75F16AC825C224B294E4048DE9DFAA46B
+TOTAL LINES: 43
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] export type SopTemplateDocument = HydratedDocument<SopTemplate>;
+[L4] export type SopRunDocument = HydratedDocument<SopRun>;
+[L5] @Schema({timestamps:true})
+[L6] export class SopTemplate {
+[L7]  @Prop({required:true,unique:true,trim:true}) sopCode!:string;
+[L8]  @Prop({required:true,trim:true}) title!:string;
+[L9]  @Prop({required:true,enum:['Eucalyptus','Beekeeping','General']}) workstream!:string;
+[L10]  @Prop({required:true,enum:['daily','weekly','monthly','event_based']}) cadence!:string;
+[L11]  @Prop({required:true,trim:true}) purpose!:string;
+[L12]  @Prop({required:true,default:[]}) checklist!:Array<{code:string;label:string;required:boolean;guidance:string}>;
+[L13]  @Prop({required:true,default:'active',enum:['draft','active','retired']}) status!:string;
+[L14]  @Prop({default:''}) ownerRole!:string;
+[L15]  @Prop({default:''}) safetyNotes!:string;
+[L16]  @Prop({required:true,default:''}) createdBy!:string;
+[L17] }
+[L18] export const SopTemplateSchema=SchemaFactory.createForClass(SopTemplate);
+[L19] SopTemplateSchema.index({workstream:1,status:1,cadence:1});
+[L20] @Schema({timestamps:true})
+[L21] export class SopRun {
+[L22]  @Prop({required:true,index:true}) templateId!:string;
+[L23]  @Prop({required:true}) sopCode!:string;
+[L24]  @Prop({required:true}) title!:string;
+[L25]  @Prop({required:true,enum:['Eucalyptus','Beekeeping','General']}) workstream!:string;
+[L26]  @Prop({required:true}) siteOrBlock!:string;
+[L27]  @Prop({required:true}) scheduledDate!:string;
+[L28]  @Prop({required:true}) assignedTo!:string;
+[L29]  @Prop({required:true,default:'open',enum:['open','in_progress','submitted','verified','rejected','cancelled']}) status!:string;
+[L30]  @Prop({required:true,default:[]}) checklistResults!:Array<{code:string;label:string;result:'done'|'not_done'|'not_applicable';note:string;evidenceReference:string}>;
+[L31]  @Prop({default:''}) completionSummary!:string;
+[L32]  @Prop({default:''}) exceptionNotes!:string;
+[L33]  @Prop({default:''}) evidenceReference!:string;
+[L34]  @Prop({default:''}) submittedBy!:string;
+[L35]  @Prop({default:null}) submittedAt?:Date;
+[L36]  @Prop({default:''}) verifiedBy!:string;
+[L37]  @Prop({default:null}) verifiedAt?:Date;
+[L38]  @Prop({default:''}) verificationNote!:string;
+[L39]  @Prop({required:true,default:''}) createdBy!:string;
+[L40] }
+[L41] export const SopRunSchema=SchemaFactory.createForClass(SopRun);
+[L42] SopRunSchema.index({scheduledDate:1,status:1,workstream:1});
+[L43] SopRunSchema.index({templateId:1,scheduledDate:1,siteOrBlock:1});
+
+------------------------------------------------------------
+SOURCE: apps\api\src\standard-operating-procedures\standard-operating-procedures.controller.ts
+SHA256: BBBBD8AB46F4627311276F25FF80B359B8EA8FE6A99BDD7C6D80160014FB3502
+TOTAL LINES: 21
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Patch, Post, Query, Req, Param } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { StandardOperatingProceduresService } from './standard-operating-procedures.service';
+[L4] @Controller('sops')
+[L5] export class StandardOperatingProceduresController {
+[L6]  constructor(private readonly service:StandardOperatingProceduresService){}
+[L7]  @Get('overview') @Roles('owner') overview(){return this.service.overview();}
+[L8]  @Get('templates') @Roles('owner') templates(){return this.service.listTemplates();}
+[L9]  @Post('seed-defaults') @Roles('owner') seed(@Req() req:any){return this.service.seedDefaults(req.user?.sub||req.user?.email||'owner');}
+[L10]  @Post('templates') @Roles('owner') createTemplate(@Body() b:any,@Req() req:any){return this.service.createTemplate(b,req.user?.sub||req.user?.email||'owner');}
+[L11]  @Patch('templates/:id/status') @Roles('owner') templateStatus(@Param('id') id:string,@Body() b:any){return this.service.activateTemplate(id,b);}
+[L12] 
+[L13]  @Get('my-runs')
+[L14]  myRuns(@Req() req:any){
+[L15]   const actor=req.user?.email||req.user?.username||req.user?.sub||'';
+[L16]   return this.service.myRuns(String(actor));
+[L17]  }
+[L18]  @Get('runs') @Roles('owner') runs(@Query() q:any){return this.service.listRuns(q);}
+[L19]  @Post('runs') @Roles('owner') createRun(@Body() b:any,@Req() req:any){return this.service.createRun(b,req.user?.sub||req.user?.email||'owner');}
+[L20]  @Patch('runs/:id') updateRun(@Param('id') id:string,@Body() b:any,@Req() req:any){return this.service.updateRun(id,b,req.user?.sub||req.user?.email||'owner',req.user?.role||'');}
+[L21] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\standard-operating-procedures\standard-operating-procedures.service.ts
+SHA256: 78B2EB957CE5663C4B4AF9A6E4BC7140DBB892494D13FD12CF99121681EA3D3D
+TOTAL LINES: 110
+------------------------------------------------------------
+[L1] import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { SopTemplate, SopRun } from './sop.schema';
+[L5] import { Plantation } from '../plantations/plantation.schema';
+[L6] import { Hive } from '../hives/hive.schema';
+[L7] import { Inspection } from '../inspections/inspection.schema';
+[L8] 
+[L9] const streams=['Eucalyptus','Beekeeping','General'];
+[L10] const cadences=['daily','weekly','monthly','event_based'];
+[L11] const templateSeeds=[
+[L12]  {sopCode:'EUC-DAILY-001',title:'Eucalyptus block walk and hazard check',workstream:'Eucalyptus',cadence:'daily',purpose:'Check the block for visible hazards and urgent work needs.',ownerRole:'Field worker / supervisor',safetyNotes:'Do not enter unsafe areas during storms or fire conditions.',checklist:[['boundary','Walk agreed accessible boundary and note access issues',true,'Do not cross unsafe or disputed boundaries.'],['fire','Look for smoke, burn marks, dry fuel build-up or fire hazards',true,'Escalate smoke/fire immediately using local emergency procedures.'],['damage','Check for visible damage, pests, disease or unusual tree decline',true,'Record affected area and photo reference where safe.'],['access','Check paths, drainage and access for safe movement',true,'Do not operate machinery without training.'],['followup','Record actions, responsible person and due date for exceptions',true,'Do not mark a problem resolved without checking it.']]},
+[L13]  {sopCode:'EUC-WEEKLY-001',title:'Eucalyptus survival and growth sample',workstream:'Eucalyptus',cadence:'weekly',purpose:'Record a repeatable sample of live and dead trees for management review.',ownerRole:'Supervisor',safetyNotes:'Use the same sample method and marked locations over time.',checklist:[['sample','Use the recorded sample locations and method',true,'Do not extrapolate a small convenience sample as a verified whole-farm count.'],['live','Count live trees in the sample',true,'Record actual count and sample size.'],['dead','Count dead or missing trees in the sample',true,'Separate dead, missing and not assessed if known.'],['growth','Record height/DBH only where trained and measured consistently',false,'Use suitable tools and units.'],['decision','Record replanting, pest or maintenance recommendations',true,'Replanting decisions should consider season, survival and cost.']]},
+[L14]  {sopCode:'BEE-WEEKLY-001',title:'Apiary external inspection',workstream:'Beekeeping',cadence:'weekly',purpose:'Check apiary access, hive exterior, security and visible colony warning signs.',ownerRole:'Beekeeper / supervisor',safetyNotes:'Use suitable protective equipment; avoid opening hives in unsafe weather or without appropriate training.',checklist:[['ppe','Confirm protective clothing and safe inspection conditions',true,'Stop if conditions or equipment are unsafe.'],['access','Check apiary access, security and animal/human disturbance',true,'Record hazards and keep bystanders at a safe distance.'],['hive','Check hive body, stand, roof, water ingress and damage externally',true,'Do not open a hive if not trained or conditions are unsuitable.'],['activity','Observe entrance activity and unusual signs without over-disturbing',true,'Record observations, not unsupported diagnoses.'],['action','Record any need for a trained internal inspection or repair',true,'Escalate suspected disease or unusual colony loss to qualified local support.']]},
+[L15]  {sopCode:'BEE-MONTHLY-001',title:'Apiary colony and equipment review',workstream:'Beekeeping',cadence:'monthly',purpose:'Review colony status, inspection due dates, equipment condition and harvest records.',ownerRole:'Beekeeper / supervisor',safetyNotes:'Follow locally appropriate beekeeping and food hygiene practices.',checklist:[['records','Review each hive record and last inspection date',true,'Update records only from observed evidence.'],['colony','Flag weak, queenless, absconded or unknown statuses for follow-up',true,'Do not assume colony status without an inspection.'],['equipment','Check protective gear, smoker and hive tools condition',true,'Repair or replace unsafe equipment before use.'],['harvest','Reconcile recorded honey harvest with dated harvest notes',false,'Do not harvest solely to meet a target; colony condition comes first.'],['followup','Assign follow-up and due date for each issue',true,'Use a trained beekeeper for technical decisions.']]},
+[L16]  {sopCode:'GEN-WEEKLY-001',title:'Weekly farm management review',workstream:'General',cadence:'weekly',purpose:'Review exceptions, safety, stock, maintenance and unfinished tasks.',ownerRole:'Owner / supervisor',safetyNotes:'Prioritise immediate safety and environmental risks.',checklist:[['alerts','Review unresolved critical/high alerts',true,'Verify source records before corrective action.'],['tasks','Review overdue tasks and assign accountable owners',true,'Agree a realistic due date.'],['stock','Review low-stock list and physically verify important items',true,'Do not order based only on a system warning.'],['maintenance','Review overdue maintenance and unsafe assets',true,'Remove unsafe assets from use until assessed.'],['cash','Review cash records and upcoming commitments',true,'Use recorded figures as estimates until reconciled.'],['actions','Record decisions, owner and due date for every action',true,'Close actions only when evidence supports closure.']]}
+[L17] ];
+[L18] @Injectable()
+[L19] export class StandardOperatingProceduresService {
+[L20]  constructor(
+[L21]   @InjectModel(SopTemplate.name) private templates:Model<any>,
+[L22]   @InjectModel(SopRun.name) private runs:Model<any>,
+[L23]   @InjectModel(Plantation.name) private plantations:Model<any>,
+[L24]   @InjectModel(Hive.name) private hives:Model<any>,
+[L25]   @InjectModel(Inspection.name) private inspections:Model<any>,
+[L26]  ){}
+[L27]  async seedDefaults(actor:string){
+[L28]   const result=[];
+[L29]   for(const seed of templateSeeds){
+[L30]    const checklist=seed.checklist.map((x:any)=>({code:x[0],label:x[1],required:x[2],guidance:x[3]}));
+[L31]    const row=await this.templates.findOneAndUpdate({sopCode:seed.sopCode},{$setOnInsert:{...seed,checklist,status:'active',createdBy:actor}},{upsert:true,new:true,setDefaultsOnInsert:true});
+[L32]    result.push(row);
+[L33]   }
+[L34]   return {message:'Default SOPs are present. Existing templates were not overwritten.',templates:result};
+[L35]  }
+[L36]  async listTemplates(){return this.templates.find().sort({workstream:1,sopCode:1}).limit(500).lean();}
+[L37]  async createTemplate(body:any,actor:string){
+[L38]   const code=String(body?.sopCode||'').trim(),title=String(body?.title||'').trim();
+[L39]   if(!code||!title||!streams.includes(body.workstream)||!cadences.includes(body.cadence))throw new BadRequestException('sopCode, title, valid workstream and cadence are required');
+[L40]   if(!Array.isArray(body.checklist)||!body.checklist.length)throw new BadRequestException('At least one checklist item is required');
+[L41]   const checklist=body.checklist.slice(0,100).map((x:any,i:number)=>{const label=String(x?.label||'').trim();if(!label)throw new BadRequestException(`Checklist item ${i+1} needs a label`);return {code:String(x.code||`item-${i+1}`).slice(0,60),label:label.slice(0,300),required:x.required!==false,guidance:String(x.guidance||'').slice(0,500)};});
+[L42]   return this.templates.create({sopCode:code,title,workstream:body.workstream,cadence:body.cadence,purpose:String(body.purpose||'').slice(0,1000),ownerRole:String(body.ownerRole||'').slice(0,120),safetyNotes:String(body.safetyNotes||'').slice(0,1500),checklist,status:'draft',createdBy:actor});
+[L43]  }
+[L44]  async activateTemplate(id:string,body:any){
+[L45]   const t=await this.templates.findById(id);if(!t)throw new NotFoundException('SOP template not found');
+[L46]   if(!['active','draft','retired'].includes(body?.status))throw new BadRequestException('Invalid template status');
+[L47]   t.status=body.status;return t.save();
+[L48]  }
+[L49]  async createRun(body:any,actor:string){
+[L50]   const template=await this.templates.findById(String(body?.templateId||''));if(!template)throw new NotFoundException('SOP template not found');
+[L51]   if(template.status!=='active')throw new BadRequestException('Only active SOP templates can be scheduled');
+[L52]   const date=String(body?.scheduledDate||'');if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||Number.isNaN(Date.parse(date)))throw new BadRequestException('scheduledDate must be YYYY-MM-DD');
+[L53]   const site=String(body?.siteOrBlock||'').trim(),assigned=String(body?.assignedTo||'').trim();if(!site||!assigned)throw new BadRequestException('siteOrBlock and assignedTo are required');
+[L54]   return this.runs.create({templateId:String(template._id),sopCode:template.sopCode,title:template.title,workstream:template.workstream,siteOrBlock:site.slice(0,160),scheduledDate:date,assignedTo:assigned.slice(0,160),status:'open',checklistResults:template.checklist.map((x:any)=>({code:x.code,label:x.label,result:'not_done',note:'',evidenceReference:''})),createdBy:actor});
+[L55]  }
+[L56]  async listRuns(query:any){
+[L57]   const filter:any={};if(query?.status)filter.status=String(query.status);if(query?.workstream)filter.workstream=String(query.workstream);if(query?.from||query?.to){filter.scheduledDate={};if(query.from)filter.scheduledDate.$gte=String(query.from);if(query.to)filter.scheduledDate.$lte=String(query.to);}
+[L58]   return this.runs.find(filter).sort({scheduledDate:-1,createdAt:-1}).limit(1000).lean();
+[L59]  }
+[L60]  async updateRun(id:string,body:any,actor:string,role:string){
+[L61]   const run=await this.runs.findById(id);if(!run)throw new NotFoundException('SOP run not found');
+[L62]   if(['verified','cancelled'].includes(run.status))throw new BadRequestException('Verified or cancelled runs cannot be edited; reopen through an owner review process');
+[L63]   if(body?.status==='in_progress'){if(role!=='owner'&&String(run.assignedTo).toLowerCase()!==actor.toLowerCase())throw new ForbiddenException('Only the assigned person or owner can update this run');run.status='in_progress';}
+[L64]   if(body?.checklistResults!==undefined){
+[L65]    if(role!=='owner'&&String(run.assignedTo).toLowerCase()!==actor.toLowerCase())throw new ForbiddenException('Only the assigned person or owner can update checklist results');
+[L66]    if(!Array.isArray(body.checklistResults))throw new BadRequestException('checklistResults must be an array');
+[L67]    const supplied=new Map(body.checklistResults.map((x:any)=>[String(x.code),x]));
+[L68]    run.checklistResults=run.checklistResults.map((old:any)=>{const x:any=supplied.get(old.code);if(!x)return old;const result=['done','not_done','not_applicable'].includes(x.result)?x.result:old.result;return {...old.toObject?.()||old, result,note:String(x.note||'').slice(0,1000),evidenceReference:String(x.evidenceReference||'').slice(0,300)};}) as any;
+[L69]   }
+[L70]   if(body?.status==='submitted'){
+[L71]    if(role!=='owner'&&String(run.assignedTo).toLowerCase()!==actor.toLowerCase())throw new ForbiddenException('Only the assigned person or owner can submit this run');
+[L72]    const missing=(run.checklistResults as any[]).filter(x=>x.required&&x.result==='not_done');
+[L73]    if(missing.length)throw new BadRequestException(`Complete or explain required checklist items before submission: ${missing.map(x=>x.label).join('; ')}`);
+[L74]    run.status='submitted';run.submittedBy=actor;run.submittedAt=new Date();run.completionSummary=String(body.completionSummary||'').slice(0,2000);run.exceptionNotes=String(body.exceptionNotes||'').slice(0,2000);run.evidenceReference=String(body.evidenceReference||'').slice(0,500);
+[L75]   }
+[L76]   if(body?.status==='verified'){
+[L77]    if(role!=='owner')throw new ForbiddenException('Only the owner can verify submitted work');
+[L78]    if(run.status!=='submitted')throw new BadRequestException('Only submitted work can be verified');
+[L79]    run.status='verified';run.verifiedBy=actor;run.verifiedAt=new Date();run.verificationNote=String(body.verificationNote||'').slice(0,1500);
+[L80]   }
+[L81]   if(body?.status==='rejected'){
+[L82]    if(role!=='owner')throw new ForbiddenException('Only the owner can reject submitted work');
+[L83]    if(run.status!=='submitted')throw new BadRequestException('Only submitted work can be rejected');
+[L84]    const note=String(body.verificationNote||'').trim();if(!note)throw new BadRequestException('A verification note is required when rejecting work');
+[L85]    run.status='rejected';run.verifiedBy=actor;run.verifiedAt=new Date();run.verificationNote=note.slice(0,1500);
+[L86]   }
+[L87]   return run.save();
+[L88]  }
+[L89]  async overview(){
+[L90]   const [templates,runs,plantations,hives,inspections]=await Promise.all([
+[L91]    this.templates.find({status:'active'}).limit(500).lean(),
+[L92]    this.runs.find().sort({scheduledDate:-1}).limit(2000).lean(),
+[L93]    this.plantations.find().select('blockId location nextAction nextActionDue').limit(1000).lean(),
+[L94]    this.hives.find().select('hiveId apiarySite colonyStatus nextInspectionDue repairsNeeded').limit(1000).lean(),
+[L95]    this.inspections.find({status:{$ne:'Completed'}}).select('inspectionId title dueDate status priority assignedTo').limit(1000).lean(),
+[L96]   ]);
+[L97]   const today=new Date().toISOString().slice(0,10);
+[L98]   const overdueRuns=runs.filter((r:any)=>r.scheduledDate<today&&!['verified','cancelled'].includes(r.status));
+[L99]   const requiredTotal=runs.reduce((s:number,r:any)=>s+(r.checklistResults||[]).filter((x:any)=>x.required).length,0);
+[L100]   const requiredDone=runs.reduce((s:number,r:any)=>s+(r.checklistResults||[]).filter((x:any)=>x.required&&x.result==='done').length,0);
+[L101]   return {generatedAt:new Date().toISOString(),totals:{activeTemplates:templates.length,runs:runs.length,open:runs.filter((r:any)=>['open','in_progress','rejected'].includes(r.status)).length,submitted:runs.filter((r:any)=>r.status==='submitted').length,verified:runs.filter((r:any)=>r.status==='verified').length,overdue:overdueRuns.length,requiredChecklistCompletionPct:requiredTotal?Math.round(requiredDone/requiredTotal*100):0,plantationBlocks:plantations.length,hives:hives.length,nonCompletedInspections:inspections.length},overdueRuns:overdueRuns.slice(0,100),fieldContext:{plantationBlocks:plantations,hives,inspections:inspections.slice(0,100)}};
+[L102]  }
+[L103] 
+[L104]  async myRuns(actorIdentifier:string){
+[L105]   const actor=String(actorIdentifier||'').trim();
+[L106]   if(!actor) return [];
+[L107]   return this.runs.find({assignedTo:{$regex:new RegExp('^'+actor.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&')+'$','i')}})
+[L108]    .sort({scheduledDate:1,createdAt:-1}).limit(100).lean();
+[L109]  }
+[L110] }
+
+============================================================
+MODULE: corrective-actions
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\corrective-actions\corrective-action.schema.ts
+SHA256: 8BE65A7EBC95C4D3AD9E290F974427AABB7A701BD72E9AB9FD86B036CD408F9E
+TOTAL LINES: 22
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] export type CorrectiveActionDocument = HydratedDocument<CorrectiveAction>;
+[L4] @Schema({ timestamps: true, collection: 'corrective_actions' })
+[L5] export class CorrectiveAction {
+[L6]  @Prop({required:true,trim:true,maxlength:120,index:true}) title!:string;
+[L7]  @Prop({required:true,trim:true,maxlength:1000}) description!:string;
+[L8]  @Prop({required:true,enum:['low','medium','high','critical'],default:'medium',index:true}) priority!:'low'|'medium'|'high'|'critical';
+[L9]  @Prop({required:true,enum:['open','in_progress','submitted','closed'],default:'open',index:true}) status!:'open'|'in_progress'|'submitted'|'closed';
+[L10]  @Prop({required:true,trim:true,maxlength:120,index:true}) assignedTo!:string;
+[L11]  @Prop({trim:true,maxlength:100}) farmBlock?:string;
+[L12]  @Prop({trim:true,maxlength:120}) locationLabel?:string;
+[L13]  @Prop({trim:true,maxlength:80,index:true}) sourceInspectionId?:string;
+[L14]  @Prop({trim:true,maxlength:1000}) completionNote?:string;
+[L15]  @Prop({trim:true,maxlength:500}) reviewNote?:string;
+[L16]  @Prop({required:true}) dueAt!:Date;
+[L17]  @Prop() submittedAt?:Date;
+[L18]  @Prop() closedAt?:Date;
+[L19]  @Prop() closedBy?:string;
+[L20]  @Prop({required:true}) createdBy!:string;
+[L21] }
+[L22] export const CorrectiveActionSchema=SchemaFactory.createForClass(CorrectiveAction);
+
+------------------------------------------------------------
+SOURCE: apps\api\src\corrective-actions\corrective-actions.controller.ts
+SHA256: 7D817522E065533E99B1513EB095F7DECCCC0DA187C8163FE1439756546382F9
+TOTAL LINES: 13
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+[L2] import { CorrectiveActionsService } from './corrective-actions.service';
+[L3] import { CreateCorrectiveActionDto, CreateFromInspectionDto, ReviewCorrectiveActionDto, UpdateCorrectiveActionDto } from './dto';
+[L4] @Controller('corrective-actions')
+[L5] export class CorrectiveActionsController {
+[L6]  constructor(private readonly service:CorrectiveActionsService){}
+[L7]  @Get() list(@Req() req:any){return this.service.list(req.user)}
+[L8]  @Get('analytics') analytics(@Req() req:any){return this.service.analytics(req.user)}
+[L9]  @Post() create(@Body() dto:CreateCorrectiveActionDto,@Req() req:any){return this.service.create(dto,req.user)}
+[L10]  @Post('from-inspection/:inspectionId') createFromInspection(@Param('inspectionId') inspectionId:string,@Body() dto:CreateFromInspectionDto,@Req() req:any){return this.service.createFromInspection(inspectionId,dto,req.user)}
+[L11]  @Post(':id/update') update(@Param('id') id:string,@Body() dto:UpdateCorrectiveActionDto,@Req() req:any){return this.service.update(id,dto,req.user)}
+[L12]  @Post(':id/review') review(@Param('id') id:string,@Body() dto:ReviewCorrectiveActionDto,@Req() req:any){return this.service.review(id,dto,req.user)}
+[L13] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\corrective-actions\corrective-actions.service.ts
+SHA256: 282782440BC20BB3354A5032EA4448E5B3F17A11E2DDDE61D319C5CC61BC9B3A
+TOTAL LINES: 64
+------------------------------------------------------------
+[L1] import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { CreateCorrectiveActionDto, CreateFromInspectionDto, ReviewCorrectiveActionDto, UpdateCorrectiveActionDto } from './dto';
+[L5] import { FieldInspection, FieldInspectionDocument } from '../field-inspections/field-inspection.schema';
+[L6] import { CorrectiveAction, CorrectiveActionDocument } from './corrective-action.schema';
+[L7] @Injectable()
+[L8] export class CorrectiveActionsService {
+[L9]  constructor(@InjectModel(CorrectiveAction.name) private readonly model:Model<CorrectiveActionDocument>, @InjectModel(FieldInspection.name) private readonly inspections:Model<FieldInspectionDocument>){}
+[L10]  private actor(u:any):string{return String(u?.email||u?.username||u?.sub||'')}
+[L11]  private owner(u:any):boolean{const r=u?.roles||(u?.role?[u.role]:[]);return Array.isArray(r)&&r.includes('owner')}
+[L12]  async create(d:CreateCorrectiveActionDto,u:any){
+[L13]   const assignedTo=d.assignedTo.trim(); if(!assignedTo)throw new BadRequestException('Assigned worker is required.');
+[L14]   const dueAt=new Date(d.dueAt);if(!Number.isFinite(dueAt.getTime()))throw new BadRequestException('Invalid due date.');
+[L15]   return this.model.create({...d,title:d.title.trim(),description:d.description.trim(),assignedTo,dueAt,
+[L16]    farmBlock:d.farmBlock?.trim()||undefined,locationLabel:d.locationLabel?.trim()||undefined,
+[L17]    sourceInspectionId:d.sourceInspectionId?.trim()||undefined,createdBy:this.actor(u),status:'open'});
+[L18]  }
+[L19]  async createFromInspection(inspectionId:string,d:CreateFromInspectionDto,u:any){
+[L20]   const inspection=await this.inspections.findById(inspectionId).lean() as any;
+[L21]   if(!inspection)throw new NotFoundException('Field inspection not found.');
+[L22]   if(!this.owner(u)&&String(inspection.assignedTo||'').toLowerCase()!==this.actor(u).toLowerCase())throw new ForbiddenException('You can create actions only from inspections assigned to your account.');
+[L23]   if(!['submitted','verified','rejected'].includes(inspection.status))throw new BadRequestException('Inspection must be submitted, verified or rejected before an action can be created.');
+[L24]   const assignedTo=String(d.assignedTo||'').trim();if(!assignedTo)throw new BadRequestException('Assigned worker is required.');
+[L25]   const dueAt=new Date(d.dueAt);if(!Number.isFinite(dueAt.getTime()))throw new BadRequestException('Invalid due date.');
+[L26]   const existing=await this.model.findOne({sourceInspectionId:String(inspection._id),status:{$ne:'closed'}}).lean();
+[L27]   if(existing)throw new BadRequestException('An unresolved corrective action already exists for this inspection. Close it before creating a follow-up.');
+[L28]   const findings=String(inspection.findings||'').trim();const recommendation=String(inspection.correctiveAction||'').trim();
+[L29]   const title=('Follow-up: '+String(inspection.title||'Field inspection')).slice(0,120);
+[L30]   const description=[findings?`Finding: ${findings}`:'',recommendation?`Recommended action: ${recommendation}`:'',!findings&&!recommendation?'Follow up on the inspection findings and document the corrective work.':''].filter(Boolean).join('\n').slice(0,1000);
+[L31]   return this.model.create({title,description,priority:d.priority,assignedTo,dueAt,farmBlock:inspection.blockCode?.trim()||undefined,locationLabel:inspection.locationLabel?.trim()||undefined,sourceInspectionId:String(inspection._id),createdBy:this.actor(u),status:'open'});
+[L32]  }
+[L33]  async list(u:any){const q=this.owner(u)?{}:{assignedTo:this.actor(u)};const rs=await this.model.find(q).sort({dueAt:1}).limit(2000).lean();const now=Date.now();return rs.map((r:any)=>({...r,overdue:r.status!=='closed'&&new Date(r.dueAt).getTime()<now}))}
+[L34]  async update(id:string,d:UpdateCorrectiveActionDto,u:any){
+[L35]   const r=await this.model.findById(id);if(!r)throw new NotFoundException('Corrective action not found.');
+[L36]   if(!this.owner(u)&&r.assignedTo.toLowerCase()!==this.actor(u).toLowerCase())throw new ForbiddenException('You can update only actions assigned to your account.');
+[L37]   if(r.status==='closed')throw new BadRequestException('Closed actions cannot be edited.');
+[L38]   if(d.status==='submitted'&&!d.completionNote?.trim())throw new BadRequestException('Add a completion note before submission.');
+[L39]   r.status=d.status;if(d.completionNote!==undefined)r.completionNote=d.completionNote.trim();
+[L40]   if(d.status==='submitted')r.submittedAt=new Date();if(d.status==='in_progress')r.reviewNote='';
+[L41]   await r.save();return r;
+[L42]  }
+[L43]  async review(id:string,d:ReviewCorrectiveActionDto,u:any){
+[L44]   if(!this.owner(u))throw new ForbiddenException('Owner access is required.');
+[L45]   const r=await this.model.findById(id);if(!r)throw new NotFoundException('Corrective action not found.');
+[L46]   if(r.status!=='submitted')throw new BadRequestException('Only submitted actions can be reviewed.');
+[L47]   if(!d.reviewNote.trim())throw new BadRequestException('Review note is required.');
+[L48]   r.status=d.status;r.reviewNote=d.reviewNote.trim();
+[L49]   if(d.status==='closed'){r.closedAt=new Date();r.closedBy=this.actor(u)}else{r.closedAt=undefined;r.closedBy=undefined}
+[L50]   await r.save();return r;
+[L51]  }
+[L52]  async analytics(u:any){
+[L53]   const rs=await this.model.find(this.owner(u)?{}:{assignedTo:this.actor(u)}).limit(5000).lean() as any[];
+[L54]   const status:any={open:0,in_progress:0,submitted:0,closed:0},priority:any={low:0,medium:0,high:0,critical:0},blocks:any={};
+[L55]   let overdue=0,onTime=0,late=0;const now=Date.now();
+[L56]   for(const r of rs){if(status[r.status]!==undefined)status[r.status]++;if(priority[r.priority]!==undefined)priority[r.priority]++;
+[L57]    const b=r.farmBlock||r.locationLabel||'Unassigned location';blocks[b]=(blocks[b]||0)+1;
+[L58]    if(r.status!=='closed'&&new Date(r.dueAt).getTime()<now)overdue++;
+[L59]    if(r.status==='closed'&&r.closedAt){if(new Date(r.closedAt).getTime()<=new Date(r.dueAt).getTime())onTime++;else late++}
+[L60]   }
+[L61]   return {total:rs.length,byStatus:status,byPriority:priority,byBlock:blocks,overdue,closedOnTime:onTime,closedLate:late,
+[L62]    completionRate:rs.length?Math.round(status.closed/rs.length*100):0,onTimeClosureRate:onTime+late?Math.round(onTime/(onTime+late)*100):null,generatedAt:new Date().toISOString()};
+[L63]  }
+[L64] }
+
+============================================================
+MODULE: farm-map
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\farm-map\farm-map.controller.ts
+SHA256: 17E6F013A0883E9C6B131FCECB48922E7C636F6561626E5508756ECA91E21794
+TOTAL LINES: 13
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+[L2] import { Roles } from '../auth/roles.decorator';
+[L3] import { FarmMapService } from './farm-map.service';
+[L4] import { CreateFarmMapFeatureDto } from './dto';
+[L5] @Controller('farm-map')
+[L6] export class FarmMapController {
+[L7]   constructor(private readonly service: FarmMapService) {}
+[L8]   @Get() list(@Query('includeArchived') includeArchived?:string) { return this.service.list(includeArchived==='true'); }
+[L9]   @Post() create(@Body() dto:CreateFarmMapFeatureDto,@Req() req:any) {
+[L10]     return this.service.create(dto,req?.user?.email||req?.user?.username||req?.user?.sub||'authenticated-user');
+[L11]   }
+[L12]   @Post(':id/archive') @Roles('owner') archive(@Param('id') id:string) { return this.service.archive(id); }
+[L13] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\farm-map\farm-map.schema.ts
+SHA256: 2CB62CF2A1D0B047E211C6769F4A2AF4B8822642395A24D825EC8EF805B39871
+TOTAL LINES: 19
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] export type FarmMapFeatureDocument = HydratedDocument<FarmMapFeature>;
+[L4] export type FarmMapFeatureType = 'block' | 'hive' | 'inspection_point' | 'access_point' | 'other';
+[L5] @Schema({ timestamps: true, collection: 'farm_map_features' })
+[L6] export class FarmMapFeature {
+[L7]   @Prop({ required: true, enum: ['block','hive','inspection_point','access_point','other'], index: true }) featureType!: FarmMapFeatureType;
+[L8]   @Prop({ required: true, enum: ['Point','Polygon'] }) geometryType!: 'Point' | 'Polygon';
+[L9]   // GeoJSON coordinates: [longitude, latitude].
+[L10]   @Prop({ type: Object, required: true }) geometry!: { type: 'Point' | 'Polygon'; coordinates: any };
+[L11]   @Prop({ required: true, trim: true, maxlength: 100 }) label!: string;
+[L12]   @Prop({ trim: true, maxlength: 40, index: true }) blockCode?: string;
+[L13]   @Prop({ min: 0, max: 100000 }) areaAcres?: number;
+[L14]   @Prop({ trim: true, maxlength: 500 }) notes?: string;
+[L15]   @Prop({ required: true, enum: ['manual','gps','imported'] }) source!: 'manual' | 'gps' | 'imported';
+[L16]   @Prop({ required: true }) createdBy!: string;
+[L17]   @Prop({ default: 'active', enum: ['active','archived'], index: true }) status!: 'active' | 'archived';
+[L18] }
+[L19] export const FarmMapFeatureSchema = SchemaFactory.createForClass(FarmMapFeature);
+
+------------------------------------------------------------
+SOURCE: apps\api\src\farm-map\farm-map.service.ts
+SHA256: F8A1B3B112AAB8E78040AE6470B7F814F06CEE8CA75D5C783774E6D4F9DDC0D2
+TOTAL LINES: 34
+------------------------------------------------------------
+[L1] import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { CreateFarmMapFeatureDto } from './dto';
+[L5] import { FarmMapFeature, FarmMapFeatureDocument } from './farm-map.schema';
+[L6] @Injectable()
+[L7] export class FarmMapService {
+[L8]   constructor(@InjectModel(FarmMapFeature.name) private readonly model: Model<FarmMapFeatureDocument>) {}
+[L9]   private validateGeometry(dto: CreateFarmMapFeatureDto) {
+[L10]     const g: any = dto.geometry;
+[L11]     if (!g || g.type !== dto.geometryType || !['Point','Polygon'].includes(g.type)) throw new BadRequestException('Geometry type must match geometryType.');
+[L12]     const pair = (p:any) => Array.isArray(p) && p.length===2 && typeof p[0]==='number' && Number.isFinite(p[0]) && p[0]>=-180 && p[0]<=180 && typeof p[1]==='number' && Number.isFinite(p[1]) && p[1]>=-90 && p[1]<=90;
+[L13]     if (g.type==='Point') { if (!pair(g.coordinates)) throw new BadRequestException('Point coordinates must be [longitude, latitude] within valid ranges.'); return; }
+[L14]     const c=g.coordinates;
+[L15]     if (!Array.isArray(c) || c.length!==1 || !Array.isArray(c[0])) throw new BadRequestException('Polygon must contain one exterior ring.');
+[L16]     const ring=c[0];
+[L17]     if (ring.length<4 || ring.length>501 || !ring.every(pair)) throw new BadRequestException('Polygon ring needs 3â€“500 vertices plus closing coordinate.');
+[L18]     const a=ring[0], b=ring[ring.length-1];
+[L19]     if (a[0]!==b[0] || a[1]!==b[1]) throw new BadRequestException('Polygon ring must repeat the first coordinate at the end.');
+[L20]     if (new Set(ring.slice(0,-1).map((p:number[])=>p.join(','))).size<3) throw new BadRequestException('Polygon needs 3 unique vertices.');
+[L21]   }
+[L22]   async create(dto: CreateFarmMapFeatureDto, actor: string) {
+[L23]     this.validateGeometry(dto);
+[L24]     if (dto.featureType==='block' && dto.geometryType!=='Polygon') throw new BadRequestException('Farm blocks must use Polygon geometry.');
+[L25]     if (dto.featureType!=='block' && dto.geometryType!=='Point') throw new BadRequestException('Non-block features must use Point geometry.');
+[L26]     return this.model.create({...dto,label:dto.label.trim(),blockCode:dto.blockCode?.trim()||undefined,notes:dto.notes?.trim()||undefined,createdBy:actor,status:'active'});
+[L27]   }
+[L28]   async list(includeArchived=false) { return this.model.find(includeArchived?{}:{status:'active'}).sort({createdAt:-1}).limit(2000).lean(); }
+[L29]   async archive(id:string) {
+[L30]     const f=await this.model.findByIdAndUpdate(id,{status:'archived'},{new:true}).lean();
+[L31]     if (!f) throw new NotFoundException('Map feature not found.');
+[L32]     return f;
+[L33]   }
+[L34] }
+
+============================================================
+MODULE: field-logs
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\field-logs\field-log.schema.ts
+SHA256: 606ED199E9D9DFD7141E9E13FE56A95D730B23383E7F1B44D827110C42FBECEE
+TOTAL LINES: 19
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] @Schema({timestamps:true})
+[L3] export class FieldLog {
+[L4]   @Prop({required:true,trim:true,unique:true}) logId!:string;
+[L5]   @Prop({required:true}) date!:Date;
+[L6]   @Prop({required:true,enum:['Forestry','Beekeeping','General']}) workstream!:string;
+[L7]   @Prop({required:true,trim:true}) siteOrBlock!:string;
+[L8]   @Prop({required:true,trim:true}) observedBy!:string;
+[L9]   @Prop({required:true,trim:true}) observation!:string;
+[L10]   @Prop() actionTaken?:string;
+[L11]   @Prop() followUpRequired?:string;
+[L12]   @Prop() followUpDue?:Date;
+[L13]   @Prop() photoReference?:string;
+[L14]   @Prop() gpsLatitude?:number;
+[L15]   @Prop() gpsLongitude?:number;
+[L16]   @Prop({enum:['Low','Medium','High','Critical'],default:'Low'}) riskLevel!:string;
+[L17]   @Prop({enum:['Open','In progress','Resolved'],default:'Open'}) status!:string;
+[L18] }
+[L19] export const FieldLogSchema = SchemaFactory.createForClass(FieldLog);
+
+------------------------------------------------------------
+SOURCE: apps\api\src\field-logs\field-logs.controller.ts
+SHA256: 7F1679A6B06600D8C31569FB71D7E6E64F55B2ECBBB53DA7A6B7B29E9084BD4F
+TOTAL LINES: 7
+------------------------------------------------------------
+[L1] import {Body,Controller,Get,Patch,Param,Post} from '@nestjs/common';import {FieldLogsService} from './field-logs.service';import {CreateFieldLogDto} from './dto';
+[L2] @Controller('field-logs') export class FieldLogsController {
+[L3]  constructor(private service:FieldLogsService){}
+[L4]  @Get() all(){return this.service.findAll();}
+[L5]  @Post() create(@Body() dto:CreateFieldLogDto){return this.service.create(dto);}
+[L6]  @Patch(':id') update(@Param('id') id:string,@Body() dto:Partial<CreateFieldLogDto>){return this.service.update(id,dto);}
+[L7] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\field-logs\field-logs.service.ts
+SHA256: 9239AD8900FFAC1DD432BC0BA6F0869790326FBDB0A836E83DAFAFC191528406
+TOTAL LINES: 21
+------------------------------------------------------------
+[L1] import {Injectable,NotFoundException} from '@nestjs/common';import {InjectModel} from '@nestjs/mongoose';import {Model} from 'mongoose';import {FieldLog} from './field-log.schema';import {CreateFieldLogDto} from './dto';
+[L2] @Injectable() export class FieldLogsService {
+[L3]  constructor(@InjectModel(FieldLog.name) private model:Model<FieldLog>){}
+[L4]  findAll(){return this.model.find().sort({date:-1}).limit(500).lean();}
+[L5]  async create(dto:CreateFieldLogDto){
+[L6]   try {
+[L7]    return await this.model.findOneAndUpdate(
+[L8]     {logId:dto.logId},
+[L9]     {$setOnInsert:dto},
+[L10]     {upsert:true,new:true,runValidators:true}
+[L11]    ).lean();
+[L12]   } catch(error) {
+[L13]    if(typeof error==='object'&&error!==null&&'code' in error&&error.code===11000){
+[L14]     const existing=await this.model.findOne({logId:dto.logId}).lean();
+[L15]     if(existing)return existing;
+[L16]    }
+[L17]    throw error;
+[L18]   }
+[L19]  }
+[L20]  async update(id:string,dto:Partial<CreateFieldLogDto>){const x=await this.model.findByIdAndUpdate(id,dto,{new:true,runValidators:true}).lean();if(!x)throw new NotFoundException('Field log not found');return x;}
+[L21] }
+
+============================================================
+MODULE: field-inspections
+============================================================
+
+------------------------------------------------------------
+SOURCE: apps\api\src\field-inspections\field-inspection.schema.ts
+SHA256: A2D7EF13060FC4D10165C7EE3D6F637190FDA7D13E58A430775E6303F56D149A
+TOTAL LINES: 63
+------------------------------------------------------------
+[L1] import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+[L2] import { HydratedDocument } from 'mongoose';
+[L3] 
+[L4] export type FieldInspectionDocument = HydratedDocument<FieldInspection>;
+[L5] 
+[L6] @Schema({ timestamps: true, collection: 'field_inspections' })
+[L7] export class FieldInspection {
+[L8]   @Prop({ required: true, trim: true, maxlength: 100, index: true })
+[L9]   title!: string;
+[L10] 
+[L11]   @Prop({ required: true, enum: ['eucalyptus', 'beekeeping', 'infrastructure', 'general'], index: true })
+[L12]   activityType!: 'eucalyptus' | 'beekeeping' | 'infrastructure' | 'general';
+[L13] 
+[L14]   @Prop({ required: true, enum: ['routine', 'follow_up', 'incident'], index: true })
+[L15]   inspectionType!: 'routine' | 'follow_up' | 'incident';
+[L16] 
+[L17]   @Prop({ required: true, enum: ['open', 'submitted', 'verified', 'rejected'], default: 'open', index: true })
+[L18]   status!: 'open' | 'submitted' | 'verified' | 'rejected';
+[L19] 
+[L20]   @Prop({ required: true, trim: true, maxlength: 120, index: true })
+[L21]   assignedTo!: string;
+[L22] 
+[L23]   @Prop({ required: true, trim: true, maxlength: 100, index: true })
+[L24]   locationLabel!: string;
+[L25] 
+[L26]   @Prop({ required: true, min: -90, max: 90 })
+[L27]   latitude!: number;
+[L28] 
+[L29]   @Prop({ required: true, min: -180, max: 180 })
+[L30]   longitude!: number;
+[L31] 
+[L32]   @Prop({ trim: true, maxlength: 40 })
+[L33]   blockCode?: string;
+[L34] 
+[L35]   @Prop({ trim: true, maxlength: 1000 })
+[L36]   checklistSummary?: string;
+[L37] 
+[L38]   @Prop({ trim: true, maxlength: 1000 })
+[L39]   findings?: string;
+[L40] 
+[L41]   @Prop({ trim: true, maxlength: 1000 })
+[L42]   correctiveAction?: string;
+[L43] 
+[L44]   @Prop({ trim: true, maxlength: 500 })
+[L45]   evidenceReference?: string;
+[L46] 
+[L47]   @Prop({ trim: true, maxlength: 500 })
+[L48]   reviewNote?: string;
+[L49] 
+[L50]   @Prop()
+[L51]   submittedAt?: Date;
+[L52] 
+[L53]   @Prop()
+[L54]   reviewedAt?: Date;
+[L55] 
+[L56]   @Prop()
+[L57]   reviewedBy?: string;
+[L58] 
+[L59]   @Prop({ required: true })
+[L60]   createdBy!: string;
+[L61] }
+[L62] 
+[L63] export const FieldInspectionSchema = SchemaFactory.createForClass(FieldInspection);
+
+------------------------------------------------------------
+SOURCE: apps\api\src\field-inspections\field-inspections.controller.ts
+SHA256: DC83DEED19D93AF01423915C9C8CDF108231119DB18147C0635CD8C409657737
+TOTAL LINES: 28
+------------------------------------------------------------
+[L1] import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+[L2] import { FieldInspectionsService } from './field-inspections.service';
+[L3] import { CreateFieldInspectionDto, ReviewFieldInspectionDto, SubmitFieldInspectionDto } from './dto';
+[L4] 
+[L5] @Controller('field-inspections')
+[L6] export class FieldInspectionsController {
+[L7]   constructor(private readonly service: FieldInspectionsService) {}
+[L8] 
+[L9]   @Get()
+[L10]   list(@Req() req: any) {
+[L11]     return this.service.list(req.user);
+[L12]   }
+[L13] 
+[L14]   @Post()
+[L15]   create(@Body() dto: CreateFieldInspectionDto, @Req() req: any) {
+[L16]     return this.service.create(dto, req.user);
+[L17]   }
+[L18] 
+[L19]   @Post(':id/submit')
+[L20]   submit(@Param('id') id: string, @Body() dto: SubmitFieldInspectionDto, @Req() req: any) {
+[L21]     return this.service.submit(id, dto, req.user);
+[L22]   }
+[L23] 
+[L24]   @Post(':id/review')
+[L25]   review(@Param('id') id: string, @Body() dto: ReviewFieldInspectionDto, @Req() req: any) {
+[L26]     return this.service.review(id, dto, req.user);
+[L27]   }
+[L28] }
+
+------------------------------------------------------------
+SOURCE: apps\api\src\field-inspections\field-inspections.service.ts
+SHA256: 19D8AC8B2C74EEB40C378DAEFFDE771A372ABB7BCB6EC522710C588048AA0365
+TOTAL LINES: 73
+------------------------------------------------------------
+[L1] import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+[L2] import { InjectModel } from '@nestjs/mongoose';
+[L3] import { Model } from 'mongoose';
+[L4] import { CreateFieldInspectionDto, ReviewFieldInspectionDto, SubmitFieldInspectionDto } from './dto';
+[L5] import { FieldInspection, FieldInspectionDocument } from './field-inspection.schema';
+[L6] 
+[L7] @Injectable()
+[L8] export class FieldInspectionsService {
+[L9]   constructor(@InjectModel(FieldInspection.name) private readonly model: Model<FieldInspectionDocument>) {}
+[L10] 
+[L11]   private actor(reqUser: any): string {
+[L12]     return String(reqUser?.email || reqUser?.username || reqUser?.sub || '');
+[L13]   }
+[L14]   private isOwner(user: any): boolean {
+[L15]     const roles = user?.roles || (user?.role ? [user.role] : []);
+[L16]     return Array.isArray(roles) && roles.includes('owner');
+[L17]   }
+[L18]   private assertCoords(lat: number, lon: number) {
+[L19]     if (!Number.isFinite(lat) || lat < -90 || lat > 90 || !Number.isFinite(lon) || lon < -180 || lon > 180) {
+[L20]       throw new BadRequestException('Coordinates are outside valid latitude/longitude ranges.');
+[L21]     }
+[L22]   }
+[L23] 
+[L24]   async create(dto: CreateFieldInspectionDto, user: any) {
+[L25]     this.assertCoords(dto.latitude, dto.longitude);
+[L26]     const assignedTo = dto.assignedTo.trim();
+[L27]     if (!assignedTo) throw new BadRequestException('Assigned worker is required.');
+[L28]     return this.model.create({
+[L29]       ...dto, title: dto.title.trim(), assignedTo, locationLabel: dto.locationLabel.trim(),
+[L30]       blockCode: dto.blockCode?.trim() || undefined,
+[L31]       checklistSummary: dto.checklistSummary?.trim() || undefined,
+[L32]       createdBy: this.actor(user), status: 'open',
+[L33]     });
+[L34]   }
+[L35] 
+[L36]   async list(user: any) {
+[L37]     const query = this.isOwner(user) ? {} : { assignedTo: this.actor(user) };
+[L38]     return this.model.find(query).sort({ createdAt: -1 }).limit(1000).lean();
+[L39]   }
+[L40] 
+[L41]   async submit(id: string, dto: SubmitFieldInspectionDto, user: any) {
+[L42]     const record = await this.model.findById(id);
+[L43]     if (!record) throw new NotFoundException('Field inspection not found.');
+[L44]     if (!this.isOwner(user) && record.assignedTo.toLowerCase() !== this.actor(user).toLowerCase()) {
+[L45]       throw new ForbiddenException('You can submit only inspections assigned to your account.');
+[L46]     }
+[L47]     if (!['open', 'rejected'].includes(record.status)) {
+[L48]       throw new BadRequestException('Only open or rejected inspections can be submitted.');
+[L49]     }
+[L50]     record.findings = dto.findings?.trim() || '';
+[L51]     record.correctiveAction = dto.correctiveAction?.trim() || '';
+[L52]     record.evidenceReference = dto.evidenceReference?.trim() || '';
+[L53]     record.status = 'submitted';
+[L54]     record.submittedAt = new Date();
+[L55]     record.reviewNote = '';
+[L56]     await record.save();
+[L57]     return record;
+[L58]   }
+[L59] 
+[L60]   async review(id: string, dto: ReviewFieldInspectionDto, user: any) {
+[L61]     if (!this.isOwner(user)) throw new ForbiddenException('Owner access is required to review inspections.');
+[L62]     const record = await this.model.findById(id);
+[L63]     if (!record) throw new NotFoundException('Field inspection not found.');
+[L64]     if (record.status !== 'submitted') throw new BadRequestException('Only submitted inspections can be reviewed.');
+[L65]     if (!dto.reviewNote.trim()) throw new BadRequestException('A review note is required.');
+[L66]     record.status = dto.status;
+[L67]     record.reviewNote = dto.reviewNote.trim();
+[L68]     record.reviewedAt = new Date();
+[L69]     record.reviewedBy = this.actor(user);
+[L70]     await record.save();
+[L71]     return record;
+[L72]   }
+[L73] }
+
+============================================================
+END OF READ-ONLY AUDIT
+============================================================
+No source files were modified by this script.
