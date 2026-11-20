@@ -110,6 +110,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/accounting/reports', label: 'Financial reports' },
       { href: '/accounting/trial-balance', label: 'Trial balance' },
       { href: '/accounting/periods', label: 'Accounting periods' },
+      { href: '/accounting/journal-entries', label: 'Journal entries' },
     ],
   },
   {

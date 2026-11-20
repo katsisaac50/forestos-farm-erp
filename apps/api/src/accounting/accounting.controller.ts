@@ -5,6 +5,8 @@ import { TrialBalanceService } from './trial-balance.service';
 import { BackfillService } from './backfill.service';
 import { FinancialReportsService } from './financial-reports.service';
 import { PeriodsService } from './periods.service';
+import { JournalEntriesService, ManualEntryInput } from './journal-entries.service';
+
 
 @Controller('accounting')
 @Roles('owner')
@@ -13,7 +15,8 @@ export class AccountingController {
     private readonly trialBalance: TrialBalanceService,
     private readonly backfill: BackfillService,
     private readonly reports: FinancialReportsService,
-    private readonly periods: PeriodsService,   
+    private readonly periods: PeriodsService,
+    private readonly journals: JournalEntriesService,   
     private readonly organizationAccess: OrganizationAccessService,
   ) {}
 
@@ -27,6 +30,57 @@ export class AccountingController {
   private actor(req: any): string {
   const user = req.user || {};
   return String(user.email || user.username || user.sub || 'unknown').toLowerCase();
+}
+
+@Get('journal-entries')
+async listJournals(
+  @Req() req: any,
+  @Headers('x-organization-id') organizationId?: string,
+  @Query('from') from?: string,
+  @Query('to') to?: string,
+) {
+  return this.journals.list(
+    await this.context(req, organizationId),
+    from ? new Date(from) : undefined,
+    to ? new Date(to + 'T23:59:59.999Z') : undefined,
+  );
+}
+
+@Get('journal-entries/:id')
+async getJournal(
+  @Param('id') id: string,
+  @Req() req: any,
+  @Headers('x-organization-id') organizationId?: string,
+) {
+  return this.journals.detail(await this.context(req, organizationId), id);
+}
+
+@Post('journal-entries')
+async createJournal(
+  @Body() body: ManualEntryInput,
+  @Req() req: any,
+  @Headers('x-organization-id') organizationId?: string,
+) {
+  return this.journals.createManual(
+    await this.context(req, organizationId),
+    body,
+    this.actor(req),
+  );
+}
+
+@Post('journal-entries/:id/reverse')
+async reverseJournal(
+  @Param('id') id: string,
+  @Body() body: { reason: string },
+  @Req() req: any,
+  @Headers('x-organization-id') organizationId?: string,
+) {
+  return this.journals.reverse(
+    await this.context(req, organizationId),
+    id,
+    body.reason,
+    this.actor(req),
+  );
 }
 
 @Get('periods')
