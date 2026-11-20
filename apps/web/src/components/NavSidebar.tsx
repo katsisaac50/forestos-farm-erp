@@ -47,6 +47,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/plantation-intelligence', label: 'Plantation intelligence' },
       { href: '/growth', label: 'Growth samples' },
       { href: '/harvest-planning', label: 'Harvest planning' },
+      { href: '/harvest-intake', label: 'Harvest intake' },
       { href: '/regeneration', label: 'Replanting & regeneration' },
       { href: '/nursery', label: 'Nursery & seedlings' },
       { href: '/field-logs', label: 'Field logs' },

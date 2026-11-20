@@ -1,0 +1,960 @@
+﻿FORESTOS PHASE 193.3.4 - AUTHORIZATION FOUNDATION AUDIT
+Generated: 2026-11-20 23:01:03
+Project root: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity
+Mode: READ ONLY - NO SOURCE FILES MODIFIED
+
+====================================================================================================
+1. AUTHORIZATION SOURCE FILE DISCOVERY
+====================================================================================================
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\app.module.ts
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.module.ts
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\guards\jwt-auth.guard.ts
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\jwt-auth.guard.ts
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.decorator.ts
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.guard.ts
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-access.service.ts
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-context.ts
+
+====================================================================================================
+2. ORGANIZATION CONTEXT DECLARATION LOCATIONS
+====================================================================================================
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-context.ts:10
+ * organization ID supplied by a query string/body/header without resolving
+ * the authenticated user's active membership server-side.
+ */
+export interface OrganizationContext {
+  organizationId: string;
+  userId: string;
+  roles: string[];
+}
+
+export const ORGANIZATION_CONTEXT_KEY = 'forestOS.organizationContext';
+
+export class OrganizationContextError extends Error {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-context.ts:18
+
+export const ORGANIZATION_CONTEXT_KEY = 'forestOS.organizationContext';
+
+export class OrganizationContextError extends Error {
+  constructor(message = 'An active organization context is required') {
+    super(message);
+    this.name = 'OrganizationContextError';
+  }
+}
+
+export function requireOrganizationContext(
+  context: OrganizationContext | undefined | null,
+
+====================================================================================================
+3. GUARD AND DECORATOR REGISTRATION LOCATIONS
+====================================================================================================
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\accounting\accounting.controller.ts:3
+import { BadRequestException, Body, Controller, Get, Headers, Param, Post, Query, Req } from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { TrialBalanceService } from './trial-balance.service';
+import { BackfillService } from './backfill.service';
+import { FinancialReportsService } from './financial-reports.service';
+import { PeriodsService } from './periods.service';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\accounting\accounting.controller.ts:20
+    private readonly periods: PeriodsService,
+    private readonly journals: JournalEntriesService,   
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\apiary-actions\apiary-actions.controller.ts:2
+import { BadRequestException, Body, Controller, Get, Headers, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { ApiaryActionsService } from './apiary-actions.service';
+
+@Controller('apiary-actions')
+export class ApiaryActionsController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\apiary-actions\apiary-actions.controller.ts:7
+@Controller('apiary-actions')
+export class ApiaryActionsController {
+  constructor(private readonly actions: ApiaryActionsService, private readonly organizationAccess: OrganizationAccessService) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts:2
+import { BadRequestException, Controller, Get, Headers, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { ApiaryIntelligenceService } from './apiary-intelligence.service';
+
+@Controller('apiary-intelligence')
+export class ApiaryIntelligenceController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\apiary-intelligence\apiary-intelligence.controller.ts:7
+@Controller('apiary-intelligence')
+export class ApiaryIntelligenceController {
+  constructor(private readonly intelligence: ApiaryIntelligenceService, private readonly organizationAccess: OrganizationAccessService) {}
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\apiary-operations\apiary-operations.controller.ts:2
+import { BadRequestException, Body, Controller, Get, Headers, Post, Query, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { ApiaryOperationsService } from './apiary-operations.service';
+
+@Controller('apiary-operations')
+export class ApiaryOperationsController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\apiary-operations\apiary-operations.controller.ts:9
+  constructor(
+    private readonly operations: ApiaryOperationsService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\audit\audit.controller.ts:10
+} from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { AuditService } from './audit.service';
+
+@Controller('audit')
+export class AuditController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\audit\audit.controller.ts:17
+  constructor(
+    private readonly service: AuditService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  @Roles('owner')
+  @Get()
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.module.ts:4
+import {MongooseModule} from '@nestjs/mongoose';
+import {JwtModule} from '@nestjs/jwt';
+import {APP_GUARD} from '@nestjs/core';
+import {User,UserSchema} from './user.schema';
+import {AuthController} from './auth.controller';
+import {AuthGuard} from './roles.guard';
+import {resolveJwtSecret} from './jwt-secret-policy';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.module.ts:9
+import {AuthGuard} from './roles.guard';
+import {resolveJwtSecret} from './jwt-secret-policy';
+@Module({imports:[MongooseModule.forFeature([{name:User.name,schema:UserSchema}]),JwtModule.register({secret:resolveJwtSecret(process.env),signOptions:{expiresIn:'8h'}})],controllers:[AuthController],providers:[AuthGuard,{provide:APP_GUARD,useClass:AuthGuard}],exports:[JwtModule]})
+export class AuthModule{}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\jwt-auth.guard.ts:5
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.guard.ts:101
+}
+
+export { AuthGuard as RolesGuard };
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\guards\jwt-auth.guard.ts:1
+export { JwtAuthGuard } from '../jwt-auth.guard';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\dashboard\dashboard.controller.ts:4
+import { Roles } from '../auth/roles.decorator';
+import { DashboardService } from './dashboard.service';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('dashboard')
+export class DashboardController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\dashboard\dashboard.controller.ts:10
+  constructor(
+    private readonly service: DashboardService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  @Roles('owner')
+  @Get('summary')
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\evidence\evidence.controller.ts:17
+import { EvidenceService } from './evidence.service';
+import { CreateEvidenceDto } from './dto';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('evidence')
+export class EvidenceController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\evidence\evidence.controller.ts:23
+  constructor(
+    private readonly service: EvidenceService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\field-capture\field-capture.controller.ts:4
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { FieldCaptureService } from './field-capture.service';
+import { EvidenceStorageService } from './evidence-storage.service';
+
+@Controller('field-capture')
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\field-capture\field-capture.controller.ts:10
+@Controller('field-capture')
+export class FieldCaptureController {
+  constructor(private readonly captures: FieldCaptureService, private readonly evidence: EvidenceStorageService, private readonly access: OrganizationAccessService) {}
+  private async context(req: any, orgId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!orgId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\field-workforce\field-workforce.controller.ts:2
+import { BadRequestException, Body, Controller, Get, Headers, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { FieldWorkforceService } from './field-workforce.service';
+
+@Controller('field-workforce')
+export class FieldWorkforceController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\field-workforce\field-workforce.controller.ts:7
+@Controller('field-workforce')
+export class FieldWorkforceController {
+  constructor(private readonly workforce: FieldWorkforceService, private readonly access: OrganizationAccessService) {}
+  private async context(req: any, orgId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+    if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+    if (!orgId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\finance\finance.controller.ts:5
+import { CreateFinanceDto } from './dto';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('finance')
+@Roles('owner')
+export class FinanceController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\finance\finance.controller.ts:12
+  constructor(
+    private readonly service: FinanceService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\growth\growth.controller.ts:4
+import {Roles} from '../auth/roles.decorator';
+import {GrowthService} from './growth.service';import {CreateGrowthSampleDto} from './dto';
+import {OrganizationAccessService} from '../organizations/organization-access.service';
+import {OrganizationContext} from '../organizations/organization-context';
+@Controller('growth') export class GrowthController {
+ constructor(private service:GrowthService,private access:OrganizationAccessService){}
+ private async context(req:any,organizationId?:string):Promise<OrganizationContext>{
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\growth\growth.controller.ts:7
+import {OrganizationContext} from '../organizations/organization-context';
+@Controller('growth') export class GrowthController {
+ constructor(private service:GrowthService,private access:OrganizationAccessService){}
+ private async context(req:any,organizationId?:string):Promise<OrganizationContext>{
+  const userId=req.user?.sub||req.user?.userId||req.user?.id;
+  if(!userId)throw new BadRequestException('Authenticated user ID is missing');
+  if(!organizationId)throw new BadRequestException('Set X-Organization-Id');
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\harvest-intake\harvest-intake.controller.ts:3
+import { BadRequestException, Body, Controller, Get, Headers, Post, Req } from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { HarvestService, CreateHarvestLotInput, CreateSaleInput } from './harvest-intake.service';
+
+@Controller('harvest')
+@Roles('owner')
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\harvest-intake\harvest-intake.controller.ts:11
+  constructor(
+    private readonly service: HarvestService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\hives\hives.controller.ts:2
+import { BadRequestException, Body, Controller, Get, Headers, Patch, Param, Post, Req } from '@nestjs/common';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { CreateHiveDto } from './dto';
+import { HivesService } from './hives.service';
+
+@Controller('hives')
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\hives\hives.controller.ts:10
+  constructor(
+    private readonly hives: HivesService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\inspections\inspections.controller.ts:15
+import { InspectionsService } from './inspections.service';
+import { CreateInspectionDto, UpdateInspectionDto } from './dto';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('inspections')
+export class InspectionsController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\inspections\inspections.controller.ts:21
+  constructor(
+    private readonly service: InspectionsService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:15
+import { IntegrationWorkflowsService } from './integration-workflows.service';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { OrganizationContext } from '../organizations/organization-context';
+
+@Controller('integration-workflows')
+@Roles('owner')
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:23
+  constructor(
+    private readonly service: IntegrationWorkflowsService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(
+    req: any,
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:89
+// import {Body,Controller,Get,Param,Post,Query,Req,UseGuards} from '@nestjs/common';
+// import {IntegrationWorkflowsService} from './integration-workflows.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+// import {
+//   BadRequestException,
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:90
+// import {IntegrationWorkflowsService} from './integration-workflows.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+// import {
+//   BadRequestException,
+//   Headers,
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:97
+// } from '@nestjs/common';
+
+// import { OrganizationAccessService } from '../organizations/organization-access.service';
+// import { OrganizationContext } from '../organizations/organization-context';
+
+// @Controller('integration-workflows')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:101
+
+// @Controller('integration-workflows')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class IntegrationWorkflowsController{
+//  constructor(
+//   private service: IntegrationWorkflowsService,
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:106
+//  constructor(
+//   private service: IntegrationWorkflowsService,
+//   private organizationAccess: OrganizationAccessService,
+// ) {}
+
+// private async context(
+//   req: any,
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\inventory\inventory.controller.ts:1
+import {BadRequestException,Body,Controller,Get,Headers,Patch,Param,Post,Req} from '@nestjs/common';import {InventoryService} from './inventory.service';import {CreateInventoryDto} from './dto';import {OrganizationAccessService} from '../organizations/organization-access.service';
+@Controller('inventory') export class InventoryController {
+ constructor(private service:InventoryService,private organizationAccess:OrganizationAccessService){}
+ private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+ @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\inventory\inventory.controller.ts:3
+import {BadRequestException,Body,Controller,Get,Headers,Patch,Param,Post,Req} from '@nestjs/common';import {InventoryService} from './inventory.service';import {CreateInventoryDto} from './dto';import {OrganizationAccessService} from '../organizations/organization-access.service';
+@Controller('inventory') export class InventoryController {
+ constructor(private service:InventoryService,private organizationAccess:OrganizationAccessService){}
+ private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+ @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+ @Post() async create(@Body() dto:CreateInventoryDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.create(dto,await this.context(req,organizationId));}
+ @Patch(':id') async update(@Param('id') id:string,@Body() dto:Partial<CreateInventoryDto>,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.update(id,dto,await this.context(req,organizationId));}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\inventory-control\inventory-control.controller.ts:3
+import { BadRequestException, Body, Controller, Get, Headers, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { Roles } from '../auth/roles.decorator';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+import { InventoryControlService } from './inventory-control.service';
+
+@Controller('inventory-control')
+@Roles('owner')
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\inventory-control\inventory-control.controller.ts:11
+  constructor(
+    private readonly service: InventoryControlService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:22
+// import {Controller,Get,UseGuards} from '@nestjs/common';
+// import {ManagementIntelligenceService} from './management-intelligence.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+// @Controller('management-intelligence')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:23
+// import {ManagementIntelligenceService} from './management-intelligence.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+// @Controller('management-intelligence')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:26
+// import {Roles} from '../auth/roles.decorator';
+// @Controller('management-intelligence')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class ManagementIntelligenceController {
+//  constructor(private service:ManagementIntelligenceService){}
+//  @Get('dashboard') dashboard(){return this.service.dashboard();}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-access.controller.ts:10
+import { Request } from 'express';
+
+import { OrganizationAccessService } from './organization-access.service';
+
+type AuthenticatedRequest = Request & {
+  user?: { sub?: string; userId?: string; id?: string };
+};
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-access.controller.ts:18
+@Controller('organization-access')
+export class OrganizationAccessController {
+  constructor(private readonly access: OrganizationAccessService) {}
+
+  @Get('mine')
+  async mine(@Req() req: AuthenticatedRequest) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-access.service.ts:16
+
+@Injectable()
+export class OrganizationAccessService {
+  constructor(
+    @InjectModel(Organization.name)
+    private readonly organizations: Model<OrganizationDocument>,
+    @InjectModel(OrganizationMembership.name)
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organizations.module.ts:10
+import { OrganizationAccessController } from './organization-access.controller';
+import { OrganizationsService } from './organizations.service';
+import { OrganizationAccessService } from './organization-access.service';
+
+@Module({
+  imports: [
+    MongooseModule.forFeature([
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organizations.module.ts:22
+  ],
+  controllers: [OrganizationsController, OrganizationAccessController],
+  providers: [OrganizationsService, OrganizationAccessService],
+  exports: [OrganizationAccessService],
+})
+export class OrganizationsModule {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organizations.module.ts:23
+  controllers: [OrganizationsController, OrganizationAccessController],
+  providers: [OrganizationsService, OrganizationAccessService],
+  exports: [OrganizationAccessService],
+})
+export class OrganizationsModule {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\plantations\plantations.controller.ts:6
+import { CreatePlantationDto } from './dto';
+import { PlantationsService } from './plantations.service';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('plantations')
+export class PlantationsController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\plantations\plantations.controller.ts:12
+  constructor(
+    private readonly plantations: PlantationsService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\sales\sales.controller.ts:1
+import {BadRequestException,Body,Controller,Get,Headers,Patch,Param,Post,Req} from '@nestjs/common';import {SalesService} from './sales.service';import {CreateSalesDto} from './dto';import {OrganizationAccessService} from '../organizations/organization-access.service';
+@Controller('sales') export class SalesController {
+ constructor(private service:SalesService,private organizationAccess:OrganizationAccessService){}
+ private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+ @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\sales\sales.controller.ts:3
+import {BadRequestException,Body,Controller,Get,Headers,Patch,Param,Post,Req} from '@nestjs/common';import {SalesService} from './sales.service';import {CreateSalesDto} from './dto';import {OrganizationAccessService} from '../organizations/organization-access.service';
+@Controller('sales') export class SalesController {
+ constructor(private service:SalesService,private organizationAccess:OrganizationAccessService){}
+ private async context(req:any,organizationId?:string){const userId=req.user?.sub||req.user?.userId||req.user?.id;if(!userId)throw new BadRequestException('Authenticated user ID is missing');if(!organizationId)throw new BadRequestException('Set X-Organization-Id to an organization you belong to');return this.organizationAccess.resolveContext(String(userId),organizationId);}
+ @Get() async all(@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.findAll(await this.context(req,organizationId));}
+ @Post() async create(@Body() dto:CreateSalesDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.create(dto,await this.context(req,organizationId));}
+ @Patch(':id') async update(@Param('id') id:string,@Body() dto:Partial<CreateSalesDto>,@Req() req:any,@Headers('x-organization-id') organizationId?:string){return this.service.update(id,dto,await this.context(req,organizationId));}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\tasks\tasks.controller.ts:14
+import { TasksService } from './tasks.service';
+import { CreateTaskDto } from './dto';
+import { OrganizationAccessService } from '../organizations/organization-access.service';
+
+@Controller('tasks')
+export class TasksController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\tasks\tasks.controller.ts:20
+  constructor(
+    private readonly service: TasksService,
+    private readonly organizationAccess: OrganizationAccessService,
+  ) {}
+
+  private async context(req: any, organizationId?: string) {
+    const userId = req.user?.sub || req.user?.userId || req.user?.id;
+
+====================================================================================================
+4. AUTHENTICATION AND AUTHORIZATION SOURCE CONTENT
+====================================================================================================
+
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\app.module.ts
+SIZE: 7259 bytes
+SHA256: DF8C37DF53FCFB9980601D1700D35174A90662B1EE796F7ED72168ABA991D02E
+TOTAL LINES: 47
+    1: import { RegistryPersistenceModule } from './registry-persistence/registry-persistence.module';
+    2: import {SalesModule} from './sales/sales.module';
+    3: import {InventoryModule} from './inventory/inventory.module';
+    4: import { FieldCaptureModule } from './field-capture/field-capture.module';
+    5: import { FieldWorkforceModule } from './field-workforce/field-workforce.module';
+    6: import { ApiaryActionsModule } from './apiary-actions/apiary-actions.module';
+    7: import { ApiaryIntelligenceModule } from './apiary-intelligence/apiary-intelligence.module';
+    8: import { ApiaryOperationsModule } from './apiary-operations/apiary-operations.module';
+    9: import {OrganizationsModule} from './organizations/organizations.module';
+   10: import {NotificationPoliciesModule} from './notification-policies/notification-policies.module';
+   11: import {CaseEvidenceModule} from './case-evidence/case-evidence.module';
+   12: import { FinancialInvestigationCasesModule } from './financial-investigation-cases/financial-investigation-cases.module';
+   13: import { MonthlyFinancialCloseModule } from './monthly-financial-close/monthly-financial-close.module';
+   14: import { CapitalSpendVerificationModule } from './capital-spend-verification/capital-spend-verification.module';
+   15: import { CapitalAllocationModule } from './capital-allocation/capital-allocation.module';
+   16: import { ReinvestmentDecisionEngineModule } from './reinvestment-decision-engine/reinvestment-decision-engine.module';
+   17: import { FinancialControlPerformanceModule } from './financial-control-performance/financial-control-performance.module';
+   18: import { FinancialControlReportModule } from './financial-control-report/financial-control-report.module';
+   19: import { FinancialEscalationsModule } from './financial-escalations/financial-escalations.module';
+   20: import { FinancialAuditTrailModule } from './financial-audit-trail/financial-audit-trail.module';
+   21: import { FinancialEvidenceModule } from './financial-evidence/financial-evidence.module';
+   22: import { FinancialActionCentreModule } from './financial-action-centre/financial-action-centre.module';
+   23: import { FinancialGovernanceModule } from './financial-governance/financial-governance.module';
+   24: import { FinancialInvestigationModule } from './financial-investigations/financial-investigation.module';
+   25: import { FinancialExceptionsModule } from './financial-exceptions/financial-exceptions.module';
+   26: import { StatementMatchingModule } from './statement-matching/statement-matching.module';
+   27: import { FinancialReconciliationModule } from './financial-reconciliation/financial-reconciliation.module';
+   28: import { FinancialReportsModule } from './financial-reports/financial-reports.module';
+   29: import { CorrectiveActionsModule } from './corrective-actions/corrective-actions.module';
+   30: import { FieldInspectionsModule } from './field-inspections/field-inspections.module';
+   31: import { FieldNavigationModule } from './field-navigation/field-navigation.module';
+   32: import { FarmMapModule } from './farm-map/farm-map.module';
+   33: import { PhotoEvidenceModule } from './photo-evidence/photo-evidence.module';
+   34: import { FieldVerificationModule } from './field-verification/field-verification.module';
+   35: import { FinanceModule } from './finance/finance.module';
+   36: import { FieldLogsModule } from './field-logs/field-logs.module';
+   37: import { TasksModule } from './tasks/tasks.module';
+   38: import { VideoEvidenceModule } from './video-evidence/video-evidence.module';
+   39: import {HarvestIntakeModule} from './harvest-intake/harvest-intake.module';
+   40: import {Module} from '@nestjs/common';import {MongooseModule} from '@nestjs/mongoose';import {HealthController} from './health.controller';import {PlantationsModule} from './plantations/plantations.module';import {HivesModule} from './hives/hives.module';import {AuthModule} from './auth/auth.module';import {InspectionsModule} from './inspections/inspections.module';import {EvidenceModule} from './evidence/evidence.module';import {AuditModule} from './audit/audit.module';import {DashboardModule} from './dashboard/dashboard.module';import {GrowthModule} from './growth/growth.module';import {HarvestModule} from './harvest/harvest.module';import {RegenerationModule} from './regeneration/regeneration.module';import {NurseryModule} from './nursery/nursery.module';import {WorkforceModule} from './workforce/workforce.module';import {CostIntelligenceModule} from './cost-intelligence/cost-intelligence.module';import {CashflowModule} from './cashflow/cashflow.module';import {InvestmentModule} from './investment/investment.module';import {RiskManagementModule} from './risk-management/risk-management.module';import {MaintenanceModule} from './maintenance/maintenance.module';import {ProcurementModule} from './procurement/procurement.module';import {InventoryControlModule} from './inventory-control/inventory-control.module';import {IntegrationWorkflowsModule} from './integration-workflows/integration-workflows.module';import {ManagementIntelligenceModule} from './management-intelligence/management-intelligence.module';import {DataIntegrityModule} from './data-integrity/data-integrity.module';import {BackupContinuityModule} from './backup-continuity/backup-continuity.module';import {PerformanceStrategyModule} from './performance-strategy/performance-strategy.module';import {PerformanceIntelligenceModule} from './performance-intelligence/performance-intelligence.module';import {AlertCenterModule} from './alert-center/alert-center.module';import {CommandCentreModule} from './command-centre/command-centre.module';import {StandardOperatingProceduresModule} from './standard-operating-procedures/standard-operating-procedures.module';@Module({imports:[SalesModule,InventoryModule,FieldCaptureModule,FieldWorkforceModule,ApiaryActionsModule,ApiaryIntelligenceModule,ApiaryOperationsModule,OrganizationsModule,NotificationPoliciesModule,CaseEvidenceModule, FinancialInvestigationCasesModule, MonthlyFinancialCloseModule, CapitalSpendVerificationModule, CapitalAllocationModule, ReinvestmentDecisionEngineModule, FinancialControlPerformanceModule, FinancialControlReportModule, FinancialEscalationsModule, FinancialAuditTrailModule, FinancialEvidenceModule, FinancialActionCentreModule, FinancialGovernanceModule, FinancialInvestigationModule, FinancialExceptionsModule, StatementMatchingModule, FinancialReconciliationModule, 
+   41:     CorrectiveActionsModule,
+   42:     FieldInspectionsModule,
+   43:     FieldLogsModule,
+   44:     TasksModule,
+   45:     VideoEvidenceModule,
+   46:     FieldNavigationModule,
+   47:     FarmMapModule,MongooseModule.forRoot(process.env.MONGODB_URI||'mongodb://127.0.0.1:27017/forestos'),AuthModule,PlantationsModule,HivesModule,InspectionsModule,EvidenceModule,AuditModule,DashboardModule,GrowthModule,HarvestModule, HarvestIntakeModule, RegenerationModule,NurseryModule,WorkforceModule,CostIntelligenceModule,CashflowModule,InvestmentModule,RiskManagementModule,MaintenanceModule,ProcurementModule,InventoryControlModule,IntegrationWorkflowsModule,ManagementIntelligenceModule,DataIntegrityModule,BackupContinuityModule,PerformanceStrategyModule,PerformanceIntelligenceModule,AlertCenterModule,CommandCentreModule,StandardOperatingProceduresModule, RegistryPersistenceModule, FinancialReportsModule, FieldVerificationModule, PhotoEvidenceModule, FinanceModule],controllers:[HealthController]}) export class AppModule{}
+
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.module.ts
+SIZE: 668 bytes
+SHA256: 021180C257D0C1C54839D7E33544A8FB447FBF1C7B240C51146ACD5C6E61CFAC
+TOTAL LINES: 10
+    1: import {Module} from '@nestjs/common';
+    2: import {MongooseModule} from '@nestjs/mongoose';
+    3: import {JwtModule} from '@nestjs/jwt';
+    4: import {APP_GUARD} from '@nestjs/core';
+    5: import {User,UserSchema} from './user.schema';
+    6: import {AuthController} from './auth.controller';
+    7: import {AuthGuard} from './roles.guard';
+    8: import {resolveJwtSecret} from './jwt-secret-policy';
+    9: @Module({imports:[MongooseModule.forFeature([{name:User.name,schema:UserSchema}]),JwtModule.register({secret:resolveJwtSecret(process.env),signOptions:{expiresIn:'8h'}})],controllers:[AuthController],providers:[AuthGuard,{provide:APP_GUARD,useClass:AuthGuard}],exports:[JwtModule]})
+   10: export class AuthModule{}
+
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\guards\jwt-auth.guard.ts
+SIZE: 49 bytes
+SHA256: E18E097B02F506225A8B5773BE646682013650579F84ECE2E164A6580FC7A337
+TOTAL LINES: 1
+    1: e
+
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\jwt-auth.guard.ts
+SIZE: 163 bytes
+SHA256: 297C97E7FF9216C99D0882D2245726AFB4848894AFF92B3EFABD32D8A6B52A69
+TOTAL LINES: 5
+    1: import { Injectable } from '@nestjs/common';
+    2: import { AuthGuard } from '@nestjs/passport';
+    3: 
+    4: @Injectable()
+    5: export class JwtAuthGuard extends AuthGuard('jwt') {}
+
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.decorator.ts
+SIZE: 242 bytes
+SHA256: 21B0F97D04D7F2DBA271F8B42EAE9C8853BC28D445894A80EFEEA7A5D6A32026
+TOTAL LINES: 5
+    1: import {SetMetadata} from '@nestjs/common';
+    2: export const IS_PUBLIC_KEY='isPublic';
+    3: export const Public=()=>SetMetadata(IS_PUBLIC_KEY,true);
+    4: export const ROLES_KEY='roles';
+    5: export const Roles=(...roles:string[])=>SetMetadata(ROLES_KEY,roles);
+
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.guard.ts
+SIZE: 2610 bytes
+SHA256: 4BA196D968D6EDD88E73168449B620061200D72B600D65FC859820E5620E4EA2
+TOTAL LINES: 101
+    1: 
+    2: import {
+    3:   CanActivate,
+    4:   ExecutionContext,
+    5:   ForbiddenException,
+    6:   Injectable,
+    7:   UnauthorizedException,
+    8: } from '@nestjs/common';
+    9: import { InjectModel } from '@nestjs/mongoose';
+   10: import { Reflector } from '@nestjs/core';
+   11: import { JwtService } from '@nestjs/jwt';
+   12: import { Model } from 'mongoose';
+   13: import { IS_PUBLIC_KEY, ROLES_KEY } from './roles.decorator';
+   14: import { User } from './user.schema';
+   15: 
+   16: @Injectable()
+   17: export class AuthGuard implements CanActivate {
+   18:   constructor(
+   19:     private readonly jwt: JwtService,
+   20:     private readonly reflector: Reflector,
+   21:     @InjectModel(User.name)
+   22:     private readonly users: Model<User>,
+   23:   ) {}
+   24: 
+   25:   async canActivate(ctx: ExecutionContext): Promise<boolean> {
+   26:     const isPublic = this.reflector.getAllAndOverride<boolean>(
+   27:       IS_PUBLIC_KEY,
+   28:       [ctx.getHandler(), ctx.getClass()],
+   29:     );
+   30: 
+   31:     if (isPublic) {
+   32:       return true;
+   33:     }
+   34: 
+   35:     const req = ctx.switchToHttp().getRequest();
+   36:     const authorization = req.headers?.authorization;
+   37: 
+   38:     if (typeof authorization !== 'string') {
+   39:       throw new UnauthorizedException('Sign in required');
+   40:     }
+   41: 
+   42:     const bearerMatch = /^Bearer\s+(\S+)$/i.exec(authorization.trim());
+   43: 
+   44:     if (!bearerMatch) {
+   45:       throw new UnauthorizedException('Sign in required');
+   46:     }
+   47: 
+   48:     const token = bearerMatch[1];
+   49: 
+   50:     let claims: Record<string, unknown>;
+   51: 
+   52:     try {
+   53:       claims = await this.jwt.verifyAsync<Record<string, unknown>>(token);
+   54:     } catch {
+   55:       throw new UnauthorizedException('Invalid or expired session');
+   56:     }
+   57: 
+   58:     const subject = claims.sub;
+   59: 
+   60:     if (
+   61:       typeof subject !== 'string' ||
+   62:       !/^[a-fA-F0-9]{24}$/.test(subject)
+   63:     ) {
+   64:       throw new UnauthorizedException('Invalid or expired session');
+   65:     }
+   66: 
+   67:     // The database is authoritative for current account status and role.
+   68:     // Database failures intentionally propagate rather than being
+   69:     // incorrectly reported as invalid JWTs.
+   70:     const account = await this.users
+   71:       .findById(subject)
+   72:       .select('_id email role active')
+   73:       .exec();
+   74: 
+   75:     if (!account || account.active !== true) {
+   76:       throw new UnauthorizedException('Account is unavailable');
+   77:     }
+   78: 
+   79:     req.user = {
+   80:       ...claims,
+   81:       sub: String(account._id),
+   82:       email: account.email,
+   83:       role: account.role,
+   84:     };
+   85: 
+   86:     const roles = this.reflector.getAllAndOverride<string[]>(
+   87:       ROLES_KEY,
+   88:       [ctx.getHandler(), ctx.getClass()],
+   89:     );
+   90: 
+   91:     if (roles?.length && !roles.includes(account.role)) {
+   92:       throw new ForbiddenException(
+   93:         'Your account cannot access this action',
+   94:       );
+   95:     }
+   96: 
+   97:     return true;
+   98:   }
+   99: }
+  100: 
+  101: export { AuthGuard as RolesGuard };
+
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-access.controller.ts
+SIZE: 1403 bytes
+SHA256: BDDD800867B440D72D95C353B2B5364C637DC6DC85C240417BBE0243D68BD7A5
+TOTAL LINES: 42
+    1: import {
+    2:   BadRequestException,
+    3:   Controller,
+    4:   Get,
+    5:   Headers,
+    6:   Req,
+    7: } from '@nestjs/common';
+    8: import { Request } from 'express';
+    9: 
+   10: import { OrganizationAccessService } from './organization-access.service';
+   11: 
+   12: type AuthenticatedRequest = Request & {
+   13:   user?: { sub?: string; userId?: string; id?: string };
+   14: };
+   15: 
+   16: @Controller('organization-access')
+   17: export class OrganizationAccessController {
+   18:   constructor(private readonly access: OrganizationAccessService) {}
+   19: 
+   20:   @Get('mine')
+   21:   async mine(@Req() req: AuthenticatedRequest) {
+   22:     const userId = req.user?.sub || req.user?.userId || req.user?.id;
+   23:     if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+   24:     return { organizations: await this.access.listMyOrganizations(userId) };
+   25:   }
+   26: 
+   27:   @Get('context')
+   28:   async context(
+   29:     @Req() req: AuthenticatedRequest,
+   30:     @Headers('x-organization-id') requestedOrganizationId?: string,
+   31:   ) {
+   32:     const userId = req.user?.sub || req.user?.userId || req.user?.id;
+   33:     if (!userId) throw new BadRequestException('Authenticated user ID is missing');
+   34:     if (!requestedOrganizationId) {
+   35:       throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
+   36:     }
+   37:     return {
+   38:       context: await this.access.resolveContext(userId, requestedOrganizationId),
+   39:       note: 'Context is verified for this response; domain endpoints must explicitly enforce it.',
+   40:     };
+   41:   }
+   42: }
+
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-access.service.ts
+SIZE: 3296 bytes
+SHA256: C9A6EF04370D74BC5F9E07367354D793CEBAC57FDCD895E9250718314E35488C
+TOTAL LINES: 96
+    1: import {
+    2:   ForbiddenException,
+    3:   Injectable,
+    4:   NotFoundException,
+    5: } from '@nestjs/common';
+    6: import { InjectModel } from '@nestjs/mongoose';
+    7: import { Model, Types } from 'mongoose';
+    8: import { Organization, OrganizationDocument } from './organization.schema';
+    9: import {
+   10:   OrganizationMembership,
+   11:   OrganizationMembershipDocument,
+   12: } from './organization-membership.schema';
+   13: import { OrganizationContext } from './organization-context';
+   14: 
+   15: @Injectable()
+   16: export class OrganizationAccessService {
+   17:   constructor(
+   18:     @InjectModel(Organization.name)
+   19:     private readonly organizations: Model<OrganizationDocument>,
+   20:     @InjectModel(OrganizationMembership.name)
+   21:     private readonly memberships: Model<OrganizationMembershipDocument>,
+   22:   ) {}
+   23: 
+   24:   /**
+   25:    * Resolve a verified active organization context for a user.
+   26:    * The organization ID is only a selector: membership and organization status
+   27:    * are checked against the database on every call.
+   28:    */
+   29:   async resolveContext(userId: string, requestedOrganizationId: string): Promise<OrganizationContext> {
+   30:     if (!Types.ObjectId.isValid(userId) || !Types.ObjectId.isValid(requestedOrganizationId)) {
+   31:       throw new NotFoundException('Organization or membership not found');
+   32:     }
+   33: 
+   34:     const organization = await this.organizations.findOne({
+   35:       _id: new Types.ObjectId(requestedOrganizationId),
+   36:       status: 'active',
+   37:     }).lean();
+   38: 
+   39:     if (!organization) {
+   40:       throw new NotFoundException('Organization or membership not found');
+   41:     }
+   42: 
+   43:     // Membership schema stores both references as strings, so query with the
+   44:     // canonical string IDs rather than BSON ObjectId values.
+   45:     const membership = await this.memberships.findOne({
+   46:       userId: String(userId),
+   47:       organizationId: String(requestedOrganizationId),
+   48:       status: 'active',
+   49:     }).lean();
+   50: 
+   51:     if (!membership) {
+   52:       throw new ForbiddenException('No active membership for the selected organization');
+   53:     }
+   54: 
+   55:     return {
+   56:       organizationId: String(organization._id),
+   57:       userId: String(userId),
+   58:       roles: Array.isArray((membership as any).roles)
+   59:         ? (membership as any).roles
+   60:         : (typeof (membership as any).role === 'string' && (membership as any).role
+   61:             ? [(membership as any).role]
+   62:             : []),
+   63:     };
+   64:   }
+   65: 
+   66:   async listMyOrganizations(userId: string) {
+   67:     if (!Types.ObjectId.isValid(userId)) return [];
+   68:     const memberships = await this.memberships.find({
+   69:       userId: String(userId),
+   70:       status: 'active',
+   71:     }).lean();
+   72: 
+   73:     const organizationIds = memberships
+   74:       .map((m: any) => String(m.organizationId))
+   75:       .filter((id: string) => Types.ObjectId.isValid(id));
+   76:     if (!organizationIds.length) return [];
+   77: 
+   78:     const organizations = await this.organizations.find({
+   79:       _id: { $in: organizationIds.map((id: string) => new Types.ObjectId(id)) },
+   80:       status: 'active',
+   81:     }).lean();
+   82: 
+   83:     const byId = new Map(organizations.map((o: any) => [String(o._id), o]));
+   84:     return memberships.flatMap((m: any) => {
+   85:       const org = byId.get(String(m.organizationId));
+   86:       return org ? [{
+   87:         organizationId: String(org._id),
+   88:         slug: org.slug,
+   89:         name: org.name,
+   90:         roles: Array.isArray(m.roles)
+   91:           ? m.roles
+   92:           : (typeof m.role === 'string' && m.role ? [m.role] : []),
+   93:       }] : [];
+   94:     });
+   95:   }
+   96: }
+
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-context.ts
+SIZE: 1214 bytes
+SHA256: 61A7C8909445270D130112594C8128B583E9542BB2474F84F870D76B7BF82EA0
+TOTAL LINES: 39
+    1: /**
+    2:  * Phase 86 â€” request-scoped organization context primitives.
+    3:  *
+    4:  * Security note:
+    5:  * These primitives do not themselves establish tenant isolation. They provide
+    6:  * a typed, fail-closed boundary for modules to adopt. Never trust an
+    7:  * organization ID supplied by a query string/body/header without resolving
+    8:  * the authenticated user's active membership server-side.
+    9:  */
+   10: export interface OrganizationContext {
+   11:   organizationId: string;
+   12:   userId: string;
+   13:   roles: string[];
+   14: }
+   15: 
+   16: export const ORGANIZATION_CONTEXT_KEY = 'forestOS.organizationContext';
+   17: 
+   18: export class OrganizationContextError extends Error {
+   19:   constructor(message = 'An active organization context is required') {
+   20:     super(message);
+   21:     this.name = 'OrganizationContextError';
+   22:   }
+   23: }
+   24: 
+   25: export function requireOrganizationContext(
+   26:   context: OrganizationContext | undefined | null,
+   27: ): OrganizationContext {
+   28:   if (!context || !context.organizationId || !context.userId || !Array.isArray(context.roles)) {
+   29:     throw new OrganizationContextError();
+   30:   }
+   31:   return context;
+   32: }
+   33: 
+   34: export function hasOrganizationRole(
+   35:   context: OrganizationContext,
+   36:   allowedRoles: string[],
+   37: ): boolean {
+   38:   return context.roles.some((role) => allowedRoles.includes(role));
+   39: }
+
+====================================================================================================
+5. AUDIT SUMMARY
+====================================================================================================
+TypeScript files scanned: 328
+Selected source files: 9
+OrganizationContext declaration matches: 2
+Guard/registration matches: 59
+No source files were intentionally modified by this script.
+
+END OF REPORT
