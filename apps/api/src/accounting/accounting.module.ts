@@ -15,6 +15,7 @@ import { OrganizationsModule } from '../organizations/organizations.module';
 import { MongooseModule as CoreMongooseModule } from '@nestjs/mongoose';
 import { FinanceTransaction, FinanceTransactionSchema } from '../finance/finance.schema';
 import { FinancialReportsService } from './financial-reports.service';
+import { PeriodsService } from './periods.service'; 
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { FinancialReportsService } from './financial-reports.service';
     OrganizationsModule,
   ],
   controllers: [AccountingController],
-  providers: [PostingService, TrialBalanceService, BackfillService, FinancialReportsService,FinanceGlAdapter],
+  providers: [PeriodsService, PostingService, TrialBalanceService, BackfillService, FinancialReportsService,FinanceGlAdapter],
 exports: [PostingService, FinanceGlAdapter, MongooseModule],
 })
 export class AccountingModule {}

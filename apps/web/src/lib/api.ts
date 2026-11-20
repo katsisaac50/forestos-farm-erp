@@ -42,11 +42,40 @@ function parseResponse<T>(text: string): T {
 async function throwResponseError(response: Response): Promise<never> {
   const text = await response.text().catch(() => '');
 
-  if (response.status === 401) {
-    throw new ApiError(401, 'Please sign in to continue.');
+  // Try to parse JSON error body so we can extract a human-readable message.
+  let parsed: unknown = undefined;
+  if (text) {
+    try { parsed = JSON.parse(text); } catch { /* not JSON */ }
   }
 
-  if (response.status === 400 && text.includes('X-Organization-Id')) {
+  const extract = (v: unknown): string | undefined => {
+    if (typeof v === 'string') return v;
+    if (Array.isArray(v)) {
+      const parts = v.map(extract).filter(Boolean);
+      return parts.length ? parts.join('; ') : undefined;
+    }
+    if (v && typeof v === 'object') {
+      const o = v as Record<string, unknown>;
+      // NestJS: { message: string | string[], error, statusCode }
+      if (o.message) {
+        const m = extract(o.message);
+        if (m) return m;
+      }
+      if (typeof o.error === 'string') return o.error;
+    }
+    return undefined;
+  };
+
+  const detail = extract(parsed) ?? (text && !parsed ? text : undefined);
+
+  if (response.status === 401) {
+    // Only show the server's reason if it says something specific;
+    // otherwise keep the friendly default.
+    const msg = detail && detail !== 'Unauthorized' ? detail : 'Please sign in to continue.';
+    throw new ApiError(401, msg);
+  }
+
+  if (response.status === 400 && (text.includes('X-Organization-Id') || (detail ?? '').includes('organization'))) {
     throw new ApiError(
       400,
       'No organization selected. Sign in again to refresh your organization context.',
@@ -55,7 +84,7 @@ async function throwResponseError(response: Response): Promise<never> {
 
   throw new ApiError(
     response.status,
-    text || `API request failed: ${response.status}`,
+    detail || `API request failed: ${response.status}`,
   );
 }
 

@@ -1,9 +1,10 @@
-import { BadRequestException, Body, Controller, Get, Headers, Post, Query, Req } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Headers, Param, Post, Query, Req } from '@nestjs/common';
 import { Roles } from '../auth/roles.decorator';
 import { OrganizationAccessService } from '../organizations/organization-access.service';
 import { TrialBalanceService } from './trial-balance.service';
 import { BackfillService } from './backfill.service';
 import { FinancialReportsService } from './financial-reports.service';
+import { PeriodsService } from './periods.service';
 
 @Controller('accounting')
 @Roles('owner')
@@ -12,6 +13,7 @@ export class AccountingController {
     private readonly trialBalance: TrialBalanceService,
     private readonly backfill: BackfillService,
     private readonly reports: FinancialReportsService,
+    private readonly periods: PeriodsService,   
     private readonly organizationAccess: OrganizationAccessService,
   ) {}
 
@@ -21,6 +23,49 @@ export class AccountingController {
     if (!organizationId) throw new BadRequestException('Set X-Organization-Id to an organization you belong to');
     return this.organizationAccess.resolveContext(String(userId), organizationId);
   }
+
+  private actor(req: any): string {
+  const user = req.user || {};
+  return String(user.email || user.username || user.sub || 'unknown').toLowerCase();
+}
+
+@Get('periods')
+async listPeriods(
+  @Req() req: any,
+  @Headers('x-organization-id') organizationId?: string,
+) {
+  return this.periods.list(await this.context(req, organizationId));
+}
+
+@Post('periods/:year/:month/lock')
+async lockPeriod(
+  @Param('year') year: string,
+  @Param('month') month: string,
+  @Req() req: any,
+  @Headers('x-organization-id') organizationId?: string,
+) {
+  return this.periods.lockPeriod(
+    await this.context(req, organizationId),
+    Number(year),
+    Number(month),
+    this.actor(req),
+  );
+}
+
+@Post('periods/:id/reopen')
+async reopenPeriod(
+  @Param('id') id: string,
+  @Body() body: { reason: string },
+  @Req() req: any,
+  @Headers('x-organization-id') organizationId?: string,
+) {
+  return this.periods.reopenPeriod(
+    await this.context(req, organizationId),
+    id,
+    body.reason,
+    this.actor(req),
+  );
+}
 
   @Get('reports/profit-and-loss')
 async getProfitAndLoss(

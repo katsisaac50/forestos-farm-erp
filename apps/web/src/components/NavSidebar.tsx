@@ -109,6 +109,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/reinvestment-decision-engine', label: 'Reinvestment decision engine' },
       { href: '/accounting/reports', label: 'Financial reports' },
       { href: '/accounting/trial-balance', label: 'Trial balance' },
+      { href: '/accounting/periods', label: 'Accounting periods' },
     ],
   },
   {
