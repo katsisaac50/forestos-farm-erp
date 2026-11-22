@@ -3,6 +3,7 @@ import { HydratedDocument } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class FarmWorker {
+  @Prop({ required: true, index: true }) organizationId!: string;
   @Prop({ required: true, trim: true }) workerCode!: string;
   @Prop({ required: true, trim: true }) displayName!: string;
   @Prop() contactDetails?: string;
@@ -14,10 +15,11 @@ export class FarmWorker {
 }
 export type FarmWorkerDocument = HydratedDocument<FarmWorker>;
 export const FarmWorkerSchema = SchemaFactory.createForClass(FarmWorker);
-FarmWorkerSchema.index({ workerCode: 1 }, { unique: true });
+FarmWorkerSchema.index({ organizationId: 1, workerCode: 1 }, { unique: true });
 
 @Schema({ timestamps: true })
 export class LabourTask {
+  @Prop({ required: true, index: true }) organizationId!: string;
   @Prop({ required: true, trim: true }) taskCode!: string;
   @Prop({ required: true, trim: true }) title!: string;
   @Prop({ required: true }) activity!: string;
@@ -36,11 +38,12 @@ export class LabourTask {
 }
 export type LabourTaskDocument = HydratedDocument<LabourTask>;
 export const LabourTaskSchema = SchemaFactory.createForClass(LabourTask);
-LabourTaskSchema.index({ taskCode: 1 }, { unique: true });
-LabourTaskSchema.index({ plannedDate: 1, status: 1 });
+LabourTaskSchema.index({ organizationId: 1, taskCode: 1 }, { unique: true });
+LabourTaskSchema.index({ organizationId: 1, plannedDate: 1, status: 1 });
 
 @Schema({ timestamps: true })
 export class LabourEntry {
+  @Prop({ required: true, index: true }) organizationId!: string;
   @Prop({ required: true }) taskId!: string;
   @Prop({ required: true }) workerCode!: string;
   @Prop({ required: true }) workDate!: string;
@@ -53,4 +56,4 @@ export class LabourEntry {
 }
 export type LabourEntryDocument = HydratedDocument<LabourEntry>;
 export const LabourEntrySchema = SchemaFactory.createForClass(LabourEntry);
-LabourEntrySchema.index({ taskId: 1, workDate: 1 });
+LabourEntrySchema.index({ organizationId: 1, taskId: 1, workDate: 1 });
