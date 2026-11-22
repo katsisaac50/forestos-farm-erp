@@ -13,7 +13,8 @@ export const RECEIPT_STATUSES=['received','partial','rejected'] as const;
 
 @Schema({timestamps:true})
 export class Supplier{
- @Prop({required:true,unique:true,trim:true}) supplierCode:string;
+ @Prop({required:true,index:true}) organizationId:string;
+ @Prop({required:true,trim:true}) supplierCode:string;
  @Prop({required:true,trim:true}) name:string;
  @Prop({default:''}) contactPerson:string;
  @Prop({default:''}) phone:string;
@@ -28,10 +29,12 @@ export class Supplier{
  @Prop({default:''}) createdBy:string;
 }
 export const SupplierSchema=SchemaFactory.createForClass(Supplier);
+SupplierSchema.index({organizationId:1,supplierCode:1},{unique:true});
 
 @Schema({timestamps:true})
 export class PurchaseRequest{
- @Prop({required:true,unique:true,trim:true}) requestCode:string;
+ @Prop({required:true,index:true}) organizationId:string;
+ @Prop({required:true,trim:true}) requestCode:string;
  @Prop({required:true,trim:true}) title:string;
  @Prop({required:true}) requestedBy:string;
  @Prop({required:true}) neededBy:string;
@@ -43,10 +46,12 @@ export class PurchaseRequest{
  @Prop({default:''}) createdBy:string;
 }
 export const PurchaseRequestSchema=SchemaFactory.createForClass(PurchaseRequest);
+PurchaseRequestSchema.index({organizationId:1,requestCode:1},{unique:true});
 
 @Schema({timestamps:true})
 export class PurchaseOrder{
- @Prop({required:true,unique:true,trim:true}) orderCode:string;
+ @Prop({required:true,index:true}) organizationId:string;
+ @Prop({required:true,trim:true}) orderCode:string;
  @Prop({required:true,index:true}) supplierId:string;
  @Prop({default:null,index:true}) requestId?:string;
  @Prop({required:true}) orderDate:string;
@@ -60,9 +65,11 @@ export class PurchaseOrder{
  @Prop({default:''}) createdBy:string;
 }
 export const PurchaseOrderSchema=SchemaFactory.createForClass(PurchaseOrder);
+PurchaseOrderSchema.index({organizationId:1,orderCode:1},{unique:true});
 
 @Schema({timestamps:true})
 export class PurchaseOrderLine{
+ @Prop({required:true,index:true}) organizationId:string;
  @Prop({required:true,index:true}) orderId:string;
  @Prop({required:true,trim:true}) itemName:string;
  @Prop({default:''}) itemCode:string;
@@ -73,9 +80,11 @@ export class PurchaseOrderLine{
  @Prop({default:''}) notes:string;
 }
 export const PurchaseOrderLineSchema=SchemaFactory.createForClass(PurchaseOrderLine);
+PurchaseOrderLineSchema.index({organizationId:1,orderId:1});
 
 @Schema({timestamps:true})
 export class GoodsReceipt{
+ @Prop({required:true,index:true}) organizationId:string;
  @Prop({required:true,index:true}) orderId:string;
  @Prop({required:true,trim:true}) receiptCode:string;
  @Prop({required:true}) receivedDate:string;
@@ -86,9 +95,11 @@ export class GoodsReceipt{
  @Prop({default:''}) createdBy:string;
 }
 export const GoodsReceiptSchema=SchemaFactory.createForClass(GoodsReceipt);
+GoodsReceiptSchema.index({organizationId:1,receiptCode:1},{unique:true});
 
 @Schema({timestamps:true})
 export class GoodsReceiptLine{
+ @Prop({required:true,index:true}) organizationId:string;
  @Prop({required:true,index:true}) receiptId:string;
  @Prop({required:true,index:true}) orderLineId:string;
  @Prop({required:true,min:0.001}) quantityReceived:number;
@@ -96,3 +107,4 @@ export class GoodsReceiptLine{
  @Prop({default:''}) notes:string;
 }
 export const GoodsReceiptLineSchema=SchemaFactory.createForClass(GoodsReceiptLine);
+GoodsReceiptLineSchema.index({organizationId:1,receiptId:1});
