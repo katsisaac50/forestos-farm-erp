@@ -10,7 +10,8 @@ export const MAINTENANCE_STATUSES = ['planned','in_progress','completed','cancel
 
 @Schema({timestamps:true})
 export class FarmAsset {
- @Prop({required:true,unique:true,trim:true}) assetCode:string;
+ @Prop({required:true,index:true}) organizationId:string;
+ @Prop({required:true,trim:true}) assetCode:string;
  @Prop({required:true,trim:true}) name:string;
  @Prop({required:true,enum:ASSET_TYPES}) assetType:string;
  @Prop({default:''}) description:string;
@@ -29,9 +30,11 @@ export class FarmAsset {
  @Prop({default:''}) createdBy:string;
 }
 export const FarmAssetSchema=SchemaFactory.createForClass(FarmAsset);
+FarmAssetSchema.index({organizationId:1,assetCode:1},{unique:true});
 
 @Schema({timestamps:true})
 export class MaintenanceRecord {
+ @Prop({required:true,index:true}) organizationId:string;
  @Prop({required:true,index:true}) assetId:string;
  @Prop({required:true,trim:true}) maintenanceCode:string;
  @Prop({required:true,enum:MAINTENANCE_TYPES}) maintenanceType:string;
@@ -49,10 +52,12 @@ export class MaintenanceRecord {
  @Prop({default:''}) createdBy:string;
 }
 export const MaintenanceRecordSchema=SchemaFactory.createForClass(MaintenanceRecord);
+MaintenanceRecordSchema.index({organizationId:1,maintenanceCode:1},{unique:true});
 
 @Schema({timestamps:true})
 export class SparePart {
- @Prop({required:true,unique:true,trim:true}) partCode:string;
+ @Prop({required:true,index:true}) organizationId:string;
+ @Prop({required:true,trim:true}) partCode:string;
  @Prop({required:true,trim:true}) name:string;
  @Prop({default:''}) category:string;
  @Prop({default:'piece'}) unit:string;
@@ -65,3 +70,4 @@ export class SparePart {
  @Prop({default:''}) createdBy:string;
 }
 export const SparePartSchema=SchemaFactory.createForClass(SparePart);
+SparePartSchema.index({organizationId:1,partCode:1},{unique:true});

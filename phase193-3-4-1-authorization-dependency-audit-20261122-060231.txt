@@ -1,0 +1,857 @@
+﻿FORESTOS PHASE 193.3.4.1 - TARGETED AUTHORIZATION DEPENDENCY AUDIT
+Generated: 2026-11-22 06:02:32
+Mode: READ ONLY
+
+1. USER, MEMBERSHIP AND PASSPORT SOURCE FILES
+
+==========================================================================================
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.module.ts
+SHA256: 021180C257D0C1C54839D7E33544A8FB447FBF1C7B240C51146ACD5C6E61CFAC
+==========================================================================================
+    1: import {Module} from '@nestjs/common';
+    2: import {MongooseModule} from '@nestjs/mongoose';
+    3: import {JwtModule} from '@nestjs/jwt';
+    4: import {APP_GUARD} from '@nestjs/core';
+    5: import {User,UserSchema} from './user.schema';
+    6: import {AuthController} from './auth.controller';
+    7: import {AuthGuard} from './roles.guard';
+    8: import {resolveJwtSecret} from './jwt-secret-policy';
+    9: @Module({imports:[MongooseModule.forFeature([{name:User.name,schema:UserSchema}]),JwtModule.register({secret:resolveJwtSecret(process.env),signOptions:{expiresIn:'8h'}})],controllers:[AuthController],providers:[AuthGuard,{provide:APP_GUARD,useClass:AuthGuard}],exports:[JwtModule]})
+   10: export class AuthModule{}
+
+==========================================================================================
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\guards\jwt-auth.guard.ts
+SHA256: E18E097B02F506225A8B5773BE646682013650579F84ECE2E164A6580FC7A337
+==========================================================================================
+    1: export { JwtAuthGuard } from '../jwt-auth.guard';
+
+==========================================================================================
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\jwt-auth.guard.ts
+SHA256: 297C97E7FF9216C99D0882D2245726AFB4848894AFF92B3EFABD32D8A6B52A69
+==========================================================================================
+    1: import { Injectable } from '@nestjs/common';
+    2: import { AuthGuard } from '@nestjs/passport';
+    3: 
+    4: @Injectable()
+    5: export class JwtAuthGuard extends AuthGuard('jwt') {}
+
+==========================================================================================
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.decorator.ts
+SHA256: 21B0F97D04D7F2DBA271F8B42EAE9C8853BC28D445894A80EFEEA7A5D6A32026
+==========================================================================================
+    1: import {SetMetadata} from '@nestjs/common';
+    2: export const IS_PUBLIC_KEY='isPublic';
+    3: export const Public=()=>SetMetadata(IS_PUBLIC_KEY,true);
+    4: export const ROLES_KEY='roles';
+    5: export const Roles=(...roles:string[])=>SetMetadata(ROLES_KEY,roles);
+
+==========================================================================================
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.guard.ts
+SHA256: 4BA196D968D6EDD88E73168449B620061200D72B600D65FC859820E5620E4EA2
+==========================================================================================
+    1: 
+    2: import {
+    3:   CanActivate,
+    4:   ExecutionContext,
+    5:   ForbiddenException,
+    6:   Injectable,
+    7:   UnauthorizedException,
+    8: } from '@nestjs/common';
+    9: import { InjectModel } from '@nestjs/mongoose';
+   10: import { Reflector } from '@nestjs/core';
+   11: import { JwtService } from '@nestjs/jwt';
+   12: import { Model } from 'mongoose';
+   13: import { IS_PUBLIC_KEY, ROLES_KEY } from './roles.decorator';
+   14: import { User } from './user.schema';
+   15: 
+   16: @Injectable()
+   17: export class AuthGuard implements CanActivate {
+   18:   constructor(
+   19:     private readonly jwt: JwtService,
+   20:     private readonly reflector: Reflector,
+   21:     @InjectModel(User.name)
+   22:     private readonly users: Model<User>,
+   23:   ) {}
+   24: 
+   25:   async canActivate(ctx: ExecutionContext): Promise<boolean> {
+   26:     const isPublic = this.reflector.getAllAndOverride<boolean>(
+   27:       IS_PUBLIC_KEY,
+   28:       [ctx.getHandler(), ctx.getClass()],
+   29:     );
+   30: 
+   31:     if (isPublic) {
+   32:       return true;
+   33:     }
+   34: 
+   35:     const req = ctx.switchToHttp().getRequest();
+   36:     const authorization = req.headers?.authorization;
+   37: 
+   38:     if (typeof authorization !== 'string') {
+   39:       throw new UnauthorizedException('Sign in required');
+   40:     }
+   41: 
+   42:     const bearerMatch = /^Bearer\s+(\S+)$/i.exec(authorization.trim());
+   43: 
+   44:     if (!bearerMatch) {
+   45:       throw new UnauthorizedException('Sign in required');
+   46:     }
+   47: 
+   48:     const token = bearerMatch[1];
+   49: 
+   50:     let claims: Record<string, unknown>;
+   51: 
+   52:     try {
+   53:       claims = await this.jwt.verifyAsync<Record<string, unknown>>(token);
+   54:     } catch {
+   55:       throw new UnauthorizedException('Invalid or expired session');
+   56:     }
+   57: 
+   58:     const subject = claims.sub;
+   59: 
+   60:     if (
+   61:       typeof subject !== 'string' ||
+   62:       !/^[a-fA-F0-9]{24}$/.test(subject)
+   63:     ) {
+   64:       throw new UnauthorizedException('Invalid or expired session');
+   65:     }
+   66: 
+   67:     // The database is authoritative for current account status and role.
+   68:     // Database failures intentionally propagate rather than being
+   69:     // incorrectly reported as invalid JWTs.
+   70:     const account = await this.users
+   71:       .findById(subject)
+   72:       .select('_id email role active')
+   73:       .exec();
+   74: 
+   75:     if (!account || account.active !== true) {
+   76:       throw new UnauthorizedException('Account is unavailable');
+   77:     }
+   78: 
+   79:     req.user = {
+   80:       ...claims,
+   81:       sub: String(account._id),
+   82:       email: account.email,
+   83:       role: account.role,
+   84:     };
+   85: 
+   86:     const roles = this.reflector.getAllAndOverride<string[]>(
+   87:       ROLES_KEY,
+   88:       [ctx.getHandler(), ctx.getClass()],
+   89:     );
+   90: 
+   91:     if (roles?.length && !roles.includes(account.role)) {
+   92:       throw new ForbiddenException(
+   93:         'Your account cannot access this action',
+   94:       );
+   95:     }
+   96: 
+   97:     return true;
+   98:   }
+   99: }
+  100: 
+  101: export { AuthGuard as RolesGuard };
+
+==========================================================================================
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\user.schema.ts
+SHA256: 8945C5F2F1381112B6AA638F42E4404C985DAE2A3A111BC554293672E8007B4F
+==========================================================================================
+    1: import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+    2: import { HydratedDocument } from 'mongoose';
+    3: export type UserDocument = HydratedDocument<User>;
+    4: @Schema({timestamps:true})
+    5: export class User {
+    6:  @Prop({required:true,unique:true,lowercase:true,trim:true}) email!:string;
+    7:  @Prop({required:true,select:false}) passwordHash!:string;
+    8:  @Prop({required:true,enum:['owner','field_worker'],default:'field_worker'}) role!:string;
+    9:  @Prop({required:true,default:true}) active!:boolean;
+   10: }
+   11: export const UserSchema=SchemaFactory.createForClass(User);
+
+==========================================================================================
+FILE: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organization-membership.schema.ts
+SHA256: C19185989BA59774E5C58275BADFBA3AC613A4D8D0E8E84721CFE7C7CF1FCAE5
+==========================================================================================
+    1: import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+    2: import { HydratedDocument } from 'mongoose';
+    3: 
+    4: export type OrganizationMembershipDocument =
+    5:   HydratedDocument<OrganizationMembership>;
+    6: 
+    7: @Schema({ timestamps: true, versionKey: false })
+    8: export class OrganizationMembership {
+    9:   @Prop({ required: true, index: true, trim: true, lowercase: true })
+   10:   userId!: string;
+   11: 
+   12:   @Prop({ required: true, index: true, trim: true })
+   13:   organizationId!: string;
+   14: 
+   15:   @Prop({
+   16:     required: true,
+   17:     enum: ['owner', 'admin', 'manager', 'field_worker', 'finance', 'viewer'],
+   18:   })
+   19:   role!: string;
+   20: 
+   21:   @Prop({ type: String, enum: ['active', 'suspended'], default: 'active' })
+   22:   status!: string;
+   23: 
+   24:   @Prop({ required: true, trim: true })
+   25:   addedBy!: string;
+   26: }
+   27: 
+   28: export const OrganizationMembershipSchema =
+   29:   SchemaFactory.createForClass(OrganizationMembership);
+   30: 
+   31: OrganizationMembershipSchema.index(
+   32:   { userId: 1, organizationId: 1 },
+   33:   { unique: true },
+   34: );
+   35: 
+   36: OrganizationMembershipSchema.index({ organizationId: 1, status: 1, role: 1 });
+
+2. EXACT BYTES OF JWT GUARD COMPATIBILITY FILE
+PATH: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\guards\jwt-auth.guard.ts
+SIZE: 49 bytes
+SHA256: E18E097B02F506225A8B5773BE646682013650579F84ECE2E164A6580FC7A337
+RAW CONTENT:
+export { JwtAuthGuard } from '../jwt-auth.guard';
+HEX:
+
+
+           Path: C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\guards\jwt-auth.guard.ts
+
+           00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
+
+00000000   65 78 70 6F 72 74 20 7B 20 4A 77 74 41 75 74 68  export { JwtAuth
+00000010   47 75 61 72 64 20 7D 20 66 72 6F 6D 20 27 2E 2E  Guard } from '..
+00000020   2F 6A 77 74 2D 61 75 74 68 2E 67 75 61 72 64 27  /jwt-auth.guard'
+00000030   3B                                               ;               
+
+
+
+
+3. ACTIVE AUTHORIZATION DECORATOR AND GUARD USAGE
+
+PATTERN: @Roles\s*\(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\accounting\accounting.controller.ts:12
+@Controller('accounting')
+@Roles('owner')
+export class AccountingController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\alert-center\alert-center.controller.ts:5
+@Controller('alert-center')
+@Roles('owner')
+export class AlertCenterController {
+ constructor(private readonly service:AlertCenterService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\audit\audit.controller.ts:20
+
+  @Roles('owner')
+  @Get()
+  async list(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.controller.ts:24
+ }
+ @Post('users') @Roles('owner') async createWorker(@Body() body:{email?:string;password?:string;role?:string}){
+  const email=String(body.email||'').trim().toLowerCase(),password=String(body.password||'');
+  if(!email.includes('@')||password.length<12)throw new UnauthorizedException('Use a valid email and a password of at least 12 characters');
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\backup-continuity\backup-continuity.controller.ts:5
+@Controller('backup-continuity')
+@Roles('owner')
+export class BackupContinuityController{
+ constructor(private service:BackupContinuityService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\biological-assets\biological-assets.controller.ts:7
+@Controller('biological-assets')
+@Roles('owner')
+export class BiologicalAssetsController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\capital-allocation\capital-allocation.controller.ts:5
+@Controller('capital-allocation')
+@Roles('owner')
+export class CapitalAllocationController {
+ constructor(private service:CapitalAllocationService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\capital-spend-verification\capital-spend-verification.controller.ts:5
+@Controller('capital-spend-verification')
+@Roles('owner')
+export class CapitalSpendVerificationController {
+ constructor(private service:CapitalSpendVerificationService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\case-evidence\case-evidence.controller.ts:8
+import {QuarantineEvidenceDto,ReviewEvidenceDto} from './dto';
+@Controller('case-evidence') @Roles('owner')
+export class CaseEvidenceController {
+ constructor(private service:CaseEvidenceService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\cashflow\cashflow.controller.ts:5
+
+@Roles('owner')
+@Controller('cashflow')
+export class CashflowController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\command-centre\command-centre.controller.ts:5
+@Controller('command-centre')
+@Roles('owner')
+export class CommandCentreController {
+ constructor(private readonly service:CommandCentreService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\cost-intelligence\cost-intelligence.controller.ts:5
+
+@Roles('owner')
+@Controller('cost-intelligence')
+export class CostIntelligenceController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\dashboard\dashboard.controller.ts:13
+
+  @Roles('owner')
+  @Get('summary')
+  async summary(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\dashboard\dashboard.controller.ts:37
+// @Controller('dashboard')
+// export class DashboardController {constructor(private readonly service:DashboardService){} @Roles('owner') @Get('summary') summary(){return this.service.summary();}}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\data-integrity\data-integrity.controller.ts:5
+@Controller('data-integrity')
+@Roles('owner')
+export class DataIntegrityController {
+ constructor(private service:DataIntegrityService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\evidence\evidence.controller.ts:48
+
+  @Roles('owner', 'field_worker')
+  @Post()
+  async create(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\evidence\evidence.controller.ts:83
+//  @Get() list(@Query('inspectionId') id:string,@Req() req:any){return this.service.list(id,req.user);}
+//  @Roles('owner','field_worker') @Post() create(@Body() dto:CreateEvidenceDto,@Req() req:any){return this.service.create(dto,req.user);}
+//  @Get(':id/image') async image(@Param('id') id:string,@Req() req:any,@Res() res:Response){const d:any=await this.service.image(id,req.user);res.setHeader('Content-Type',d.mimeType);res.setHeader('Cache-Control','no-store');return res.send(Buffer.from(d.dataBase64,'base64'));}
+// }
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\farm-map\farm-map.controller.ts:12
+  }
+  @Post(':id/archive') @Roles('owner') archive(@Param('id') id:string) { return this.service.archive(id); }
+}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\field-navigation\field-navigation.controller.ts:24
+  @Post(':id/archive')
+  @Roles('owner')
+  archive(@Param('id') id: string) {
+    return this.service.archive(id);
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\field-verification\field-verification.controller.ts:18
+ }
+ @Patch(':id/approve') @Roles('owner') async approve(@Param('id') id:string,@Body() dto:ReviewFieldVerificationDto,@Req() req:any){
+  return this.service.review(id,dto,String(req.user?.email||req.user?.username||req.user?.sub||'owner'),true);
+ }
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\field-verification\field-verification.controller.ts:21
+ }
+ @Patch(':id/reject') @Roles('owner') async reject(@Param('id') id:string,@Body() dto:ReviewFieldVerificationDto,@Req() req:any){
+  return this.service.review(id,dto,String(req.user?.email||req.user?.username||req.user?.sub||'owner'),false);
+ }
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\finance\finance.controller.ts:8
+@Controller('finance')
+@Roles('owner')
+export class FinanceController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-action-centre\financial-action-centre.controller.ts:7
+@Controller('financial-action-centre')
+@Roles('owner')
+export class FinancialActionCentreController {
+  constructor(private readonly service: FinancialActionCentreService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-audit-trail\financial-audit-trail.controller.ts:6
+@Controller('financial-audit-trail')
+@Roles('owner')
+export class FinancialAuditTrailController {
+ constructor(private readonly service: FinancialAuditTrailService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-control-performance\financial-control-performance.controller.ts:5
+@Controller('financial-control-performance')
+@Roles('owner')
+export class FinancialControlPerformanceController {
+ constructor(private readonly service: FinancialControlPerformanceService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-control-report\financial-control-report.controller.ts:5
+@Controller('financial-control-report')
+@Roles('owner')
+export class FinancialControlReportController {
+ constructor(private readonly service: FinancialControlReportService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-escalations\financial-escalations.controller.ts:6
+@Controller('financial-escalations')
+@Roles('owner')
+export class FinancialEscalationsController {
+ constructor(private readonly service: FinancialEscalationsService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-evidence\financial-evidence.controller.ts:7
+@Controller('financial-evidence')
+@Roles('owner')
+export class FinancialEvidenceController {
+ constructor(private readonly service: FinancialEvidenceService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-exceptions\financial-exceptions.controller.ts:5
+@Controller('financial-exceptions')
+@Roles('owner')
+export class FinancialExceptionsController {
+  constructor(private readonly service: FinancialExceptionsService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-governance\financial-governance.controller.ts:6
+@Controller('financial-governance')
+@Roles('owner')
+export class FinancialGovernanceController {
+  constructor(private readonly service: FinancialGovernanceService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-investigation-cases\financial-investigation-cases.controller.ts:6
+@Controller('financial-investigation-cases')
+@Roles('owner')
+export class FinancialInvestigationCasesController {
+ constructor(private service: FinancialInvestigationCasesService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-investigations\financial-investigation.controller.ts:6
+@Controller('financial-investigations')
+@Roles('owner')
+export class FinancialInvestigationController {
+ constructor(private readonly service:FinancialInvestigationService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-reconciliation\financial-reconciliation.controller.ts:7
+@Controller('financial-reconciliation')
+@Roles('owner')
+export class FinancialReconciliationController {
+  constructor(private readonly service: FinancialReconciliationService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\financial-reports\financial-reports.controller.ts:6
+@Controller('financial-reports')
+@Roles('owner')
+export class FinancialReportsController {
+  constructor(private readonly service: FinancialReportsService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\growth\growth.controller.ts:17
+ }
+ @Roles('owner','admin','manager') @Post() async create(@Body() dto:CreateGrowthSampleDto,@Req() req:any,@Headers('x-organization-id') organizationId?:string){
+  const context=await this.context(req,organizationId);
+  if(!context.roles.some(r=>['owner','admin','manager','field_worker'].includes(r)))throw new ForbiddenException('Organization membership does not allow growth entry');
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\harvest\harvest.controller.ts:5
+
+@Roles('owner')
+@Controller('harvest')
+export class HarvestController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\harvest-intake\harvest-intake.controller.ts:7
+@Controller('harvest-intake')
+@Roles('owner')
+export class HarvestIntakeController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\inspections\inspections.controller.ts:41
+
+  @Roles('owner')
+  @Post()
+  async create(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\inspections\inspections.controller.ts:71
+//  @Get() list(@Req() req:any){return this.service.list(req.user);}
+//  @Roles('owner') @Post() create(@Body() dto:CreateInspectionDto,@Req() req:any){return this.service.create(dto,req.user);}
+//  @Patch(':id') update(@Param('id') id:string,@Body() dto:UpdateInspectionDto,@Req() req:any){return this.service.update(id,dto,req.user);}
+// }
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:19
+@Controller('integration-workflows')
+@Roles('owner')
+export class IntegrationWorkflowsController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:102
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class IntegrationWorkflowsController{
+//  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\inventory-control\inventory-control.controller.ts:7
+@Controller('inventory-control')
+@Roles('owner')
+export class InventoryControlController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\investment\investment.controller.ts:5
+
+@Roles('owner')
+@Controller('investment')
+export class InvestmentController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\maintenance\maintenance.controller.ts:5
+@Controller('maintenance')
+@Roles('owner')
+export class MaintenanceController {
+ constructor(private readonly service:MaintenanceService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:6
+@Controller('management-intelligence')
+@Roles('owner')
+export class ManagementIntelligenceController {
+  constructor(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:27
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class ManagementIntelligenceController {
+//  constructor(private service:ManagementIntelligenceService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\monthly-financial-close\monthly-financial-close.controller.ts:9
+@Controller('monthly-financial-close')
+@Roles('owner')
+export class MonthlyFinancialCloseController {
+  constructor(private readonly service: MonthlyFinancialCloseService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\notification-policies\notification-policies.controller.ts:5
+@Controller('notification-policies')
+@Roles('owner')
+export class NotificationPoliciesController{
+ constructor(private service:NotificationPoliciesService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\nursery\nursery.controller.ts:4
+import { NurseryService } from './nursery.service';
+@Roles('owner')
+@Controller('nursery')
+export class NurseryController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\organizations\organizations.controller.ts:2
+import {Body,Controller,Get,Param,Post,Query,Req} from '@nestjs/common';import {Roles} from '../auth/roles.decorator';import {OrganizationsService} from './organizations.service';
+@Controller('organizations') @Roles('owner')
+export class OrganizationsController{
+ constructor(private service:OrganizationsService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\performance-intelligence\performance-intelligence.controller.ts:5
+@Controller('performance-intelligence')
+@Roles('owner')
+export class PerformanceIntelligenceController {
+  constructor(private readonly service:PerformanceIntelligenceService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\performance-strategy\performance-strategy.controller.ts:5
+@Controller('performance-strategy')
+@Roles('owner')
+export class PerformanceStrategyController{
+ constructor(private service:PerformanceStrategyService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\photo-evidence\photo-evidence.controller.ts:28
+ }
+ @Patch(':id/approve') @Roles('owner') async approve(@Param('id') id:string,@Body() dto:PhotoEvidenceReviewDto,@Req() req:any){return this.service.review(id,dto,this.actor(req),true);}
+ @Patch(':id/reject') @Roles('owner') async reject(@Param('id') id:string,@Body() dto:PhotoEvidenceReviewDto,@Req() req:any){return this.service.review(id,dto,this.actor(req),false);}
+}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\photo-evidence\photo-evidence.controller.ts:29
+ @Patch(':id/approve') @Roles('owner') async approve(@Param('id') id:string,@Body() dto:PhotoEvidenceReviewDto,@Req() req:any){return this.service.review(id,dto,this.actor(req),true);}
+ @Patch(':id/reject') @Roles('owner') async reject(@Param('id') id:string,@Body() dto:PhotoEvidenceReviewDto,@Req() req:any){return this.service.review(id,dto,this.actor(req),false);}
+}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\plantations\plantations.controller.ts:27
+
+  @Roles('owner', 'admin', 'manager')
+  @Get('intelligence')
+  async intelligence(@Req() req: any, @Headers('x-organization-id') organizationId?: string) {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\plantations\plantations.controller.ts:34
+
+  @Roles('owner', 'admin', 'manager')
+  @Post()
+  async create(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\plantations\plantations.controller.ts:45
+
+  @Roles('owner', 'admin', 'manager')
+  @Patch(':id')
+  async update(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\procurement\procurement.controller.ts:6
+@Controller('procurement')
+@Roles('owner')
+export class ProcurementController {
+  constructor(private readonly service: ProcurementService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\regeneration\regeneration.controller.ts:4
+import { RegenerationService } from './regeneration.service';
+@Roles('owner')
+@Controller('regeneration')
+export class RegenerationController {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\reinvestment-decision-engine\reinvestment-decision-engine.controller.ts:5
+@Controller('reinvestment-decision-engine')
+@Roles('owner')
+export class ReinvestmentDecisionEngineController {
+ constructor(private service:ReinvestmentDecisionEngineService){}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\risk-management\risk-management.controller.ts:6
+@Controller('risk-management')
+@Roles('owner')
+export class RiskManagementController {
+  constructor(private readonly service: RiskManagementService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\standard-operating-procedures\standard-operating-procedures.controller.ts:7
+ constructor(private readonly service:StandardOperatingProceduresService){}
+ @Get('overview') @Roles('owner') overview(){return this.service.overview();}
+ @Get('templates') @Roles('owner') templates(){return this.service.listTemplates();}
+ @Post('seed-defaults') @Roles('owner') seed(@Req() req:any){return this.service.seedDefaults(req.user?.sub||req.user?.email||'owner');}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\standard-operating-procedures\standard-operating-procedures.controller.ts:8
+ @Get('overview') @Roles('owner') overview(){return this.service.overview();}
+ @Get('templates') @Roles('owner') templates(){return this.service.listTemplates();}
+ @Post('seed-defaults') @Roles('owner') seed(@Req() req:any){return this.service.seedDefaults(req.user?.sub||req.user?.email||'owner');}
+ @Post('templates') @Roles('owner') createTemplate(@Body() b:any,@Req() req:any){return this.service.createTemplate(b,req.user?.sub||req.user?.email||'owner');}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\standard-operating-procedures\standard-operating-procedures.controller.ts:9
+ @Get('templates') @Roles('owner') templates(){return this.service.listTemplates();}
+ @Post('seed-defaults') @Roles('owner') seed(@Req() req:any){return this.service.seedDefaults(req.user?.sub||req.user?.email||'owner');}
+ @Post('templates') @Roles('owner') createTemplate(@Body() b:any,@Req() req:any){return this.service.createTemplate(b,req.user?.sub||req.user?.email||'owner');}
+ @Patch('templates/:id/status') @Roles('owner') templateStatus(@Param('id') id:string,@Body() b:any){return this.service.activateTemplate(id,b);}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\standard-operating-procedures\standard-operating-procedures.controller.ts:10
+ @Post('seed-defaults') @Roles('owner') seed(@Req() req:any){return this.service.seedDefaults(req.user?.sub||req.user?.email||'owner');}
+ @Post('templates') @Roles('owner') createTemplate(@Body() b:any,@Req() req:any){return this.service.createTemplate(b,req.user?.sub||req.user?.email||'owner');}
+ @Patch('templates/:id/status') @Roles('owner') templateStatus(@Param('id') id:string,@Body() b:any){return this.service.activateTemplate(id,b);}
+
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\standard-operating-procedures\standard-operating-procedures.controller.ts:11
+ @Post('templates') @Roles('owner') createTemplate(@Body() b:any,@Req() req:any){return this.service.createTemplate(b,req.user?.sub||req.user?.email||'owner');}
+ @Patch('templates/:id/status') @Roles('owner') templateStatus(@Param('id') id:string,@Body() b:any){return this.service.activateTemplate(id,b);}
+
+ @Get('my-runs')
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\standard-operating-procedures\standard-operating-procedures.controller.ts:18
+ }
+ @Get('runs') @Roles('owner') runs(@Query() q:any){return this.service.listRuns(q);}
+ @Post('runs') @Roles('owner') createRun(@Body() b:any,@Req() req:any){return this.service.createRun(b,req.user?.sub||req.user?.email||'owner');}
+ @Patch('runs/:id') updateRun(@Param('id') id:string,@Body() b:any,@Req() req:any){return this.service.updateRun(id,b,req.user?.sub||req.user?.email||'owner',req.user?.role||'');}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\standard-operating-procedures\standard-operating-procedures.controller.ts:19
+ @Get('runs') @Roles('owner') runs(@Query() q:any){return this.service.listRuns(q);}
+ @Post('runs') @Roles('owner') createRun(@Body() b:any,@Req() req:any){return this.service.createRun(b,req.user?.sub||req.user?.email||'owner');}
+ @Patch('runs/:id') updateRun(@Param('id') id:string,@Body() b:any,@Req() req:any){return this.service.updateRun(id,b,req.user?.sub||req.user?.email||'owner',req.user?.role||'');}
+}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\statement-matching\statement-matching.controller.ts:7
+@Controller('statement-matching')
+@Roles('owner')
+export class StatementMatchingController {
+  constructor(private readonly service: StatementMatchingService) {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\video-evidence\video-evidence.controller.ts:74
+  @Patch(':id/approve')
+  @Roles('owner')
+  async approve(@Param('id') id: string, @Body() dto: VideoEvidenceReviewDto, @Req() req: any) {
+    return this.service.review(id, dto, this.actor(req), true);
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\video-evidence\video-evidence.controller.ts:80
+  @Patch(':id/reject')
+  @Roles('owner')
+  async reject(@Param('id') id: string, @Body() dto: VideoEvidenceReviewDto, @Req() req: any) {
+    return this.service.review(id, dto, this.actor(req), false);
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\workforce\workforce.controller.ts:6
+@Controller('workforce')
+@Roles('owner')
+export class WorkforceController {
+  constructor(private readonly service: WorkforceService) {}
+MATCH COUNT: 72
+
+PATTERN: @Public\s*\(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\health.controller.ts:6
+export class HealthController {
+  @Public()
+  @Get()
+  check() {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\health.controller.ts:12
+
+  @Public()
+  @Get('ready')
+  readiness() {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.controller.ts:11
+ constructor(@InjectModel(User.name) private users:Model<User>,private jwt:JwtService){}
+ @Public() @Post('setup-owner') async setup(@Body() body:{email?:string;password?:string;setupKey?:string}){
+  if(!process.env.OWNER_SETUP_KEY||body.setupKey!==process.env.OWNER_SETUP_KEY)throw new ForbiddenException('Owner setup key is not valid');
+  if(await this.users.countDocuments({})>0)throw new ForbiddenException('Setup is already complete');
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.controller.ts:19
+ }
+ @Public() @Post('login') async login(@Body() body:{email?:string;password?:string}){
+  const user=await this.users.findOne({email:String(body.email||'').trim().toLowerCase(),active:true}).select('+passwordHash');
+  if(!user||!await bcrypt.compare(String(body.password||''),user.passwordHash))throw new UnauthorizedException('Email or password is incorrect');
+MATCH COUNT: 4
+
+PATTERN: @UseGuards\s*\(
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:101
+// @Controller('integration-workflows')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class IntegrationWorkflowsController{
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:26
+// @Controller('management-intelligence')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class ManagementIntelligenceController {
+MATCH COUNT: 2
+
+PATTERN: JwtAuthGuard
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\jwt-auth.guard.ts:5
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\guards\jwt-auth.guard.ts:1
+export { JwtAuthGuard } from '../jwt-auth.guard';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:89
+// import {IntegrationWorkflowsService} from './integration-workflows.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:101
+// @Controller('integration-workflows')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class IntegrationWorkflowsController{
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:22
+// import {ManagementIntelligenceService} from './management-intelligence.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:26
+// @Controller('management-intelligence')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class ManagementIntelligenceController {
+MATCH COUNT: 6
+
+PATTERN: RolesGuard
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.guard.ts:101
+
+export { AuthGuard as RolesGuard };
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:90
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+// import {
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:101
+// @Controller('integration-workflows')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class IntegrationWorkflowsController{
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:23
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+// @Controller('management-intelligence')
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:26
+// @Controller('management-intelligence')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class ManagementIntelligenceController {
+MATCH COUNT: 5
+
+PATTERN: AuthGuard
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.module.ts:7
+import {AuthController} from './auth.controller';
+import {AuthGuard} from './roles.guard';
+import {resolveJwtSecret} from './jwt-secret-policy';
+@Module({imports:[MongooseModule.forFeature([{name:User.name,schema:UserSchema}]),JwtModule.register({secret:resolveJwtSecret(process.env),signOptions:{expiresIn:'8h'}})],controllers:[AuthController],providers:[AuthGuard,{provide:APP_GUARD,useClass:AuthGuard}],exports:[JwtModule]})
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.module.ts:9
+import {resolveJwtSecret} from './jwt-secret-policy';
+@Module({imports:[MongooseModule.forFeature([{name:User.name,schema:UserSchema}]),JwtModule.register({secret:resolveJwtSecret(process.env),signOptions:{expiresIn:'8h'}})],controllers:[AuthController],providers:[AuthGuard,{provide:APP_GUARD,useClass:AuthGuard}],exports:[JwtModule]})
+export class AuthModule{}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\jwt-auth.guard.ts:2
+import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
+@Injectable()
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\jwt-auth.guard.ts:5
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {}
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.guard.ts:17
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(
+    private readonly jwt: JwtService,
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\roles.guard.ts:101
+
+export { AuthGuard as RolesGuard };
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\guards\jwt-auth.guard.ts:1
+export { JwtAuthGuard } from '../jwt-auth.guard';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:89
+// import {IntegrationWorkflowsService} from './integration-workflows.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\integration-workflows\integration-workflows.controller.ts:101
+// @Controller('integration-workflows')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class IntegrationWorkflowsController{
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:22
+// import {ManagementIntelligenceService} from './management-intelligence.service';
+// import {JwtAuthGuard} from '../auth/jwt-auth.guard';
+// import {RolesGuard} from '../auth/roles.guard';
+// import {Roles} from '../auth/roles.decorator';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\management-intelligence\management-intelligence.controller.ts:26
+// @Controller('management-intelligence')
+// @UseGuards(JwtAuthGuard,RolesGuard)
+// @Roles('owner')
+// export class ManagementIntelligenceController {
+MATCH COUNT: 11
+
+PATTERN: PassportStrategy
+MATCH COUNT: 0
+
+PATTERN: PassportModule
+MATCH COUNT: 0
+
+PATTERN: APP_GUARD
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.module.ts:4
+import {JwtModule} from '@nestjs/jwt';
+import {APP_GUARD} from '@nestjs/core';
+import {User,UserSchema} from './user.schema';
+import {AuthController} from './auth.controller';
+
+C:\Users\katon\Downloads\ForestOS_Phase13_Workforce_Labour_Productivity\apps\api\src\auth\auth.module.ts:9
+import {resolveJwtSecret} from './jwt-secret-policy';
+@Module({imports:[MongooseModule.forFeature([{name:User.name,schema:UserSchema}]),JwtModule.register({secret:resolveJwtSecret(process.env),signOptions:{expiresIn:'8h'}})],controllers:[AuthController],providers:[AuthGuard,{provide:APP_GUARD,useClass:AuthGuard}],exports:[JwtModule]})
+export class AuthModule{}
+MATCH COUNT: 2
+
+4. SUMMARY
+TypeScript files scanned: 340
+Target source files: 7
+No source files were modified.
+END OF REPORT
