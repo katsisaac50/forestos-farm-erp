@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { StockItem, StockItemDocument, StockMovement, StockMovementDocument } from './inventory.schema';
+import { StockItem, StockItemDocument, StockMovement, StockMovementDocument } from './inventory-control.schema';
 import { OrganizationContext, requireOrganizationContext } from '../organizations/organization-context';
 import { organizationDocument, organizationFilter } from '../organizations/organization-scope';
+import { InventoryControlGlService } from './inventory-control-gl.service';
 
 const categories = ['seedlings','spare_parts','fuel','tools','beekeeping','fertiliser','safety','packaging','other'];
 const types = ['opening_balance','receipt','issue','return','adjustment_increase','adjustment_decrease','write_off'];
@@ -11,7 +12,7 @@ function num(v: any, n: string, min = 0) {
   const x = Number(v);
   if (!Number.isFinite(x) || x < min) throw new BadRequestException(`${n} must be a number >= ${min}`);
   return x;
-}
+}``
 function date(v: any) {
   if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v) || Number.isNaN(Date.parse(v))) {
     throw new BadRequestException('movementDate must be YYYY-MM-DD');
@@ -24,6 +25,7 @@ export class InventoryControlService {
   constructor(
     @InjectModel(StockItem.name) private items: Model<StockItemDocument>,
     @InjectModel(StockMovement.name) private moves: Model<StockMovementDocument>,
+    private readonly gl: InventoryControlGlService,
   ) {}
 
   async dashboard(rawContext: OrganizationContext) {
@@ -127,47 +129,66 @@ export class InventoryControlService {
   }
 
   async postMovement(rawContext: OrganizationContext, b: any, actor = '') {
-    const context = requireOrganizationContext(rawContext);
-    if (!b?.itemId || !b?.movementCode?.trim()) throw new BadRequestException('itemId and movementCode are required');
-    if (!types.includes(b.movementType)) throw new BadRequestException('Invalid movementType');
-    const item: any = await this.items.findOne(organizationFilter(context, { _id: b.itemId }));
-    if (!item) throw new NotFoundException('Stock item not found');
-    const quantity = num(b.quantity, 'quantity', 0.001);
-    const unitCost = num(b.unitCostUgx ?? item.averageUnitCostUgx, 'unitCostUgx');
-    const movementDate = date(b.movementDate);
-    let delta = quantity;
-    if (['issue', 'adjustment_decrease', 'write_off'].includes(b.movementType)) delta = -quantity;
-    const next = item.quantityOnHand + delta;
-    if (next < 0) throw new BadRequestException(`Insufficient stock: available ${item.quantityOnHand} ${item.unit}`);
-    const prior = item.quantityOnHand;
-    const priorCost = item.averageUnitCostUgx;
-    if (['receipt', 'return', 'opening_balance', 'adjustment_increase'].includes(b.movementType) && next > 0) {
-      item.averageUnitCostUgx = prior + quantity > 0
-        ? ((prior * priorCost) + (quantity * unitCost)) / (prior + quantity)
-        : unitCost;
-    }
-    item.quantityOnHand = next;
+  const context = requireOrganizationContext(rawContext);
+  if (!b?.itemId || !b?.movementCode?.trim()) throw new BadRequestException('itemId and movementCode are required');
+  if (!types.includes(b.movementType)) throw new BadRequestException('Invalid movementType');
+  const item: any = await this.items.findOne(organizationFilter(context, { _id: b.itemId }));
+  if (!item) throw new NotFoundException('Stock item not found');
+  const quantity = num(b.quantity, 'quantity', 0.001);
+  const unitCost = num(b.unitCostUgx ?? item.averageUnitCostUgx, 'unitCostUgx');
+  const movementDate = date(b.movementDate);
+  let delta = quantity;
+  if (['issue', 'adjustment_decrease', 'write_off'].includes(b.movementType)) delta = -quantity;
+  const next = item.quantityOnHand + delta;
+  if (next < 0) throw new BadRequestException(`Insufficient stock: available ${item.quantityOnHand} ${item.unit}`);
+  const prior = item.quantityOnHand;
+  const priorCost = item.averageUnitCostUgx;
+  if (['receipt', 'return', 'opening_balance', 'adjustment_increase'].includes(b.movementType) && next > 0) {
+    item.averageUnitCostUgx = prior + quantity > 0
+      ? ((prior * priorCost) + (quantity * unitCost)) / (prior + quantity)
+      : unitCost;
+  }
+  item.quantityOnHand = next;
+  await item.save();
+
+  let movement: any;
+  try {
+    movement = await this.moves.create(organizationDocument(context, {
+      itemId: String(item._id),
+      movementCode: b.movementCode.trim(),
+      movementType: b.movementType,
+      movementDate,
+      quantity,
+      unitCostUgx: unitCost,
+      balanceAfter: next,
+      referenceType: b.referenceType || '',
+      referenceCode: b.referenceCode || '',
+      destinationOrSource: b.destinationOrSource || '',
+      reason: b.reason || '',
+      notes: b.notes || '',
+    }));
+  } catch (e) {
+    item.quantityOnHand = prior;
+    item.averageUnitCostUgx = priorCost;
     await item.save();
-    try {
-      return await this.moves.create(organizationDocument(context, {
-        itemId: String(item._id),
-        movementCode: b.movementCode.trim(),
-        movementType: b.movementType,
-        movementDate,
-        quantity,
-        unitCostUgx: unitCost,
-        balanceAfter: next,
-        referenceType: b.referenceType || '',
-        referenceCode: b.referenceCode || '',
-        destinationOrSource: b.destinationOrSource || '',
-        reason: b.reason || '',
-        notes: b.notes || '',
-      }));
-    } catch (e) {
+    throw e;
+  }
+
+  // Post to GL (fail-closed on locked period, log-and-proceed otherwise)
+  try {
+    const fullContext: OrganizationContext = { ...context, userId: actor || context.userId || '' };
+    await this.gl.postMovement(fullContext, movement.toObject(), item.toObject());
+  } catch (e: any) {
+    if (e?.status === 400 && /locked period/i.test(e.message)) {
+      await this.moves.findByIdAndDelete(movement._id);
       item.quantityOnHand = prior;
       item.averageUnitCostUgx = priorCost;
       await item.save();
       throw e;
     }
+    console.error(`GL post failed for movement ${movement.movementCode}: ${e.message}`);
   }
+
+  return movement;
+}
 }
