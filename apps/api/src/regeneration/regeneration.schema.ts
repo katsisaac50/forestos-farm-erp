@@ -3,6 +3,7 @@ import { HydratedDocument } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class RegenerationPlan {
+  @Prop({ required: true, index: true }) organizationId!: string;
   @Prop({ required: true, trim: true }) planName!: string;
   @Prop({ required: true, trim: true }) blockId!: string;
   @Prop({ required: true, enum: ['replanting','coppice_regrowth','mixed_review','restoration','other'] }) method!: string;
@@ -24,11 +25,12 @@ export class RegenerationPlan {
 }
 export type RegenerationPlanDocument = HydratedDocument<RegenerationPlan>;
 export const RegenerationPlanSchema = SchemaFactory.createForClass(RegenerationPlan);
-RegenerationPlanSchema.index({ blockId: 1, plannedStartDate: 1 });
+RegenerationPlanSchema.index({ organizationId: 1, blockId: 1, plannedStartDate: 1 });
 
 @Schema({ timestamps: true })
 export class RegenerationCost {
-  @Prop({ required: true }) planId!: string;
+  @Prop({ required: true, index: true }) organizationId!: string;
+  @Prop({ required: true, index: true }) planId!: string;
   @Prop({ required: true, trim: true }) category!: string;
   @Prop({ required: true, min: 0 }) amountUgx!: number;
   @Prop({ required: true }) date!: string;
@@ -38,11 +40,12 @@ export class RegenerationCost {
 }
 export type RegenerationCostDocument = HydratedDocument<RegenerationCost>;
 export const RegenerationCostSchema = SchemaFactory.createForClass(RegenerationCost);
-RegenerationCostSchema.index({ planId: 1, date: -1 });
+RegenerationCostSchema.index({ organizationId: 1, planId: 1, date: -1 });
 
 @Schema({ timestamps: true })
 export class SurvivalCheck {
-  @Prop({ required: true }) planId!: string;
+  @Prop({ required: true, index: true }) organizationId!: string;
+  @Prop({ required: true, index: true }) planId!: string;
   @Prop({ required: true }) checkDate!: string;
   @Prop({ required: true, min: 0 }) sampleSize!: number;
   @Prop({ required: true, min: 0 }) liveCount!: number;
@@ -54,4 +57,4 @@ export class SurvivalCheck {
 }
 export type SurvivalCheckDocument = HydratedDocument<SurvivalCheck>;
 export const SurvivalCheckSchema = SchemaFactory.createForClass(SurvivalCheck);
-SurvivalCheckSchema.index({ planId: 1, checkDate: -1 });
+SurvivalCheckSchema.index({ organizationId: 1, planId: 1, checkDate: -1 });
