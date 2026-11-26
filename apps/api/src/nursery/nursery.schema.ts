@@ -3,7 +3,8 @@ import { HydratedDocument } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class NurseryBatch {
-  @Prop({ required: true, trim: true}) batchCode!: string;
+  @Prop({ required: true, index: true }) organizationId!: string;
+  @Prop({ required: true, trim: true }) batchCode!: string;
   @Prop({ required: true, trim: true }) speciesOrClone!: string;
   @Prop({ required: true }) startDate!: string;
   @Prop({ required: true, min: 0 }) initialQuantity!: number;
@@ -18,12 +19,13 @@ export class NurseryBatch {
 }
 export type NurseryBatchDocument = HydratedDocument<NurseryBatch>;
 export const NurseryBatchSchema = SchemaFactory.createForClass(NurseryBatch);
-NurseryBatchSchema.index({ batchCode: 1 }, { unique: true });
-NurseryBatchSchema.index({ status: 1, expectedReadyDate: 1 });
+NurseryBatchSchema.index({ organizationId: 1, batchCode: 1 }, { unique: true });
+NurseryBatchSchema.index({ organizationId: 1, status: 1, expectedReadyDate: 1 });
 
 @Schema({ timestamps: true })
 export class NurseryMovement {
-  @Prop({ required: true }) batchId!: string;
+  @Prop({ required: true, index: true }) organizationId!: string;
+  @Prop({ required: true, index: true }) batchId!: string;
   @Prop({ required: true, enum: ['production_added','loss','dispatch','adjustment_in','adjustment_out'] }) movementType!: string;
   @Prop({ required: true, min: 1 }) quantity!: number;
   @Prop({ required: true }) movementDate!: string;
@@ -35,4 +37,4 @@ export class NurseryMovement {
 }
 export type NurseryMovementDocument = HydratedDocument<NurseryMovement>;
 export const NurseryMovementSchema = SchemaFactory.createForClass(NurseryMovement);
-NurseryMovementSchema.index({ batchId: 1, movementDate: -1 });
+NurseryMovementSchema.index({ organizationId: 1, batchId: 1, movementDate: -1 });
